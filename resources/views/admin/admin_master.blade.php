@@ -21,15 +21,11 @@
     <title>Web Editor</title>
     <link rel="apple-touch-icon" href="{{ asset('admin/assets/images/favicon/pacmediac_logo.png') }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('admin/assets/images/favicon/favicon.png') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- BEGIN: VENDOR CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/vendors/vendors.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/vendors/animate-css/animate.css') }}">
-
-    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/vendors/data-tables/css/jquery.dataTables.min.css') }}">
-    <!-- <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/vendors/hover-effects/media-hover-effects.css') }}"> -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/vendors/data-tables/extensions/responsive/css/responsive.dataTables.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/vendors/data-tables/css/dataTables.checkboxes.css') }}">
     <!-- END: VENDOR CSS-->
     <!-- BEGIN: Page Level CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/themes/vertical-modern-menu-template/materialize.css') }}">
@@ -39,12 +35,14 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/page-users.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/page-account-settings.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/advance-ui-media.css') }}">
+
+
     @yield('styles')
     @yield('headScript')
     <!-- END: Page Level CSS-->
     <!-- BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/custom/custom.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/custom/toast.css') }}" >
+    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/custom/toast.css') }}">
     <!-- END: Custom CSS-->
     <style type="text/css">
         form:invalid button {
@@ -54,7 +52,7 @@
     </style>
 </head>
 <!-- END: Head-->
-<body class="vertical-layout vertical-menu-collapsible page-header-dark vertical-modern-menu preload-transitions 2-columns {{ ($route == 'dashboard')? 'menu-collapse' : '' }}  " data-open="click" data-menu="vertical-modern-menu" data-col="2-columns">
+<body class="vertical-layout vertical-menu-collapsible page-header-dark vertical-modern-menu preload-transitions 2-columns   " data-open="click" data-menu="vertical-modern-menu" data-col="2-columns">
 
 
 @include('admin.component.header')

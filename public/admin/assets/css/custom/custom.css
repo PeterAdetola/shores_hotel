@@ -414,7 +414,7 @@ input[type=range]::-ms-thumb
 .small-heading
 {
     font-size: 20px;
-    font-weight: 300;    
+    font-weight: 300;
 }
 
 
@@ -455,7 +455,7 @@ input[type=range]::-ms-thumb
     width: 4rem;
     font-size: 1.5em;
 }
-.big-avatar {   
+.big-avatar {
 
     /* Rounded border */
     border-radius: 50%;
@@ -487,4 +487,37 @@ input[type=range]::-ms-thumb
 .tabs-vertical .tabs .tab a.active:hover
 {
     color: #ff4081 !important;
+}
+
+.bookings .card {
+    width: 100%;
+    display: flex;
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    gap: 20px;
+}
+
+.bookings .stat-box {
+    flex: 1;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    transition: border-color 0.3s ease;
+}
+
+.bookings .stat-box:hover {
+    border-color: #888;
+}
+
+.bookings .stat-number {
+    font-weight: bold;
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.bookings .stat-label {
+    font-size: 16px;
+    color: #555;
 }

@@ -8,6 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <link rel="icon" href="{{ asset('img/favicon/favicon.ico') }}" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 
 
     <!-- bootstrap grid css -->
@@ -18,6 +19,8 @@
     <link rel="stylesheet" href="{{ asset('css/plugins/datepicker.css') }}">
     <!-- aquarelle css -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <!-- custom css -->
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
     <!-- page name -->
     <title>Shores Hotels</title>
 </head>
@@ -44,7 +47,7 @@
     <div class="mil-top-panel">
         <div class="container">
             <div class="mil-top-panel-content">
-                <a href="home-1.html" class="mil-logo">
+                <a href="{{url('/')}}" class="mil-logo">
                     <img src="{{ asset('img/logo.png') }}" alt="aquarelle">
                 </a>
                 <div class="mil-menu-btn">
@@ -53,31 +56,19 @@
                 <div class="mil-mobile-menu">
                     <nav class="mil-menu">
                         <ul>
-                            <li class="mil-current"><a href="home-4.html">Home</a></li>
-                            <li>
-                                <a href="#.">About</a>
+                            <li class="mil-current"><a href="{{ url('/') }}">Home</a></li>
+
+                            <li class="">
+                                <a href="#.">Accommodation</a>
                                 <ul>
-                                    <li><a href="about.html">About us</a></li>
-                                    <li><a href="services.html">Services</a></li>
-                                    <li><a href="service.html">Single service</a></li>
+                                    <li><a href="{{ route('getlodged') }}">Get Lodged</a></li>
+                                    <li><a href="{{ route('typesOfRoom') }}">Rooms</a></li>
+                                    <li><a href="{{ route('typesOfApartment') }}">Apartments</a></li>
                                 </ul>
                             </li>
-                            <li>
-                                <a href="#.">Rooms</a>
-                                <ul>
-                                    <li><a href="search.html">Search room</a></li>
-                                    <li><a href="room-1.html">Room type 1</a></li>
-                                    <li><a href="room-2.html">Room type 2</a></li>
-                                </ul>
-                            </li>
+{{--                            <li><a href="#.">Apartments</a></li>--}}
+                            <li><a href="#.">Citibar</a></li>
                             <li><a href="contact.html">Contact</a></li>
-                            <li>
-                                <a href="#.">Blog</a>
-                                <ul>
-                                    <li><a href="blog.html">Blog</a></li>
-                                    <li><a href="publication.html">Publication</a></li>
-                                </ul>
-                            </li>
                         </ul>
                     </nav>
                     <a href="#." class="mil-button mil-open-book-popup mil-top-panel-btn">

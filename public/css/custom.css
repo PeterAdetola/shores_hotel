@@ -1,0 +1,41 @@
+.white-text{
+    color: rgb(255, 255, 255)
+}
+.dark-text{
+    color: rgb(20, 13, 1)
+}
+.light-text{
+    color: rgb(248, 172, 40)
+}
+.grey-text{
+    color: rgb(107, 107, 106)
+}
+.shade{
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    /* Horizontal offset | Vertical offset | Blur radius | Color */
+}
+.mil-content-sm-pad {
+    position: relative;
+    z-index: 2;
+    background-color: rgb(255, 255, 250);
+    border-radius: 20px;
+    box-shadow: 0px 4px 20px rgba(32, 79, 94, 0.05);
+    width: 80%; /* Increased from 40% to 80% */
+    max-width: 600px; /* Optional: Limits max width */
+    margin: 0 auto; /* Centers horizontally */
+    padding: 60px; /* Slightly reduced padding for better space use */
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 992px) {
+    .mil-content-sm-pad {
+        width: 90%; /* Wider on tablets */
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .mil-content-sm-pad {
+        width: calc(100% - 40px); /* Full width minus margins on mobile */
+        padding: 40px 20px; /* Tighter padding on small screens */
+    }
+}

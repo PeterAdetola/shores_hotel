@@ -32,8 +32,8 @@ $route = Route::current()->getName()
 
         <li class="bold">
           <a class="collapsible-header waves-effect waves-cyan " href="JavaScript:void(0)">
-          <i class="material-icons">swap_vert</i>
-            <span class="menu-title" data-i18n="Home Slide Setup">Financial Records</span>
+          <i class="material-icons"><span class="material-symbols-outlined">calendar_add_on</span></i>
+            <span class="menu-title" data-i18n="Home Slide Setup">Bookings</span>
           </a>
           <div class="collapsible-body">
             <ul class="collapsible collapsible-sub" data-collapsible="accordion">
@@ -42,9 +42,71 @@ $route = Route::current()->getName()
                   <span data-i18n="Home Slide">Instant Records</span>
                 </a>
               </li>
+                <li>
+                    <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
+                        <span data-i18n="Home Slide">Instant Records</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
+                        <span data-i18n="Home Slide">Instant Records</span>
+                    </a>
+                </li>
             </ul>
           </div>
         </li>
+
+          <li class="bold">
+              <a class="collapsible-header waves-effect waves-cyan " href="JavaScript:void(0)">
+                  <i class="material-icons"><span class="material-symbols-outlined">nest_multi_room</span></i>
+                  <span class="menu-title" data-i18n="Home Slide Setup">Rooms</span>
+              </a>
+              <div class="collapsible-body">
+                  <ul class="collapsible collapsible-sub" data-collapsible="accordion">
+                      <li>
+                          <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
+                              <span data-i18n="Home Slide">Instant Records</span>
+                          </a>
+                      </li>
+                      <li>
+                          <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
+                              <span data-i18n="Home Slide">Instant Records</span>
+                          </a>
+                      </li>
+                      <li>
+                          <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
+                              <span data-i18n="Home Slide">Instant Records</span>
+                          </a>
+                      </li>
+                  </ul>
+              </div>
+          </li>
+
+          <li class="bold">
+              <a class="collapsible-header waves-effect waves-cyan " href="JavaScript:void(0)">
+                  <i class="material-icons"><span class="material-symbols-outlined">mail</span></i>
+                  <span class="menu-title" data-i18n="Home Slide Setup">Emails</span>
+              </a>
+              <div class="collapsible-body">
+                  <ul class="collapsible collapsible-sub" data-collapsible="accordion">
+                      <li>
+                          <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
+                              <span data-i18n="Home Slide">Instant Records</span>
+                          </a>
+                      </li>
+                      <li>
+                          <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
+                              <span data-i18n="Home Slide">Instant Records</span>
+                          </a>
+                      </li>
+                      <li>
+                          <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
+                              <span data-i18n="Home Slide">Instant Records</span>
+                          </a>
+                      </li>
+                  </ul>
+              </div>
+          </li>
       </ul>
       <!-- <div class="navigation-background"></div> -->
       <a class="sidenav-trigger btn-sidenav-toggle btn-floating btn-medium waves-effect waves-light hide-on-large-only" href="#" data-target="slide-out"><i class="material-icons">menu</i></a>

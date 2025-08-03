@@ -30,11 +30,11 @@
     <!-- about 2 end -->
 
     <!-- reviews -->
-    @include('index.partials.reviews')
+{{--    @include('index.partials.reviews')--}}
     <!-- reviews end -->
 
     <!-- blog -->
-    @include('index.partials.blog')
+{{--    @include('index.partials.blog')--}}
     <!-- blog end -->
 
 @endsection

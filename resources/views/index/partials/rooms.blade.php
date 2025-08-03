@@ -81,7 +81,7 @@
                         <div class="mil-divider"></div>
                         <div class="mil-card-bottom">
                             <div class="mil-price"><span class="mil-symbol">$</span><span class="mil-number">49</span>/per night</div>
-                            <a href="room-1.html" class="mil-button mil-icon-button mil-accent-1">
+                            <a href="{{ route('chosen_lodge') }}" class="mil-button mil-icon-button mil-accent-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark">
                                     <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
                                 </svg>
@@ -160,7 +160,7 @@
                         <div class="mil-divider"></div>
                         <div class="mil-card-bottom">
                             <div class="mil-price"><span class="mil-symbol">$</span><span class="mil-number">49</span>/per night</div>
-                            <a href="room-1.html" class="mil-button mil-icon-button mil-accent-1">
+                            <a href="{{ route('chosen_lodge') }}" class="mil-button mil-icon-button mil-accent-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark">
                                     <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
                                 </svg>
@@ -249,7 +249,7 @@
                         <div class="mil-divider"></div>
                         <div class="mil-card-bottom">
                             <div class="mil-price"><span class="mil-symbol">$</span><span class="mil-number">49</span>/per night</div>
-                            <a href="room-1.html" class="mil-button mil-icon-button mil-accent-1">
+                            <a href="{{ route('chosen_lodge') }}" class="mil-button mil-icon-button mil-accent-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark">
                                     <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
                                 </svg>
@@ -338,7 +338,7 @@
                         <div class="mil-divider"></div>
                         <div class="mil-card-bottom">
                             <div class="mil-price"><span class="mil-symbol">$</span><span class="mil-number">49</span>/per night</div>
-                            <a href="room-1.html" class="mil-button mil-icon-button mil-accent-1">
+                            <a href="{{ route('chosen_lodge') }}" class="mil-button mil-icon-button mil-accent-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark">
                                     <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
                                 </svg>
@@ -422,7 +422,7 @@
                         <div class="mil-divider"></div>
                         <div class="mil-card-bottom">
                             <div class="mil-price"><span class="mil-symbol">$</span><span class="mil-number">49</span>/per night</div>
-                            <a href="room-1.html" class="mil-button mil-icon-button mil-accent-1">
+                            <a href="{{ route('chosen_lodge') }}" class="mil-button mil-icon-button mil-accent-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark">
                                     <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
                                 </svg>
@@ -494,7 +494,7 @@
                         <div class="mil-divider"></div>
                         <div class="mil-card-bottom">
                             <div class="mil-price"><span class="mil-symbol">$</span><span class="mil-number">49</span>/per night</div>
-                            <a href="room-1.html" class="mil-button mil-icon-button mil-accent-1">
+                            <a href="{{ route('chosen_lodge') }}" class="mil-button mil-icon-button mil-accent-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark">
                                     <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
                                 </svg>

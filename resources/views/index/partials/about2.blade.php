@@ -5,7 +5,7 @@
 
                 <div class="mil-text-frame">
                     <div class="mil-suptitle mil-mb-20 mil-fade-up">About us</div>
-                    <h2 class="mil-mb-40 mil-fade-up">Our goal and philosophy</h2>
+                    <h2 class="mil-mb-40 mil-fade-up grey-text">Our goal and philosophy</h2>
                     <p class="mil-mb-20 mil-fade-up">Accusantium doloremque laudantium, totam rem aperiam beatae vitae dicta sunt, explicabo ullamco laboris nisi ut aliquip ex.</p>
 
                     <p class="mil-mb-40 mil-fade-up">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non.</p>
