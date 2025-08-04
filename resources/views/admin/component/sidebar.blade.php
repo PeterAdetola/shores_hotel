@@ -64,18 +64,13 @@ $route = Route::current()->getName()
               <div class="collapsible-body">
                   <ul class="collapsible collapsible-sub" data-collapsible="accordion">
                       <li>
-                          <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
-                              <span data-i18n="Home Slide">Instant Records</span>
+                          <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href="{{route('add_room')}}"><i class="material-icons">radio_button_unchecked</i>
+                              <span data-i18n="Home Slide">Add Room</span>
                           </a>
                       </li>
                       <li>
                           <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
-                              <span data-i18n="Home Slide">Instant Records</span>
-                          </a>
-                      </li>
-                      <li>
-                          <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
-                              <span data-i18n="Home Slide">Instant Records</span>
+                              <span data-i18n="Home Slide">Manage Rooms</span>
                           </a>
                       </li>
                   </ul>
@@ -84,7 +79,8 @@ $route = Route::current()->getName()
 
           <li class="bold">
               <a class="collapsible-header waves-effect waves-cyan " href="JavaScript:void(0)">
-                  <i class="material-icons"><span class="material-symbols-outlined">mail</span></i>
+                  <i class="material-icons"><span class="material-symbols-outlined">mail
+</span></i>
                   <span class="menu-title" data-i18n="Home Slide Setup">Emails</span>
               </a>
               <div class="collapsible-body">

@@ -16,15 +16,16 @@
                 <div class="container">
                     <div class="row">
                         <div class="col s10 m6 l6">
-                            <h5 class="breadcrumbs-title mt-0 mb-0"><span>Blank Page</span></h5>
-                            <ol class="breadcrumbs mb-0">
-                                <li class="breadcrumb-item"><a href="#">Home</a>
-                                </li>
-                                <li class="breadcrumb-item"><a href="#">Pages</a>
-                                </li>
-                                <li class="breadcrumb-item active">Blank Page
-                                </li>
-                            </ol>
+                            <h5 class="breadcrumbs-title mt-0 mb-0"><span>Welcome Admin</span></h5>
+{{--                            <ol class="breadcrumbs mb-0">--}}
+{{--                                <li class="breadcrumb-item"><a href="#">Home</a>--}}
+{{--                                </li>--}}
+{{--                                <li class="breadcrumb-item"><a href="#">Pages</a>--}}
+{{--                                </li>--}}
+{{--                                <li class="breadcrumb-item active">Blank Page--}}
+{{--                                </li>--}}
+{{--                            </ol>--}}
+                            <p style="font-weight: 600">Welcome to Shores Hotel Reservation management portal.</p>
                         </div>
                     </div>
                 </div>
@@ -33,7 +34,7 @@
                 <div class="container">
                     <div class="section">
                         <div class="row">
-                            <div class="col s12 m6 l4 card-width">
+                            <div class="col s12 m6 l6 card-width">
                                 <div class="card border-radius-6">
                                     <div class="card-content center-align">
 {{--                                        <i class="material-icons amber-text small-ico-bg mb-5">--}}
@@ -43,44 +44,35 @@
                                             business
                                         </i>
 
-                                        <h4 class="m-0"><b>32</b></h4>
-                                        <p>Total Room</p>
+                                        <h4 class="m-0"><b>5</b></h4>
+                                        <p>Today Check-ins</p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col s12 m6 l4 card-width">
+                            <div class="col s12 m6 l6 card-width">
                                 <div class="card border-radius-6">
                                     <div class="card-content center-align">
                                         <i class="material-icons amber-text small-ico-bg mb-5">room</i>
-                                        <h4 class="m-0"><b>12</b></h4>
-                                        <p>Available Room</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col s12 m6 l4 card-width">
-                                <div class="card border-radius-6">
-                                    <div class="card-content center-align">
-                                        <i class="material-icons amber-text small-ico-bg mb-5">location_off</i>
-                                        <h4 class="m-0"><b>20</b></h4>
-                                        <p>Reserved Room</p>
+                                        <h4 class="m-0"><b>2</b></h4>
+                                        <p>Today Check-outs</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                 </div>
 {{--                    <div class="content-overlay"></div>--}}
-                        <div class="card-content bookings">
-                            <div class="card">
-                                <div class="stat-box">
-                                    <div class="stat-number">10</div>
-                                    <div class="stat-label">Today Check-ins</div>
-                                </div>
-                                <div class="stat-box">
-                                    <div class="stat-number">5</div>
-                                    <div class="stat-label">Today Check-outs</div>
-                                </div>
-                            </div>
-                        </div>
+{{--                        <div class="card-content bookings">--}}
+{{--                            <div class="card">--}}
+{{--                                <div class="stat-box">--}}
+{{--                                    <div class="stat-number">10</div>--}}
+{{--                                    <div class="stat-label">Today Check-ins</div>--}}
+{{--                                </div>--}}
+{{--                                <div class="stat-box">--}}
+{{--                                    <div class="stat-number">5</div>--}}
+{{--                                    <div class="stat-label">Today Check-outs</div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
 
 
                     <div class="card-content bookings">

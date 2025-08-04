@@ -26,18 +26,18 @@
     <!-- BEGIN: VENDOR CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/vendors/vendors.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/vendors/animate-css/animate.css') }}">
+    @yield('vendor_styles')
     <!-- END: VENDOR CSS-->
     <!-- BEGIN: Page Level CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/themes/vertical-modern-menu-template/materialize.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/themes/vertical-modern-menu-template/style.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/dashboard-modern.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/app-invoice.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/page-users.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/page-account-settings.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/advance-ui-media.css') }}">
-
-
+{{--    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/dashboard-modern.css') }}">--}}
     @yield('styles')
+{{--    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/app-invoice.css') }}">--}}
+{{--    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/page-users.css') }}">--}}
+{{--    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/page-account-settings.css') }}">--}}
+{{--    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/advance-ui-media.css') }}">--}}
+
     @yield('headScript')
     <!-- END: Page Level CSS-->
     <!-- BEGIN: Custom CSS-->
@@ -72,48 +72,45 @@
 @include('admin.component.footer')
 
 <!-- END: Footer-->
+{{--<script src="{{ asset('admin/assets/js/jquery.min.js') }}"></script>--}}
+
 <!-- BEGIN VENDOR JS-->
 <script src="{{ asset('admin/assets/js/vendors.min.js') }}"></script>
-@yield('scripts')
 <!-- BEGIN VENDOR JS-->
 <!-- BEGIN PAGE VENDOR JS-->
-<script src="{{ asset('admin/assets/vendors/data-tables/js/jquery.dataTables.min.js') }}"></script>
-<!-- <script src="{{ asset('admin/assets/vendors/jquery-validation/jquery.validate.min.js') }}"></script> -->
-<script src="{{ asset('admin/assets/vendors/data-tables/extensions/responsive/js/dataTables.responsive.min.js') }}"></script>
-<script src="{{ asset('admin/assets/vendors/data-tables/js/datatables.checkboxes.min.js') }}"></script>
+@yield('vendor_scripts')
 <!-- END PAGE VENDOR JS-->
 <!-- BEGIN THEME  JS-->
 <script src="{{ asset('admin/assets/js/plugins.js') }}"></script>
-<script src="{{ asset('admin/assets/js/search.js') }}"></script>
-<script src="{{ asset('admin/assets/js/custom/custom-script.js') }}"></script>
-<script src="{{ asset('admin/assets/js/custom/sweetalert.min.js') }}"></script>
-<script src="{{ asset('admin/assets/js/custom/sweetalert_init.js') }}"></script>
+{{--<script src="{{ asset('admin/assets/js/search.js') }}"></script>--}}
+{{--<script src="{{ asset('admin/assets/js/custom/custom-script.js') }}"></script>--}}
+{{--<script src="{{ asset('admin/assets/js/custom/sweetalert.min.js') }}"></script>--}}
+{{--<script src="{{ asset('admin/assets/js/custom/sweetalert_init.js') }}"></script>--}}
 <!-- END THEME  JS-->
 <!-- BEGIN PAGE LEVEL JS-->
-<script src="{{ asset('admin/assets/js/scripts/dashboard-modern.js') }}"></script>
-<script src="{{ asset('admin/assets/js/scripts/page-users.js') }}"></script>
-<script src="{{ asset('admin/assets/js/scripts/app-invoice.js') }}"></script>
-<script src="{{ asset('admin/assets/js/scripts/page-account-settings.js') }}"></script>
-<script src="{{ asset('admin/assets/js/scripts/advance-ui-modals.js') }}"></script>
-<script src="{{ asset('admin/assets/js/scripts/ui-alerts.js') }}"></script>
-<script src="{{ asset('admin/assets/js/scripts/advance-ui-media.js') }}"></script>
-<script src="{{ asset('admin/assets/js/scripts/cards-extended.js') }}"></script>
+{{--<script src="{{ asset('admin/assets/js/scripts/dashboard-modern.js') }}"></script>--}}
+{{--<script src="{{ asset('admin/assets/js/scripts/advance-ui-modals.js') }}"></script>--}}
+{{--<script src="{{ asset('admin/assets/js/scripts/ui-alerts.js') }}"></script>--}}
+{{--<script src="{{ asset('admin/assets/js/scripts/app-invoice.js') }}"></script>--}}
+{{--<script src="{{ asset('admin/assets/js/scripts/intro.js') }}"></script>--}}
+@yield('scripts')
+
 <!-- END PAGE LEVEL JS-->
 
-<script>
+
 
 
 
 
     @if(Session::has('message'))
-
+        <script>
     setTimeout(function () {
         var toastHTML = "{{ Session::get('message') }}";
         M.toast({html: toastHTML})
     }, 2000);
-
+        </script>
     @endif
 
-</script>
+
 </body>
 </html>
