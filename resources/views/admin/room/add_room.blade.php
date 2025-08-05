@@ -60,7 +60,7 @@
                                                     </div>
                                                     <div class="input-field col m4 s610">
                                                         <label for="pricePerNight">Price Per Night: <span class="red-text">*</span></label>
-                                                        <input type="number" id="pricePerNight" class="validate" name="pricePerNight" value="0.00" required>
+                                                        <input type="number" id="pricePerNight" class="validate" name="pricePerNight" value="0.00" min="0.00" max="10" required>
                                                     </div>
                                                     <div class="input-field col m2 s2">
                                                         <label for="numUnit">Number of Units: <span class="red-text">*</span></label>
@@ -194,18 +194,18 @@
                                                         </div>
                                                     </div>
                                                     <div class="input-field col m6 s12">
-                                                        <div class="availability-box">
-                                                            <div class="switch">
-                                                                <label>
-                                                                    <input type="checkbox" class="hidden-checkbox" checked>
-                                                                    <span class="lever"></span>
-                                                                    <span class="availability-text">Availability</span>
-                                                                </label>
+                                                            <div class="availability-box">
+                                                                <div class="switch">
+                                                                    <label>
+                                                                        <input type="checkbox" class="hidden-checkbox" checked>
+                                                                        <span class="lever"></span>
+                                                                        <span class="availability-text">Availability</span>
+                                                                    </label>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        </div>
                                                         <div class="input-field col m6 s12">
-                                                        <textarea id="textarea2" class="materialize-textarea"></textarea>
+                                                        <textarea name="description" id="textarea2" class="materialize-textarea"></textarea>
                                                         <label for="textarea2">Textarea</label>
                                                     </div>
                                                 </div>

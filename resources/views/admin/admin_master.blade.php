@@ -89,7 +89,7 @@
 <!-- END THEME  JS-->
 <!-- BEGIN PAGE LEVEL JS-->
 {{--<script src="{{ asset('admin/assets/js/scripts/dashboard-modern.js') }}"></script>--}}
-{{--<script src="{{ asset('admin/assets/js/scripts/advance-ui-modals.js') }}"></script>--}}
+<script src="{{ asset('admin/assets/js/scripts/advance-ui-modals.js') }}"></script>
 {{--<script src="{{ asset('admin/assets/js/scripts/ui-alerts.js') }}"></script>--}}
 {{--<script src="{{ asset('admin/assets/js/scripts/app-invoice.js') }}"></script>--}}
 {{--<script src="{{ asset('admin/assets/js/scripts/intro.js') }}"></script>--}}

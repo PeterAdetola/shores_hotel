@@ -64,12 +64,17 @@ $route = Route::current()->getName()
               <div class="collapsible-body">
                   <ul class="collapsible collapsible-sub" data-collapsible="accordion">
                       <li>
-                          <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href="{{route('add_room')}}"><i class="material-icons">radio_button_unchecked</i>
+                          <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
+                              <span data-i18n="Home Slide">Check Rooms</span>
+                          </a>
+                      </li>
+                      <li>
+                          <a class="{{ ($route == 'add_room')? 'active' : '' }} waves-effect waves-cyan" href="{{route('add_room')}}"><i class="material-icons">radio_button_unchecked</i>
                               <span data-i18n="Home Slide">Add Room</span>
                           </a>
                       </li>
                       <li>
-                          <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
+                          <a class="{{ ($route == 'manage_rooms')? 'active' : '' }} waves-effect waves-cyan" href="{{route('manage_rooms')}}"><i class="material-icons">radio_button_unchecked</i>
                               <span data-i18n="Home Slide">Manage Rooms</span>
                           </a>
                       </li>

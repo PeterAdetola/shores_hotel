@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Auth;
+use App\Models\RoomCategory;
 
 
 // Get user's id
@@ -48,5 +49,12 @@ if (!function_exists('getUserName')) {
         } else {
             return redirect('login');
         }
+    }
+}
+
+// Get room categories
+if (!function_exists('getRoomCategories')) {
+    function getRoomCategories() {
+        return RoomCategory::all();
     }
 }

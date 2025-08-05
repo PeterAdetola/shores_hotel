@@ -18,8 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Store displayed value if exists
             const valueDisplay = document.getElementById(el.id + 'Value');
             if (valueDisplay) defaultStates[el.id + '_display'] = el.value;
-        } else if (el.type === 'number') {
-            defaultStates[el.id] = el.value; // Store by ID for number inputs
         } else {
             defaultStates[el.name] = el.value;
         }
@@ -74,8 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (valueDisplay) {
                         valueDisplay.textContent = defaultStates[input.id + '_display'] || input.min;
                     }
-                } else if (input.type === 'number') {
-                    input.value = defaultStates[input.id] || input.min;
                 } else if (input.type === 'file') {
                     input.value = '';
                     // Clear file previews
