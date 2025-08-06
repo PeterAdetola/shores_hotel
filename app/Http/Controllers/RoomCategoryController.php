@@ -76,7 +76,6 @@ class RoomCategoryController extends Controller
 
         $notification = array(
             'message' => 'Category deleted.',
-            'alert-type' => 'success'
         );
 
         return redirect()->back()->with($notification);

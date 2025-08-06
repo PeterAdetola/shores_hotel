@@ -1,11 +1,12 @@
-
 @extends('admin.admin_master')
 @section('admin')
     @php
         $pageTitle = 'Manage Rooms';
-        $categories = getRoomCategories();
     @endphp
-
+    @section('headScript')
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+{{--        <script src="{{ asset('admin/assets/vendors/sortable/sortable.js') }}"></script>--}}
+    @endsection
 
 
     <style>
@@ -30,12 +31,14 @@
         }
 
         .action-container a:hover {
-             opacity: 0.8;
-             transform: translateY(-1px);
-         }
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+
         .action-container a {
             transition: all 0.2s ease;
         }
+
         .action-delete:hover i {
             color: #f44336 !important;
         }
@@ -59,11 +62,12 @@
                             </ol>
                         </div>
 
-                        <!-- Somethings removed here -->
+                        <!-- Something is removed here -->
 
                     </div>
                 </div>
-            </div><br>
+            </div>
+            <br>
             <div class="col s12">
                 <div class="container">
                     <!-- users view start -->
@@ -71,46 +75,52 @@
                         <div class="col s12 m12 l7">
                             <div class="card subscriber-list-card">
                                 <div class="card-content pb-1">
-                                    <h4 class="card-title mb-0" style="display: inline-block">Accommodation Categories</h4>
-                                    <a href="#add_category-modal" class="modal-trigger" style="float: right"><span class="chip btn light-green white-text text-accent-2">Add Category</span></a>
+                                    <h4 class="card-title mb-0" style="display: inline-block">Accommodation
+                                        Categories</h4>
+                                    <a href="#add_category-modal" class="modal-trigger" style="float: right"><span
+                                            class="chip btn light-green white-text text-accent-2">Add Category</span></a>
                                 </div>
-                                @include('admin.room.modals.add_category-modal')
+                                @include('admin.room.modals.category.add_category-modal')
                                 <table class="subscription-table responsive-table highlight">
                                     <thead>
                                     <tr>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @forelse ($categories as $category)
+                                    @forelse (getRoomCategories() as $category)
                                         <tr>
                                             <td>&nbsp;&nbsp;&nbsp;&nbsp;{{ $category->name }}</td>
                                             <td style="text-align: right">
-                                                <div class="action-container" >
-                                                    <a href="#edit_category-modal{{ $category->id }}" class="modal-trigger action-edit">
-                                                        <span class="chip pink lighten-5 pink-text text-accent-2">Edit</span>
+                                                <div class="action-container">
+                                                    <a href="#edit_category-modal{{ $category->id }}"
+                                                       class="modal-trigger action-edit">
+                                                        <span
+                                                            class="chip pink lighten-5 pink-text text-accent-2">Edit</span>
                                                     </a>
-                                                    <a href="#delete_category-modal{{ $category->id }}" class="modal-trigger action-delete">
+                                                    <a href="#delete_category-modal{{ $category->id }}"
+                                                       class="modal-trigger action-delete">
                                                         <span class="material-symbols-outlined grey-text">delete</span>
                                                     </a>
                                                 </div>&nbsp;&nbsp;&nbsp;&nbsp;
                                             </td>
                                         </tr>
-                                            @include('admin.room.modals.edit_category-modal')
-                                            @include('admin.room.modals.delete_category-modal')
+                                        @include('admin.room.modals.category.edit_category-modal')
+                                        @include('admin.room.modals.category.delete_category-modal')
                                     @empty
-                                                <tr>
-                                                    <td>&nbsp;&nbsp;&nbsp;&nbsp;Category Name</td>
-                                                    <td style="text-align: right">
-                                                        <div class="action-container" >
-                                                            <a href="#" class="modal-trigger action-edit">
-                                                                <span class="chip pink lighten-5 pink-text text-accent-2">Edit</span>
-                                                            </a>
-                                                            <a href="#" class="modal-trigger action-delete">
-                                                                <span class="material-symbols-outlined grey-text">delete</span>
-                                                            </a>
-                                                        </div>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    </td>
-                                                </tr>
+                                        <tr>
+                                            <td>&nbsp;&nbsp;&nbsp;&nbsp;Category Name</td>
+                                            <td style="text-align: right">
+                                                <div class="action-container">
+                                                    <a href="#" class="modal-trigger action-edit">
+                                                        <span
+                                                            class="chip pink lighten-5 pink-text text-accent-2">Edit</span>
+                                                    </a>
+                                                    <a href="#" class="modal-trigger action-delete">
+                                                        <span class="material-symbols-outlined grey-text">delete</span>
+                                                    </a>
+                                                </div>&nbsp;&nbsp;&nbsp;&nbsp;
+                                            </td>
+                                        </tr>
                                     @endforelse
                                     </tbody>
                                 </table>
@@ -124,22 +134,62 @@
                         <div class="col s12 m12 l7 mb-10">
                             <div class="card subscriber-list-card">
                                 <div class="card-content pb-1">
-                                    <h4 class="card-title mb-0" style="display: inline-block">Feature List</h4>
-                                    <a href="#add_feature-modal" class="modal-trigger" style="float: right"><span class="chip btn light-green white-text text-accent-2">Add Feature</span></a>
+                                    <h4 class="card-title mb-0" style="display: inline-block">Facility List</h4>
+                                    <a href="#add_facility-modal" class="modal-trigger" style="float: right"><span
+                                            class="chip btn light-green white-text text-accent-2">Add Facility</span></a>
                                 </div>
-{{--                                @include('admin.room.modals.add_feature-modal')--}}
-                                <table class="subscription-table responsive-table highlight">
+                                <div class="divider"></div>
+                                @include('admin.room.modals.facility.add_facility-modal')
+                                <table class="subscription-table responsive-table" id="facility-table">
                                     <thead>
                                     <tr>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;Facility</td>
+                                        <td>&nbsp;&nbsp;Icon</td>
+                                        <td style="text-align: right">
+                                            <div class="action-container">
+                                                Actions
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            </div>
+                                        </td>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>&nbsp;&nbsp;&nbsp;&nbsp;Category Name</td>
+                                    <tbody id="sortable">
+                                    @forelse (getFacilities() as $facility)
+                                        <tr class="hoverable"  data-id="{{ $facility->id }}">
+                                            <td>&nbsp;&nbsp;&nbsp;&nbsp;{{ $facility->name }}</td>
+                                            <td>&nbsp;&nbsp;<span
+                                                    class="material-symbols-outlined">{{ $facility->icon }}</span></td>
                                             <td style="text-align: right">
-                                                <div class="action-container" >
+                                                <div class="action-container">
+                                                    <a href="#edit_facility-modal{{ $facility->id }}"
+                                                       class="modal-trigger action-edit">
+                                                        <span
+                                                            class="chip pink lighten-5 pink-text text-accent-2">Edit</span>
+                                                    </a>
+                                                    <a href="#delete_facility-modal{{ $facility->id }}"
+                                                       class="modal-trigger action-delete">
+                                                        <span class="material-symbols-outlined grey-text">delete</span>
+                                                    </a>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <a href="#!"
+                                                       class="action-delete">
+                                                        <span class="material-symbols-outlined grey-text" style="cursor: grab;">drag_handle</span>
+                                                    </a>
+                                                </div>&nbsp;&nbsp;&nbsp;&nbsp;
+                                            </td>
+                                        </tr>
+                                        @include('admin.room.modals.facility.edit_facility-modal')
+                                        @include('admin.room.modals.facility.delete_facility-modal')
+                                    @empty
+                                        <tr>
+                                            <td>&nbsp;&nbsp;&nbsp;&nbsp;Facility Name</td>
+                                            <td>&nbsp;&nbsp;<span class="material-symbols-outlined">check_circle</span>
+                                            </td>
+                                            <td style="text-align: right">
+                                                <div class="action-container">
                                                     <a href="#" class="modal-trigger action-edit">
-                                                        <span class="chip pink lighten-5 pink-text text-accent-2">Edit</span>
+                                                        <span
+                                                            class="chip pink lighten-5 pink-text text-accent-2">Edit</span>
                                                     </a>
                                                     <a href="#" class="modal-trigger action-edit">
                                                         <span class="material-symbols-outlined grey-text">delete</span>
@@ -147,26 +197,45 @@
                                                 </div>&nbsp;&nbsp;&nbsp;&nbsp;
                                             </td>
                                         </tr>
+                                    @endforelse
                                     </tbody>
                                 </table>
                             </div>
                         </div>
 
-{{--                    </div>--}}
-                    <!-- users view ends -->
+                        {{--                    </div>--}}
+                        <!-- users view ends -->
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- END: Page Main-->
+        <!-- END: Page Main-->
+        <script>
 
+            document.addEventListener('DOMContentLoaded', function() {
+                let sortable = new Sortable(document.getElementById('sortable'), {
+                    handle: '.action-delete', // or whatever drag handle you want
+                    animation: 150,
+                    onEnd: function () {
+                        let order = [];
+                        document.querySelectorAll('#sortable tr').forEach((row, index) => {
+                            order.push({ id: row.dataset.id, position: index + 1 });
+                        });
 
+                        fetch('{{ route("facilities.reorder") }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ order: order })
+                        });
+                    }
+                });
+            });
 
-
-
+        </script>
 @endsection
 @section('scripts')
-{{--    <script src="{{ asset('backend/assets/vendors/dropify/js/dropify.min.js') }}"></script>--}}
-{{--    <script src="{{ asset('backend/assets/js/scripts/form-file-uploads.js') }}"></script>--}}
-{{--    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>--}}
+{{--        <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>--}}
 @endsection

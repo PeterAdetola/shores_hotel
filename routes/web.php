@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoomCategoryController;
+use App\Http\Controllers\FacilityController;
 
 Route::get('/', function () {
     return view('index.index');
@@ -43,15 +44,24 @@ Route::get('/manage_rooms', function () {
     return view('/admin/room/manage_rooms');
 })->name('manage_rooms');
 
-// --------------| Cat Routes |----------------------------------------
+// --------------| Room Category Routes |----------------------------------------
 
 Route::get('/room-categories/create', [RoomCategoryController::class, 'create'])->name('room-categories.create');
 Route::post('/room-categories', [RoomCategoryController::class, 'store'])->name('room-categories.store');
 Route::put('/room-categories/{id}', [RoomCategoryController::class, 'update'])->name('room-categories.update');
 Route::delete('/room-categories/{id}', [RoomCategoryController::class, 'destroy'])->name('room-categories.destroy');
 
-//Route::get('/room-categories/{id}/edit', [RoomCategoryController::class, 'edit'])->name('room-categories.edit');
-//Route::get('/room-categories', [RoomCategoryController::class, 'index'])->name('room-categories.index');
+// --------------| Room Facility Routes |----------------------------------------
 
+Route::prefix('facilities')->group(function () {
+//    Route::get('/', [FacilityController::class, 'index'])->name('facilities.index');
+    Route::get('/create', [FacilityController::class, 'create'])->name('facilities.create');
+    Route::post('/', [FacilityController::class, 'store'])->name('facilities.store');
+    Route::get('/{id}/edit', [FacilityController::class, 'edit'])->name('facilities.edit');
+    Route::put('/{id}', [FacilityController::class, 'update'])->name('facilities.update');
+    Route::delete('/{id}', [FacilityController::class, 'destroy'])->name('facilities.destroy');
+    Route::post('/facilities/reorder', [FacilityController::class, 'reorder'])->name('facilities.reorder');
+
+});
 
 require __DIR__.'/auth.php';

@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Auth;
 use App\Models\RoomCategory;
+use App\Models\RoomFacility;
 
 
 // Get user's id
@@ -56,5 +57,12 @@ if (!function_exists('getUserName')) {
 if (!function_exists('getRoomCategories')) {
     function getRoomCategories() {
         return RoomCategory::all();
+    }
+}
+
+if (!function_exists('getFacilities')) {
+    function getFacilities()
+    {
+        return \App\Models\RoomFacility::orderBy('position')->get();
     }
 }
