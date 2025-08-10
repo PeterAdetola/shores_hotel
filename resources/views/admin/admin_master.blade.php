@@ -15,7 +15,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta name="description" content="Pacmedia - Tactical Digital Solutions. Brand Strategy, Development & Intelligent Automation.">
+    <meta name="description" content="Pacmedia - Your Tactical Digital Solutions. Brand Strategy, Development & Intelligent Automation.">
     <meta name="keywords" content="brand strategy, digital experience design, web development, AI automation systems, brand identity systems, conversion-focused design, custom development, intelligent customer operations, digital presence strategy, tactical digital solutions">
     <meta name="author" content="Pacmedia Creatives">
     <title>Web Editor</title>
@@ -42,7 +42,7 @@
     <!-- END: Page Level CSS-->
     <!-- BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/custom/custom.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/custom/toast.css') }}">
+{{--    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/custom/toast.css') }}">--}}
     <!-- END: Custom CSS-->
     <style type="text/css">
         form:invalid button {
@@ -90,6 +90,7 @@
 <!-- BEGIN PAGE LEVEL JS-->
 {{--<script src="{{ asset('admin/assets/js/scripts/dashboard-modern.js') }}"></script>--}}
 <script src="{{ asset('admin/assets/js/scripts/advance-ui-modals.js') }}"></script>
+<script src="{{ asset('admin/assets/js/scripts/ui-alerts.js') }}"></script>
 {{--<script src="{{ asset('admin/assets/js/scripts/ui-alerts.js') }}"></script>--}}
 {{--<script src="{{ asset('admin/assets/js/scripts/app-invoice.js') }}"></script>--}}
 {{--<script src="{{ asset('admin/assets/js/scripts/intro.js') }}"></script>--}}
@@ -102,15 +103,44 @@
 
 
 
+{{--    @if(Session::has('message'))--}}
+{{--        <script>--}}
+{{--    setTimeout(function () {--}}
+{{--        var toastHTML = "{{ Session::get('message') }}";--}}
+{{--        M.toast({html: toastHTML})--}}
+{{--    }, 2000);--}}
+{{--        </script>--}}
+{{--    @endif--}}
+<script>
     @if(Session::has('message'))
-        <script>
-    setTimeout(function () {
-        var toastHTML = "{{ Session::get('message') }}";
-        M.toast({html: toastHTML})
-    }, 2000);
-        </script>
-    @endif
+    document.addEventListener('DOMContentLoaded', function() {
+        const message = "{{ Session::get('message') }}";
+        const type = "{{ Session::get('type', 'info') }}";
 
+        // Set different colors based on type
+        let bgColor = '';
+        switch(type) {
+            case 'success':
+                bgColor = 'green';
+                break;
+            case 'error':
+                bgColor = 'red';
+                break;
+            case 'warning':
+                bgColor = 'orange';
+                break;
+            default:
+                bgColor = 'blue';
+        }
+
+        M.toast({
+            html: message,
+            classes: bgColor,
+            displayLength: 4000
+        });
+    });
+    @endif
+</script>
 
 </body>
 </html>

@@ -16,10 +16,10 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Check if a user with a specific username or email already exists to prevent duplicates
-        if (!User::where('email', 'your.email@example.com')->exists()) {
+        if (!User::where('email', 'peteradetola@gmail.com')->exists()) {
             User::create([
                 'name' => 'Peter Adetola', // Replace with your desired name
-                'username' => 'peteradetola', // Replace with your desired username
+                'username' => 'pter', // Replace with your desired username
                 'email' => 'peteradetola@gmail.com', // Replace with your desired email
                 'password' => Hash::make('peter.com'), // Replace with your desired password
                 'email_verified_at' => Carbon::now(), // This bypasses email verification

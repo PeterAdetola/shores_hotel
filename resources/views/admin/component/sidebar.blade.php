@@ -74,8 +74,8 @@ $route = Route::current()->getName()
                           </a>
                       </li>
                       <li>
-                          <a class="{{ ($route == 'manage_rooms')? 'active' : '' }} waves-effect waves-cyan" href="{{route('manage_rooms')}}"><i class="material-icons">radio_button_unchecked</i>
-                              <span data-i18n="Home Slide">Manage Rooms</span>
+                          <a class="{{ ($route == 'room_config')? 'active' : '' }} waves-effect waves-cyan" href="{{route('room_config')}}"><i class="material-icons">radio_button_unchecked</i>
+                              <span data-i18n="Home Slide">Room Config</span>
                           </a>
                       </li>
                   </ul>

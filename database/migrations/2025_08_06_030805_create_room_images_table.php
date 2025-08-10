@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('room_facilities', function (Blueprint $table) {
-            $table->integer('position')->nullable()->after('id');
+        Schema::create('room_images', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('room_id')->constrained()->onDelete('cascade');
+            $table->string('image_path');
+            $table->boolean('is_featured')->default(false);
+            $table->timestamps();
         });
     }
 
@@ -21,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('room_facilities', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('room_images');
     }
 };

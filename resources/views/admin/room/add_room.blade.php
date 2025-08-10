@@ -40,199 +40,209 @@
                     <div class="row">
                         <div class="col s12 mb-5">
                             <div class="card">
+                                @if(session('error'))
+                                    <div class="card-alert card orange lighten-5">
+                                        <div class="card-content orange-text">
+                                            <p>{{ session('error_message') }}</p>
+                                        </div>
+                                        <button type="button" class="close orange-text" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                @endif
                                 <div class="card-content pb-0">
                                     <div class="card-header mb-2">
                                         <h4 class="card-title">{{ $pageTitle }}</h4>
                                     </div>
 
-                                    <ul class="stepper horizontal" id="horizStepper">
-                                        <li class="step active">
-                                            <div class="step-title waves-effect">Information</div>
-                                            <div class="step-content">
-                                                <div class="row">
-                                                    <div class="input-field col m6 s12">
-                                                        <select name="eventStatus" required>
-                                                            <option value="" disabled selected>Select Category</option>
-                                                            <option value="Planning">Planning</option>
-                                                            <option value="In Progress">In Progress</option>
-                                                            <option value="Completed">Completed</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="input-field col m4 s610">
-                                                        <label for="pricePerNight">Price Per Night: <span class="red-text">*</span></label>
-                                                        <input type="number" id="pricePerNight" class="validate" name="pricePerNight" value="0.00" min="0.00" max="10" required>
-                                                    </div>
-                                                    <div class="input-field col m2 s2">
-                                                        <label for="numUnit">Number of Units: <span class="red-text">*</span></label>
-                                                        <input type="number" id="numUnit" class="validate" name="pricePerNight" value="1" min="1" max="10" required>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="input-field col m6 s12">
-                                                        <label for="adultMax">Adult Maximum No. : <span id="adultValue">1</span> <span class="red-text">*</span></label><br><br>
-                                                        <span class="range-field">
-                                                            <input  id="adultMax" type="range" min="1" max="5" value="1" />
-                                                        </span>
-                                                    </div>
-
-                                                    <div class="input-field col m6 s12">
-                                                        <label for="childrenMax">Children Maximum No. : <span id="childrenValue">0</span> <span class="red-text">*</span></label><br><br>
-                                                        <span class="range-field">
-                                                            <input id="childrenMax" type="range" min="0" max="5" value="0" />
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="step-actions">
+                                    <form action="{{ route('rooms.store') }}" method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        <ul class="stepper horizontal" id="horizStepper">
+                                            <li class="step active">
+                                                <div class="step-title waves-effect">Information</div>
+                                                <div class="step-content">
                                                     <div class="row">
-                                                        <div class="col m4 s12 mb-3">
-                                                            <button class="red btn btn-reset" type="button" data-stepper-reset>
-                                                                <i class="material-icons left">clear</i>Reset
-                                                            </button>
+                                                        <div class="input-field col m6 s12">
+                                                            <select name="room_category_id" required>
+                                                                <option value="" disabled selected>Select Category</option>
+                                                                @forelse (getRoomCategories() as $category)
+                                                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                                @empty
+                                                                    <option value="" disabled>No categories available</option>
+                                                                @endforelse
+                                                            </select>
                                                         </div>
-                                                        <div class="col m4 s12 mb-3">
-                                                            <button class="btn btn-light previous-step" type="button" disabled>
-                                                                <i class="material-icons left">arrow_back</i>
-                                                                Prev
-                                                            </button>
-                                                        </div>
-                                                        <div class="col m4 s12 mb-3">
-                                                            <button class="waves-effect waves dark btn btn-primary next-step" type="button">
-                                                                Next
-                                                                <i class="material-icons right">arrow_forward</i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="step">
-                                            <div class="step-title waves-effect">Images</div>
-                                            <div class="step-content">
-                                                <div class="row">
-                                                    <div class="input-field col m6 s12">
-                                                        <input name="image" type="file" id="input-file-now-custom-2" class="dropify" data-height='200' />
-                                                        @error('image')
-                                                        <small class="errorTxt3  red-text">{{ $message }}*</small>
-                                                        @enderror
-                                                        <small class="errorTxt3  grey-text">Upload image in JPG (1144 x 1300)</small>
-                                                    </div>
-                                                    <div class="input-field col m6 s12">
-                                                        <div id="simpleList" class="preview-container"></div>
-                                                        <small class="errorTxt3  grey-text">Upload images in JPG (600 x 600)</small>
-                                                        <div class="file-field input-field ml-2">
-                                                            <div class="btn">
-                                                                <span>File</span>
-                                                                <input name="images[]" id="file-upload" accept="image/*" type="file" multiple>
-                                                            </div>
-                                                            <div class="file-path-wrapper">
-                                                                <input name="project_img_path" class="file-path validate" type="text" placeholder="Upload one or more files">
-                                                                @error('folio_img')
-                                                                <div class="chip">
-                                                                    <small class="errorTxt3 red-text">{{ $message }}*</small>
-                                                                    <i class="close material-icons">close</i>
-                                                                </div>
-                                                                @enderror
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
 
-                                                <div class="step-actions">
+                                                        <div class="input-field col m4 s610">
+                                                            <label for="pricePerNight">Price Per Night: <span class="red-text">*</span></label>
+                                                            <input type="number" id="pricePerNight" class="validate" name="price_per_night" value="0.00" min="0.00" required>
+
+                                                        </div>
+                                                        <div class="input-field col m2 s2">
+                                                            <label for="numUnit">Number of Units: <span class="red-text">*</span></label>
+                                                            <input type="number" id="numUnit" class="validate" name="num_units" value="1" min="1" max="10" required>
+                                                        </div>
+                                                    </div>
                                                     <div class="row">
-                                                        <div class="col m4 s12 mb-3">
-                                                            <button class="red btn btn-reset" type="button" data-stepper-reset>
-                                                                <i class="material-icons left">clear</i>Reset
-                                                            </button>
+                                                        <div class="input-field col m6 s12">
+                                                            <label for="adultMax">Adult Maximum No. : <span id="adultValue">1</span> <span class="red-text">*</span></label><br><br>
+                                                            <span class="range-field">
+                            <input id="adultMax" name="adult_max" type="range" min="1" max="5" value="1" />
+                        </span>
                                                         </div>
-                                                        <div class="col m4 s12 mb-3">
-                                                            <button class="btn btn-light previous-step" type="button">
-                                                                <i class="material-icons left">arrow_back</i>
-                                                                Prev
-                                                            </button>
+
+                                                        <div class="input-field col m6 s12">
+                                                            <label for="childrenMax">Children Maximum No. : <span id="childrenValue">0</span> <span class="red-text">*</span></label><br><br>
+                                                            <span class="range-field">
+                            <input id="childrenMax" name="children_max" type="range" min="0" max="5" value="0" />
+                        </span>
                                                         </div>
-                                                        <div class="col m4 s12 mb-3">
-                                                            <button class="waves-effect waves dark btn btn-primary next-step" type="button">
-                                                                Next
-                                                                <i class="material-icons right">arrow_forward</i>
-                                                            </button>
+                                                    </div>
+                                                    <div class="step-actions">
+                                                        <div class="row">
+                                                            <div class="col m4 s12 mb-3">
+                                                                <button class="red btn btn-reset" type="button" data-stepper-reset>
+                                                                    <i class="material-icons left">clear</i>Reset
+                                                                </button>
+                                                            </div>
+                                                            <div class="col m4 s12 mb-3">
+                                                                <button class="btn btn-light previous-step" type="button" disabled>
+                                                                    <i class="material-icons left">arrow_back</i>
+                                                                    Prev
+                                                                </button>
+                                                            </div>
+                                                            <div class="col m4 s12 mb-3">
+                                                                <button class="waves-effect waves dark btn btn-primary next-step" type="button">
+                                                                    Next
+                                                                    <i class="material-icons right">arrow_forward</i>
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                        <li class="step">
-                                            <div class="step-title waves-effect">Amenities</div>
-                                            <div class="step-content">
-                                                <div class="row">
-                                                    <div class="input-field col m6 s12">
-                                                        <p>Amenities</p>
-                                                        <div class="amenities-container">
-                                                            <div class="amenity-item">
-                                                                <input type="checkbox" id="staffing" name="requirements[]" value="Staffing">
-                                                                <label for="staffing">Staffing</label>
-                                                            </div>
-                                                            <div class="amenity-item">
-                                                                <input type="checkbox" id="catering" name="requirements[]" value="Catering">
-                                                                <label for="catering">Catering</label>
-                                                            </div>
-                                                            <div class="amenity-item">
-                                                                <input type="checkbox" id="wifi" name="requirements[]" value="WiFi">
-                                                                <label for="wifi">WiFi</label>
-                                                            </div>
-                                                            <div class="amenity-item">
-                                                                <input type="checkbox" id="parking" name="requirements[]" value="Parking">
-                                                                <label for="parking">Parking</label>
-                                                            </div>
-                                                            <div class="amenity-item">
-                                                                <input type="checkbox" id="pool" name="requirements[]" value="Pool">
-                                                                <label for="pool">Pool</label>
-                                                            </div>
-                                                            <div class="amenity-item">
-                                                                <input type="checkbox" id="gym" name="requirements[]" value="Gym">
-                                                                <label for="gym">Gym</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="input-field col m6 s12">
-                                                            <div class="availability-box">
-                                                                <div class="switch">
-                                                                    <label>
-                                                                        <input type="checkbox" class="hidden-checkbox" checked>
-                                                                        <span class="lever"></span>
-                                                                        <span class="availability-text">Availability</span>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
+                                            </li>
+                                            <li class="step">
+                                                <div class="step-title waves-effect">Images</div>
+                                                <div class="step-content">
+                                                    <div class="row">
+                                                        <div class="input-field col m6 s12">
+                                                            <input name="image" type="file" id="input-file-now-custom-2" class="dropify" data-height='200' />
+                                                            <small class="errorTxt3  grey-text">Upload image in JPG (1500 x 844)</small>
                                                         </div>
                                                         <div class="input-field col m6 s12">
-                                                        <textarea name="description" id="textarea2" class="materialize-textarea"></textarea>
-                                                        <label for="textarea2">Textarea</label>
+                                                            <div id="simpleList" class="preview-container"></div>
+                                                            <small class="errorTxt3  grey-text">Upload images in JPG (1500 x 844)</small>
+                                                            <div class="file-field input-field ml-2">
+                                                                <div class="btn">
+                                                                    <span>File</span>
+                                                                    <input name="images[]" id="file-upload" accept="image/*" type="file" multiple>
+                                                                </div>
+                                                                <div class="file-path-wrapper">
+                                                                    <input class="file-path validate" type="text" placeholder="Upload one or more files" readonly>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="step-actions">
+                                                        <div class="row">
+                                                            <div class="col m4 s12 mb-3">
+                                                                <button class="red btn btn-reset" type="button" data-stepper-reset>
+                                                                    <i class="material-icons left">clear</i>Reset
+                                                                </button>
+                                                            </div>
+                                                            <div class="col m4 s12 mb-3">
+                                                                <button class="btn btn-light previous-step" type="button">
+                                                                    <i class="material-icons left">arrow_back</i>
+                                                                    Prev
+                                                                </button>
+                                                            </div>
+                                                            <div class="col m4 s12 mb-3">
+                                                                <button class="waves-effect waves dark btn btn-primary next-step" type="button">
+                                                                    Next
+                                                                    <i class="material-icons right">arrow_forward</i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="step-actions">
+                                            </li>
+                                            <li class="step">
+                                                <div class="step-title waves-effect">Amenities</div>
+                                                <div class="step-content">
                                                     <div class="row">
-                                                        <div class="col m4 s12 mb-3">
-                                                            <button class="red btn btn-reset" type="button" data-stepper-reset>
-                                                                <i class="material-icons left">clear</i>Reset
-                                                            </button>
+                                                        <div class="input-field col m6 s12">
+                                                            <p>Amenities</p>
+                                                            <div class="amenities-container">
+                                                                @forelse (getFacilities() as $facility)
+                                                                    <div class="amenity-item">
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            id="facility_{{ $facility->id }}"
+                                                                            name="facilities[]"
+                                                                            value="{{ $facility->id }}">
+
+                                                                        <label for="facility_{{ $facility->id }}">
+                                                                            <span class="material-symbols-outlined">{{ $facility->icon }}</span>
+                                                                            {{ $facility->name }}
+                                                                        </label>
+                                                                    </div>
+                                                                @empty
+                                                                    <p>No facilities available</p>
+                                                                @endforelse
+                                                            </div>
                                                         </div>
-                                                        <div class="col m4 s12 mb-3">
-                                                            <button class="btn btn-light previous-step" type="button">
-                                                                <i class="material-icons left">arrow_back</i>
-                                                                Prev
-                                                            </button>
+                                                        <div class="col l6">
+                                                            <div class="input-field col s12">
+                                                                <div class="availability-box">
+                                                                    <div class="switch">
+                                                                        <label>
+                                                                            <input type="checkbox" name="availability" class="hidden-checkbox" value="1" checked>
+                                                                            <span class="lever"></span>
+                                                                            <span class="availability-text">Availability</span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="input-field col s12">
+                                                                <textarea name="description" id="textarea2" class="materialize-textarea"></textarea>
+                                                                <label for="textarea2">Textarea</label>
+                                                            </div>
                                                         </div>
-                                                        <div class="col m4 s12 mb-3">
-                                                            <button class="waves-effect waves-dark btn btn-primary" type="submit">
-                                                                Submit
-                                                            </button>
+                                                    </div>
+                                                    <div class="step-actions">
+                                                        <div class="row">
+                                                            <div class="col m4 s12 mb-3">
+                                                                <button class="red btn btn-reset" type="button" data-stepper-reset>
+                                                                    <i class="material-icons left">clear</i>Reset
+                                                                </button>
+                                                            </div>
+                                                            <div class="col m4 s12 mb-3">
+                                                                <button class="btn btn-light previous-step" type="button">
+                                                                    <i class="material-icons left">arrow_back</i>
+                                                                    Prev
+                                                                </button>
+                                                            </div>
+                                                            <div class="col m4 s12 mb-3">
+                                                                <button id="addRoomBtn" class="waves-effect waves-dark btn btn-primary" type="submit">
+                                                                    Submit
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                    </ul>
+                                            </li>
+                                        </ul>
+                                    </form>
+
+
+                                    <div class="row">
+                                        <div class="progress collection">
+                                            <div id="add_room-preloader" class="indeterminate"  style="display:none; border:2px #ebebeb solid"></div>
+                                        </div>
+                                    </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -243,9 +253,8 @@
         </div>
     </div>
     <!-- END: Page Main-->
-
-
 @endsection
+
 @section('vendor_scripts')
     <script src="{{ asset('admin/assets/vendors/materialize-stepper/materialize-stepper.min.js') }}"></script>
     <script src="{{ asset('admin/assets/vendors/dropify/js/dropify.min.js') }}"></script>
@@ -254,7 +263,11 @@
     <script src="{{ asset('admin/assets/js/scripts/form-wizard.js') }}"></script>
     <script src="{{ asset('admin/assets/js/scripts/form-file-uploads.js') }}"></script>
     <script src="{{ asset('admin/assets/js/custom/stepper-form.js') }}"></script>
-   <script>
-   </script>
 
+    <script>
+        document.getElementById("addRoomBtn").addEventListener("click", function() {
+            var preloader = document.getElementById("add_room-preloader");
+            preloader.style.display = "block";
+        });
+    </script>
 @endsection

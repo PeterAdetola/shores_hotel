@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\RoomFacility;
+use App\Models\Facility;
 
 class FacilityController extends Controller
 {
@@ -15,19 +15,21 @@ class FacilityController extends Controller
             'icon' => 'nullable|string|max:255'
         ]);
 
-        RoomFacility::create($request->only('name', 'icon'));
+        $maxPosition = Facility::max('position') ?? 0;
 
-        $notification = array(
-            'message' => 'Facility added.',
-        );
+        Facility::create([
+            'name' => $request->name,
+            'icon' => $request->icon,
+            'position' => $maxPosition + 1,
+        ]);
 
-        return redirect()->back()->with($notification);
+        return redirect_with_notification('Facility added.');
     }
 
     // Show edit form
     public function edit($id)
     {
-        $facility = RoomFacility::findOrFail($id);
+        $facility = Facility::findOrFail($id);
         return view('admin.facilities.edit', compact('facility'));
     }
 
@@ -39,21 +41,17 @@ class FacilityController extends Controller
             'icon' => 'nullable|string|max:255'
         ]);
 
-        $facility = RoomFacility::findOrFail($id);
+        $facility = Facility::findOrFail($id);
         $facility->update($request->only('name', 'icon'));
 
-        $notification = array(
-            'message' => 'Facility updated.',
-        );
-
-        return redirect()->back()->with($notification);
+        return redirect_with_notification('Facility updated.');
     }
 
     // Reorder facility
     public function reorder(Request $request)
     {
         foreach ($request->order as $item) {
-            \App\Models\RoomFacility::where('id', $item['id'])
+            \App\Models\Facility::where('id', $item['id'])
                 ->update(['position' => $item['position']]);
         }
 
@@ -64,13 +62,16 @@ class FacilityController extends Controller
     // Delete facility
     public function destroy($id)
     {
-        $facility = RoomFacility::findOrFail($id);
+        $facility = Facility::findOrFail($id);
+
+//        if ($facility->rooms()->count() > 0) {
+
+//        return redirect_with_notification("Facility in use - can't delete.");
+//        }
+
         $facility->delete();
 
-        $notification = array(
-            'message' => 'Facility deleted.',
-        );
+        return redirect_with_notification('Facility updated.');
 
-        return redirect()->back()->with($notification);
     }
 }

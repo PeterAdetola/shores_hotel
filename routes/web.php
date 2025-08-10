@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoomCategoryController;
 use App\Http\Controllers\FacilityController;
+use App\Http\Controllers\RoomController;
 
 Route::get('/', function () {
     return view('index.index');
@@ -40,9 +41,16 @@ Route::middleware('auth')->group(function () {
 Route::get('/add_room', function () {
     return view('/admin/room/add_room');
 })->name('add_room');
-Route::get('/manage_rooms', function () {
-    return view('/admin/room/manage_rooms');
-})->name('manage_rooms');
+Route::get('/room_config', function () {
+    return view('/admin/room/room_config');
+})->name('room_config');
+
+
+// --------------| Room Routes |----------------------------------------
+
+Route::get('/rooms/create', [RoomController::class, 'create'])->name('rooms.create');
+Route::post('/rooms', [RoomController::class, 'store'])->name('rooms.store');
+Route::get('/rooms', [RoomController::class, 'index'])->name('rooms.index');
 
 // --------------| Room Category Routes |----------------------------------------
 
@@ -61,6 +69,8 @@ Route::prefix('facilities')->group(function () {
     Route::put('/{id}', [FacilityController::class, 'update'])->name('facilities.update');
     Route::delete('/{id}', [FacilityController::class, 'destroy'])->name('facilities.destroy');
     Route::post('/facilities/reorder', [FacilityController::class, 'reorder'])->name('facilities.reorder');
+    Route::delete('/facilities/{id}', [FacilityController::class, 'destroy'])->name('facilities.destroy');
+
 
 });
 

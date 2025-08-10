@@ -11,9 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('room_facilities', function (Blueprint $table) {
-            $table->integer('position')->nullable()->after('id');
-        });
+        Schema::rename('room_facilities', 'facilities');
     }
 
     /**
@@ -21,8 +19,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('room_facilities', function (Blueprint $table) {
-            //
-        });
+        Schema::rename('facilities', 'room_facilities');
     }
 };

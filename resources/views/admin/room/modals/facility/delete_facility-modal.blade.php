@@ -14,7 +14,7 @@
             <div class="col s12" id="account">
                 <!-- users delete media object ends -->
                 <!-- users delete account form start -->
-                <form method="POST" action="{{ route('room-categories.destroy', $facility->id) }}">
+                <form method="POST" action="{{ route('facilities.destroy', $facility->id) }}">
                     @csrf
                     @method('DELETE')
 

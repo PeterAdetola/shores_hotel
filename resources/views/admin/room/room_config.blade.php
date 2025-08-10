@@ -5,7 +5,6 @@
     @endphp
     @section('headScript')
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-{{--        <script src="{{ asset('admin/assets/vendors/sortable/sortable.js') }}"></script>--}}
     @endsection
 
 
@@ -166,13 +165,13 @@
                                                         <span
                                                             class="chip pink lighten-5 pink-text text-accent-2">Edit</span>
                                                     </a>
-                                                    <a href="#delete_facility-modal{{ $facility->id }}"
-                                                       class="modal-trigger action-delete">
+                                                         <a href="#delete_facility-modal{{ $facility->id }}"
+                                                            class="modal-trigger action-delete">
                                                         <span class="material-symbols-outlined grey-text">delete</span>
                                                     </a>
+
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    <a href="#!"
-                                                       class="action-delete">
+                                                    <a href="javascript:void(0)" class="drag_handle">
                                                         <span class="material-symbols-outlined grey-text" style="cursor: grab;">drag_handle</span>
                                                     </a>
                                                 </div>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -202,9 +201,6 @@
                                 </table>
                             </div>
                         </div>
-
-                        {{--                    </div>--}}
-                        <!-- users view ends -->
                     </div>
                 </div>
             </div>
@@ -214,7 +210,7 @@
 
             document.addEventListener('DOMContentLoaded', function() {
                 let sortable = new Sortable(document.getElementById('sortable'), {
-                    handle: '.action-delete', // or whatever drag handle you want
+                    handle: '.drag_handle', // or whatever drag handle you want
                     animation: 150,
                     onEnd: function () {
                         let order = [];
@@ -235,7 +231,4 @@
             });
 
         </script>
-@endsection
-@section('scripts')
-{{--        <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>--}}
 @endsection

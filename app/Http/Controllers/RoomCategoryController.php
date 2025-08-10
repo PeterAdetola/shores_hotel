@@ -13,10 +13,10 @@ class RoomCategoryController extends Controller
 //        return view('admin.room.manage_rooms', compact('categories'));
 //    }
 
-    public function create()
-    {
-        return view('room-categories.create');
-    }
+//    public function create()
+//    {
+//        return view('room-categories.create');
+//    }
 
     public function store(Request $request)
     {
@@ -28,11 +28,7 @@ class RoomCategoryController extends Controller
             'name' => $request->name,
         ]);
 
-        $notification = array(
-            'message' => 'Room category added',
-        );
-
-        return redirect()->back()->with($notification);
+        return redirect_with_notification('Room category added.', 'success');
     }
 //
 //    public function edit($id)
@@ -51,11 +47,7 @@ class RoomCategoryController extends Controller
         $category->name = $request->name;
         $category->save();
 
-        $notification = array(
-            'message' => 'Category updated',
-        );
-
-        return redirect()->back()->with($notification);
+        return redirect_with_notification('Category updated.', 'success');
     }
 
     public function destroy($id)
@@ -63,22 +55,19 @@ class RoomCategoryController extends Controller
         $category = RoomCategory::findOrFail($id);
 
         // Check if the category has associated rooms
-//        if ($category->rooms()->count() > 0) {
-//            $notification = array(
-//                'message' => "Category in use - can't delete.",
-//                'alert-type' => 'error'
-//            );
-//
-//            return redirect()->back()->with($notification);
-//        }
+        if ($category->rooms()->count() > 0) {
+            $notification = array(
+                'message' => "Category in use - can't delete.",
+                'alert-type' => 'error'
+            );
+
+        return redirect_with_notification("Category in use - can't delete.", 'error');
+
+        }
 
         $category->delete();
 
-        $notification = array(
-            'message' => 'Category deleted.',
-        );
-
-        return redirect()->back()->with($notification);
+        return redirect_with_notification('Category deleted.', 'success');
     }
 
 

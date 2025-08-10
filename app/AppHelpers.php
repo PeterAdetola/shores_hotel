@@ -1,7 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Auth;
 use App\Models\RoomCategory;
-use App\Models\RoomFacility;
+use App\Models\Facility;
 
 
 // Get user's id
@@ -63,6 +63,26 @@ if (!function_exists('getRoomCategories')) {
 if (!function_exists('getFacilities')) {
     function getFacilities()
     {
-        return \App\Models\RoomFacility::orderBy('position')->get();
+        return Facility::orderBy('position')->get();
+    }
+}
+
+
+if (!function_exists('redirect_with_notification')) {
+
+    function redirect_with_notification(
+        string $message,
+        string $type = 'success',
+        array $additional = [],
+        string $route = null
+    ) {
+        $notification = array_merge([
+            'message' => $message,
+            'type' => $type
+        ], $additional);
+
+        return $route
+            ? redirect()->route($route)->with($notification)
+            : redirect()->back()->with($notification);
     }
 }
