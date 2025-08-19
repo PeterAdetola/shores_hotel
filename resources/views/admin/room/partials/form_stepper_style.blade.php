@@ -76,7 +76,9 @@
         position: relative;
         z-index: 1;
     }
-
+/*.stepper select {*/
+/*    text-align: left !important;*/
+/*}*/
     .stepper .step-actions {
         position: relative;
         z-index: 2;
@@ -180,6 +182,12 @@
         opacity: 0;
         width: 0;
         height: 0;
+    }
+    #select-options-5de765dc-44e0-4ba5-8411-5d9c3333b193 li > span {
+        text-align: left !important;
+    }
+    ul.dropdown-content li > span {
+        text-align: left !important;
     }
 
     /* Materialize switch adjustments */

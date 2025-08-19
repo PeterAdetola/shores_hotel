@@ -8,9 +8,9 @@ class RoomImage extends Model
 {
     protected $fillable = ['room_id', 'image_path', 'is_featured'];
 
-    public function room()
-    {
-        return $this->belongsTo(Room::class);
-    }
+//    public function room()
+//    {
+//        return $this->belongsTo(Room::class);
+//    }
 }
 

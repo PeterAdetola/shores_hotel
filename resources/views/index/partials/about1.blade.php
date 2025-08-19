@@ -11,23 +11,23 @@
                         <li class="mil-fade-up">
                             <div class="mil-item-head">
                                 <span>01.</span>
-                                <h4>Ocean Oasis</h4>
+                                <h4>Shores Hotel</h4>
                             </div>
-                            <p>Accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae.</p>
+                            <p>Luxury accommodations, exotic dining, and a rooftop lounge for a truly memorable, relaxing escape.</p>
                         </li>
                         <li class="mil-fade-up">
                             <div class="mil-item-head">
                                 <span>02.</span>
-                                <h4>Beach Haven</h4>
+                                <h4>Shores Apartments</h4>
                             </div>
-                            <p>Doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae.</p>
+                            <p>Your home away from home, offering luxury apartments with a kitchen, pool access, and rooftop views.</p>
                         </li>
                         <li class="mil-fade-up">
                             <div class="mil-item-head">
                                 <span>03.</span>
-                                <h4>Sunset Bliss</h4>
+                                <h4>Citibar</h4>
                             </div>
-                            <p>Laudantium, totam accusantium doloremque rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto.</p>
+                            <p>The ultimate entertainment hub with a rooftop terrace, live music, karaoke, and games for a vibrant nightlife experience.</p>
                         </li>
                     </ul>
                 </div>

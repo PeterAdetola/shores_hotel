@@ -28,7 +28,7 @@ class RoomCategoryController extends Controller
             'name' => $request->name,
         ]);
 
-        return redirect_with_notification('Room category added.', 'success');
+        return notification('Room category added.', 'success');
     }
 //
 //    public function edit($id)
@@ -47,7 +47,7 @@ class RoomCategoryController extends Controller
         $category->name = $request->name;
         $category->save();
 
-        return redirect_with_notification('Category updated.', 'success');
+        return notification('Category updated.', 'success');
     }
 
     public function destroy($id)
@@ -61,13 +61,13 @@ class RoomCategoryController extends Controller
                 'alert-type' => 'error'
             );
 
-        return redirect_with_notification("Category in use - can't delete.", 'error');
+        return notification("Category in use - can't delete.", 'error');
 
         }
 
         $category->delete();
 
-        return redirect_with_notification('Category deleted.', 'success');
+        return notification('Category deleted.', 'success');
     }
 
 

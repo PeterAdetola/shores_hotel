@@ -4,12 +4,13 @@
         $pageTitle = 'Add Room';
     @endphp
     @section('vendor_styles')
-        <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/vendors/materialize-stepper/materialize-stepper.min.css') }}">
+        <link rel="stylesheet" type="text/css"
+              href="{{ asset('admin/assets/vendors/materialize-stepper/materialize-stepper.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/vendors/dropify/css/dropify.min.css') }}">
     @endsection
     @section('styles')
         <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/form-wizard.css') }}">
-        @include('admin.room.form_stepper_style')
+        @include('admin.room.partials.form_stepper_style')
     @endsection
     <!-- BEGIN: Page Main-->
     <div id="main">
@@ -33,7 +34,8 @@
 
                     </div>
                 </div>
-            </div><br>
+            </div>
+            <br>
             <div class="col s12">
                 <div class="container">
                     <!-- page content starts -->
@@ -45,7 +47,8 @@
                                         <div class="card-content orange-text">
                                             <p>{{ session('error_message') }}</p>
                                         </div>
-                                        <button type="button" class="close orange-text" data-dismiss="alert" aria-label="Close">
+                                        <button type="button" class="close orange-text" data-dismiss="alert"
+                                                aria-label="Close">
                                             <span aria-hidden="true">×</span>
                                         </button>
                                     </div>
@@ -55,7 +58,8 @@
                                         <h4 class="card-title">{{ $pageTitle }}</h4>
                                     </div>
 
-                                    <form action="{{ route('rooms.store') }}" method="POST" enctype="multipart/form-data">
+                                    <form action="{{ route('rooms.store') }}" method="POST"
+                                          enctype="multipart/form-data"  onsubmit="disableSubmit(this)">
                                         @csrf
                                         <ul class="stepper horizontal" id="horizStepper">
                                             <li class="step active">
@@ -64,55 +68,71 @@
                                                     <div class="row">
                                                         <div class="input-field col m6 s12">
                                                             <select name="room_category_id" required>
-                                                                <option value="" disabled selected>Select Category</option>
+                                                                <option value="" disabled selected>Select Category
+                                                                </option>
                                                                 @forelse (getRoomCategories() as $category)
-                                                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                                    <option
+                                                                        value="{{ $category->id }}">{{ $category->name }}</option>
                                                                 @empty
-                                                                    <option value="" disabled>No categories available</option>
+                                                                    <option value="" disabled>No categories available
+                                                                    </option>
                                                                 @endforelse
                                                             </select>
                                                         </div>
 
                                                         <div class="input-field col m4 s610">
-                                                            <label for="pricePerNight">Price Per Night: <span class="red-text">*</span></label>
-                                                            <input type="number" id="pricePerNight" class="validate" name="price_per_night" value="0.00" min="0.00" required>
+                                                            <label for="pricePerNight">Price Per Night: <span
+                                                                    class="red-text">*</span></label>
+                                                            <input type="number" id="pricePerNight" class="validate"
+                                                                   name="price_per_night" value="0.00" min="0.00"
+                                                                   required>
 
                                                         </div>
                                                         <div class="input-field col m2 s2">
-                                                            <label for="numUnit">Number of Units: <span class="red-text">*</span></label>
-                                                            <input type="number" id="numUnit" class="validate" name="num_units" value="1" min="1" max="10" required>
+                                                            <label for="numUnit">Number of Units: <span
+                                                                    class="red-text">*</span></label>
+                                                            <input type="number" id="numUnit" class="validate"
+                                                                   name="num_units" value="1" min="1" max="10" required>
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="input-field col m6 s12">
-                                                            <label for="adultMax">Adult Maximum No. : <span id="adultValue">1</span> <span class="red-text">*</span></label><br><br>
+                                                            <label for="adultMax">Adult Maximum No. : <span
+                                                                    id="adultValue">1</span> <span
+                                                                    class="red-text">*</span></label><br><br>
                                                             <span class="range-field">
-                            <input id="adultMax" name="adult_max" type="range" min="1" max="5" value="1" />
+                            <input id="adultMax" name="adult_max" type="range" min="1" max="5" value="1"/>
                         </span>
                                                         </div>
 
                                                         <div class="input-field col m6 s12">
-                                                            <label for="childrenMax">Children Maximum No. : <span id="childrenValue">0</span> <span class="red-text">*</span></label><br><br>
+                                                            <label for="childrenMax">Children Maximum No. : <span
+                                                                    id="childrenValue">0</span> <span
+                                                                    class="red-text">*</span></label><br><br>
                                                             <span class="range-field">
-                            <input id="childrenMax" name="children_max" type="range" min="0" max="5" value="0" />
+                            <input id="childrenMax" name="children_max" type="range" min="0" max="5" value="0"/>
                         </span>
                                                         </div>
                                                     </div>
                                                     <div class="step-actions">
                                                         <div class="row">
                                                             <div class="col m4 s12 mb-3">
-                                                                <button class="red btn btn-reset" type="button" data-stepper-reset>
+                                                                <button class="red btn btn-reset" type="button"
+                                                                        data-stepper-reset>
                                                                     <i class="material-icons left">clear</i>Reset
                                                                 </button>
                                                             </div>
                                                             <div class="col m4 s12 mb-3">
-                                                                <button class="btn btn-light previous-step" type="button" disabled>
+                                                                <button class="btn btn-light previous-step"
+                                                                        type="button" disabled>
                                                                     <i class="material-icons left">arrow_back</i>
                                                                     Prev
                                                                 </button>
                                                             </div>
                                                             <div class="col m4 s12 mb-3">
-                                                                <button class="waves-effect waves dark btn btn-primary next-step" type="button">
+                                                                <button
+                                                                    class="waves-effect waves dark btn btn-primary next-step"
+                                                                    type="button">
                                                                     Next
                                                                     <i class="material-icons right">arrow_forward</i>
                                                                 </button>
@@ -126,19 +146,25 @@
                                                 <div class="step-content">
                                                     <div class="row">
                                                         <div class="input-field col m6 s12">
-                                                            <input name="image" type="file" id="input-file-now-custom-2" class="dropify" data-height='200' />
-                                                            <small class="errorTxt3  grey-text">Upload image in JPG (1500 x 844)</small>
+                                                            <input name="image" type="file" id="input-file-now-custom-2"
+                                                                   class="dropify" data-height='200'/>
+                                                            <small class="errorTxt3  grey-text">Upload image in JPG
+                                                                (1500 x 844)</small>
                                                         </div>
                                                         <div class="input-field col m6 s12">
                                                             <div id="simpleList" class="preview-container"></div>
-                                                            <small class="errorTxt3  grey-text">Upload images in JPG (1500 x 844)</small>
+                                                            <small class="errorTxt3  grey-text">Upload images in JPG
+                                                                (1500 x 844)</small>
                                                             <div class="file-field input-field ml-2">
                                                                 <div class="btn">
                                                                     <span>File</span>
-                                                                    <input name="images[]" id="file-upload" accept="image/*" type="file" multiple>
+                                                                    <input name="images[]" id="file-upload"
+                                                                           accept="image/*" type="file" multiple>
                                                                 </div>
                                                                 <div class="file-path-wrapper">
-                                                                    <input class="file-path validate" type="text" placeholder="Upload one or more files" readonly>
+                                                                    <input class="file-path validate" type="text"
+                                                                           placeholder="Upload one or more files"
+                                                                           readonly>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -147,18 +173,22 @@
                                                     <div class="step-actions">
                                                         <div class="row">
                                                             <div class="col m4 s12 mb-3">
-                                                                <button class="red btn btn-reset" type="button" data-stepper-reset>
+                                                                <button class="red btn btn-reset" type="button"
+                                                                        data-stepper-reset>
                                                                     <i class="material-icons left">clear</i>Reset
                                                                 </button>
                                                             </div>
                                                             <div class="col m4 s12 mb-3">
-                                                                <button class="btn btn-light previous-step" type="button">
+                                                                <button class="btn btn-light previous-step"
+                                                                        type="button">
                                                                     <i class="material-icons left">arrow_back</i>
                                                                     Prev
                                                                 </button>
                                                             </div>
                                                             <div class="col m4 s12 mb-3">
-                                                                <button class="waves-effect waves dark btn btn-primary next-step" type="button">
+                                                                <button
+                                                                    class="waves-effect waves dark btn btn-primary next-step"
+                                                                    type="button">
                                                                     Next
                                                                     <i class="material-icons right">arrow_forward</i>
                                                                 </button>
@@ -183,7 +213,8 @@
                                                                             value="{{ $facility->id }}">
 
                                                                         <label for="facility_{{ $facility->id }}">
-                                                                            <span class="material-symbols-outlined">{{ $facility->icon }}</span>
+                                                                            <span
+                                                                                class="material-symbols-outlined">{{ $facility->icon }}</span>
                                                                             {{ $facility->name }}
                                                                         </label>
                                                                     </div>
@@ -197,15 +228,19 @@
                                                                 <div class="availability-box">
                                                                     <div class="switch">
                                                                         <label>
-                                                                            <input type="checkbox" name="availability" class="hidden-checkbox" value="1" checked>
+                                                                            <input type="checkbox" name="availability"
+                                                                                   class="hidden-checkbox" value="1"
+                                                                                   checked>
                                                                             <span class="lever"></span>
-                                                                            <span class="availability-text">Availability</span>
+                                                                            <span
+                                                                                class="availability-text">Availability</span>
                                                                         </label>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="input-field col s12">
-                                                                <textarea name="description" id="textarea2" class="materialize-textarea"></textarea>
+                                                                <textarea name="description" id="textarea2"
+                                                                          class="materialize-textarea"></textarea>
                                                                 <label for="textarea2">Textarea</label>
                                                             </div>
                                                         </div>
@@ -213,18 +248,22 @@
                                                     <div class="step-actions">
                                                         <div class="row">
                                                             <div class="col m4 s12 mb-3">
-                                                                <button class="red btn btn-reset" type="button" data-stepper-reset>
+                                                                <button class="red btn btn-reset" type="button"
+                                                                        data-stepper-reset>
                                                                     <i class="material-icons left">clear</i>Reset
                                                                 </button>
                                                             </div>
                                                             <div class="col m4 s12 mb-3">
-                                                                <button class="btn btn-light previous-step" type="button">
+                                                                <button class="btn btn-light previous-step"
+                                                                        type="button">
                                                                     <i class="material-icons left">arrow_back</i>
                                                                     Prev
                                                                 </button>
                                                             </div>
                                                             <div class="col m4 s12 mb-3">
-                                                                <button id="addRoomBtn" class="waves-effect waves-dark btn btn-primary" type="submit">
+                                                                <button id="addRoomBtn"
+                                                                        class="waves-effect waves-dark btn btn-primary"
+                                                                        type="submit">
                                                                     Submit
                                                                 </button>
                                                             </div>
@@ -238,7 +277,8 @@
 
                                     <div class="row">
                                         <div class="progress collection">
-                                            <div id="add_room-preloader" class="indeterminate"  style="display:none; border:2px #ebebeb solid"></div>
+                                            <div id="add_room-preloader" class="indeterminate"
+                                                 style="display:none; border:2px #ebebeb solid"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -265,9 +305,16 @@
     <script src="{{ asset('admin/assets/js/custom/stepper-form.js') }}"></script>
 
     <script>
-        document.getElementById("addRoomBtn").addEventListener("click", function() {
+        document.getElementById("addRoomBtn").addEventListener("click", function () {
             var preloader = document.getElementById("add_room-preloader");
             preloader.style.display = "block";
         });
+
+        function disableSubmit(form) {
+            const button = form.querySelector('button[type="submit"]');
+            button.disabled = true;
+            button.innerText = 'Submitting...'; // Optional
+            return true; // Continue form submission
+        }
     </script>
 @endsection

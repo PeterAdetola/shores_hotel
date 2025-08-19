@@ -112,6 +112,51 @@
 {{--        </script>--}}
 {{--    @endif--}}
 <script>
+    // Global AJAX notification handler
+    function handleAjaxResponse(response) {
+        if (response && response.message) {
+            const type = response.type || 'info';
+            const classes = {
+                'success': 'green',
+                'error': 'red',
+                'warning': 'orange',
+                'info': 'blue'
+            }[type] || 'blue';
+
+            M.toast({
+                html: response.message,
+                classes: classes,
+                displayLength: 3000
+            });
+        }
+    }
+
+    // For jQuery AJAX
+    $(document).ajaxComplete(function(event, xhr, settings) {
+        try {
+            if (xhr.responseJSON) {
+                handleAjaxResponse(xhr.responseJSON);
+            }
+        } catch (e) {
+            console.error('AJAX response error:', e);
+        }
+    });
+
+    // For Fetch API
+    const originalFetch = window.fetch;
+    window.fetch = async function(...args) {
+        const response = await originalFetch(...args);
+        try {
+            const data = await response.clone().json();
+            handleAjaxResponse(data);
+        } catch (e) {
+            // Not JSON or parsing failed
+        }
+        return response;
+    };
+{{--</script>--}}
+
+{{--<script>--}}
     @if(Session::has('message'))
     document.addEventListener('DOMContentLoaded', function() {
         const message = "{{ Session::get('message') }}";
