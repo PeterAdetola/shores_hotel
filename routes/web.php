@@ -2,22 +2,42 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoomCategoryController;
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\CitibarController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\GetLodgedController;
 
-Route::get('/', function () {
-    return view('index.index');
-});
-Route::get('/getlodged', function () {
-    return view('getlodged');
-})->name('getlodged');
+
+
+//Route::get('/', function () {
+//    return view('index.index');
+//});
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/citibar', [CitibarController::class, 'index'])->name('citibar');
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+//Route::get('/getlodged', [GetLodgedController::class, 'getlodged'])->name('getlodged');
+//Route::get('/rooms/filter', [GetLodgedController::class, 'filter'])->name('rooms.filter');
+Route::get('/getlodged', [GetLodgedController::class, 'index'])->name('getlodged');
+Route::get('/getlodged/filter', [GetLodgedController::class, 'filter'])->name('getlodged.filter');
+//Route::get('/contact', function () {
+//    return view('contact');
+//})->name('contact');
+//Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/citibar', [App\Http\Controllers\CitibarController::class, 'index'])->name('citibar');
+
+//Route::get('/getlodged', function () {
+//    return view('getlodged');
+//})->name('getlodged');
 Route::get('/typesOfRoom', function () {
     return view('typesOfRoom');
 })->name('typesOfRoom');
 Route::get('/typesOfApartment', function () {
     return view('typesOfApartment');
 })->name('typesOfApartment');
+
 Route::get('/chosen_lodge', function () {
     return view('chosen_lodge');
 })->name('chosen_lodge');

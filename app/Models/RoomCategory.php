@@ -7,7 +7,7 @@ use App\Models\Room;
 
 class RoomCategory extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'type'];
 
     public function rooms()
     {

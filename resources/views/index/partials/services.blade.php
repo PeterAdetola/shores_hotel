@@ -6,7 +6,7 @@
         </div>
         <div class="row mil-mb-40">
             <div class="col-md-6 col-xl-4">
-                <a href="service.html" class="mil-service-card mil-mb-40-adapt mil-fade-up">
+                <a href="{{ route('getlodged') }}" class="mil-service-card mil-mb-40-adapt mil-fade-up">
                     <div class="mil-img-frame">
                         <img src="{{ asset('img/services/1.jpg') }}" alt="img">
                     </div>
@@ -14,7 +14,7 @@
                 </a>
             </div>
             <div class="col-md-6 col-xl-4">
-                <a href="service.html" class="mil-service-card mil-offset mil-mb-40-adapt mil-fade-up">
+                <a href="{{ route('getlodged') }}" class="mil-service-card mil-offset mil-mb-40-adapt mil-fade-up">
                     <div class="mil-img-frame">
                         <img src="{{ asset('img/services/2.jpg') }}" alt="img">
                     </div>
@@ -22,7 +22,7 @@
                 </a>
             </div>
             <div class="col-md-6 col-xl-4">
-                <a href="service.html" class="mil-service-card mil-mb-40-adapt mil-fade-up">
+                <a href="{{ route('citibar') }}" class="mil-service-card mil-mb-40-adapt mil-fade-up">
                     <div class="mil-img-frame">
                         <img src="{{ asset('img/services/3.jpg') }}" alt="img">
                     </div>
@@ -32,7 +32,7 @@
         </div>
         <div class="row justify-content-between">
             <div class="col-lg-7">
-                <p class="mil-fade-up">Accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo.</p>
+                <p class="mil-fade-up">Shores Hotel offers a complete hospitality experience: a luxury hotel, residential apartments, and an exciting bar for all your needs.</p>
             </div>
             <div class="col-lg-5">
                 <div class="mil-desctop-right mil-fade-up">

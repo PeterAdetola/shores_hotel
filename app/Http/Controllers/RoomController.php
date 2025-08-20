@@ -227,7 +227,6 @@ class RoomController extends Controller
 
             DB::commit();
             return notification('Room created.','success');
-
         } catch (\Exception $e) {
             DB::rollBack();
             return notification('Error creating room.','error',['error_message' => $e->getMessage()]);
@@ -273,7 +272,7 @@ class RoomController extends Controller
             $room->facilities()->sync($validated['facilities'] ?? []);
 
             if ($request->hasFile('image')) {
-                $oldFeatured = $room->images()->where('is_featured', true)->first();
+                $oldFeatured = $room->galleryImages()->where('is_featured', true)->first();
                 if ($oldFeatured) {
                     Storage::disk('public')->delete($oldFeatured->image_path);
                     $oldFeatured->delete();

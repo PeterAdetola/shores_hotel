@@ -5,8 +5,8 @@
             <div class="col-xl-5 mil-mb-100">
 
                 <div class="mil-text-frame">
-                    <div class="mil-suptitle mil-mb-20 mil-fade-up">About us</div>
-                    <h2 class="mil-mb-60 mil-fade-up grey-text">Why more than a million visitors chose us</h2>
+                    <div class="mil-suptitle mil-mb-20 mil-fade-up">{{ $aboutContent1['suptitle'] }}</div>
+                    <h2 class="mil-mb-60 mil-fade-up grey-text">{{ $aboutContent1['title'] }}</h2>
                     <ul class="mil-about-list">
                         <li class="mil-fade-up">
                             <div class="mil-item-head">
