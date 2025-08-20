@@ -1,7 +1,7 @@
 @extends('admin.admin_master')
 @section('admin')
     @php
-        $pageTitle = 'Manage Rooms';
+        $pageTitle = 'Room Config';
     @endphp
     @section('headScript')
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
@@ -60,16 +60,13 @@
                                 </li>
                             </ol>
                         </div>
-
-                        <!-- Something is removed here -->
-
                     </div>
                 </div>
             </div>
             <br>
             <div class="col s12">
                 <div class="container">
-                    <!-- users view start -->
+                    <!-- Accommodation Categories start -->
                     <div class="row">
                         <div class="col s12 m12 l7">
                             <div class="card subscriber-list-card">
@@ -127,8 +124,8 @@
                         </div>
 
                     </div>
-
-
+                    <!-- Accommodation Categories ends -->
+                    <!-- Facility List start -->
                     <div class="row">
                         <div class="col s12 m12 l7 mb-10">
                             <div class="card subscriber-list-card">
@@ -154,7 +151,7 @@
                                     </thead>
                                     <tbody id="sortable">
                                     @forelse (getFacilities() as $facility)
-                                        <tr class="hoverable"  data-id="{{ $facility->id }}">
+                                        <tr class="hoverable z-depth-1"  data-id="{{ $facility->id }}">
                                             <td>&nbsp;&nbsp;&nbsp;&nbsp;{{ $facility->name }}</td>
                                             <td>&nbsp;&nbsp;<span
                                                     class="material-symbols-outlined">{{ $facility->icon }}</span></td>
@@ -172,7 +169,7 @@
 
                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                     <a href="javascript:void(0)" class="drag_handle">
-                                                        <span class="material-symbols-outlined grey-text" style="cursor: grab;">drag_handle</span>
+                                                        <span class="material-symbols-outlined grey-text" style="cursor: grab;">drag_indicator</span>
                                                     </a>
                                                 </div>&nbsp;&nbsp;&nbsp;&nbsp;
                                             </td>
@@ -202,6 +199,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Facility List end -->
                 </div>
             </div>
         </div>

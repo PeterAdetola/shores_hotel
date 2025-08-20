@@ -12,13 +12,10 @@ $route = Route::current()->getName()
           <img style="margin-top: -8px; height: 1.3em;" class="show-on-medium-and-down hide-on-med-and-up" src="{{ asset('admin/assets/images/logo/pacmediac_logo.png') }}" alt="Pacmedia logo"/><span class="logo-text hide-on-med-and-down" style="padding-bottom:20px"><img src="{{ asset('admin/assets/images/logo/logo-text.png') }}"  style="height: 1.2em;" /></span>
         </a>
 
-
-<!--
-          <a class="brand-logo darken-1" href="{{route('dashboard')}}">
-          <img style="padding-bottom: 0.2em; height: 1.3em;" class="hide-on-med-and-down" src="{{-- asset('admin/assets/images/logo/recordia_bg_logo.png') --}}" alt="recordia logo"/>
-          <img style="margin-top: -8px; height: 1.3em;" class="show-on-medium-and-down hide-on-med-and-up" src="{{-- asset('admin/assets/images/logo/recordia_bg_logo.png') --}}" alt="recordia logo"/><span class="logo-text hide-on-med-and-down"><img src="{{-- asset('admin/assets/images/logo/recordia_text.png') --}}"  style="height: 1.5em;" /></span>
-        </a>
--->
+{{--          <a class="brand-logo darken-1" href="{{route('dashboard')}}">--}}
+{{--          <img style="padding-bottom: 0.2em; height: 1.3em;" class="hide-on-med-and-down" src="--}}{{-- asset('admin/assets/images/logo/recordia_bg_logo.png') --}}{{--" alt="recordia logo"/>--}}
+{{--          <img style="margin-top: -8px; height: 1.3em;" class="show-on-medium-and-down hide-on-med-and-up" src="--}}{{-- asset('admin/assets/images/logo/recordia_bg_logo.png') --}}{{--" alt="recordia logo"/><span class="logo-text hide-on-med-and-down"><img src="--}}{{-- asset('admin/assets/images/logo/recordia_text.png') --}}{{--"  style="height: 1.5em;" /></span>--}}
+{{--        </a>--}}
 
         <a class="navbar-toggler" href="#">
           <i class="material-icons">radio_button_checked</i>
@@ -27,7 +24,7 @@ $route = Route::current()->getName()
       </div>
       <ul class="sidenav sidenav-collapsible leftside-navigation collapsible sidenav-fixed menu-shadow" id="slide-out" data-menu="menu-navigation" data-collapsible="menu-accordion">
 
-        <li class="active bold"><a class="{{ ($route == 'dashboard')? 'active' : '' }} waves-effect waves-cyan " href="{{ route('dashboard') }}"><i class="material-icons">dashboard</i><span class="menu-title" data-i18n="Dashboard">Dashboard</span></a>
+        <li class="active bold"><a class="{{ ($route == 'dashboard')? 'active' : '' }} waves-effect waves-cyan " href="{{ route('dashboard') }}"><i class="material-icons"><span class="material-symbols-outlined">dashboard</span></i><span class="menu-title" data-i18n="Dashboard">Dashboard</span></a>
         </li>
 
         <li class="bold">
@@ -39,17 +36,17 @@ $route = Route::current()->getName()
             <ul class="collapsible collapsible-sub" data-collapsible="accordion">
               <li>
                 <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
-                  <span data-i18n="Home Slide">Instant Records</span>
+                  <span data-i18n="Home Slide">All Bookings</span>
                 </a>
               </li>
                 <li>
                     <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
-                        <span data-i18n="Home Slide">Instant Records</span>
+                        <span data-i18n="Home Slide">Unprocessed Bookings</span>
                     </a>
                 </li>
                 <li>
                     <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
-                        <span data-i18n="Home Slide">Instant Records</span>
+                        <span data-i18n="Home Slide">Processed Bookings</span>
                     </a>
                 </li>
             </ul>
@@ -64,17 +61,17 @@ $route = Route::current()->getName()
               <div class="collapsible-body">
                   <ul class="collapsible collapsible-sub" data-collapsible="accordion">
                       <li>
-                          <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
-                              <span data-i18n="Home Slide">Check Rooms</span>
+                          <a class="{{ ($route == 'room_management')? 'active' : '' }} waves-effect waves-cyan" href="{{ route('room_management') }}"><i class="material-icons">radio_button_unchecked</i>
+                              <span data-i18n="Room Management">Room Management</span>
                           </a>
                       </li>
                       <li>
-                          <a class="{{ ($route == 'add_room')? 'active' : '' }} waves-effect waves-cyan" href="{{route('add_room')}}"><i class="material-icons">radio_button_unchecked</i>
-                              <span data-i18n="Home Slide">Add Room</span>
+                          <a class="{{ ($route == 'add_room')? 'active' : '' }} waves-effect waves-cyan" href="{{ route('add_room') }}"><i class="material-icons">radio_button_unchecked</i>
+                              <span data-i18n="Add Room">Add Room</span>
                           </a>
                       </li>
                       <li>
-                          <a class="{{ ($route == 'room_config')? 'active' : '' }} waves-effect waves-cyan" href="{{route('room_config')}}"><i class="material-icons">radio_button_unchecked</i>
+                          <a class="{{ ($route == 'room_config')? 'active' : '' }} waves-effect waves-cyan" href="{{ route('room_config') }}"><i class="material-icons">radio_button_unchecked</i>
                               <span data-i18n="Home Slide">Room Config</span>
                           </a>
                       </li>

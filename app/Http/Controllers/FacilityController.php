@@ -23,7 +23,7 @@ class FacilityController extends Controller
             'position' => $maxPosition + 1,
         ]);
 
-        return redirect_with_notification('Facility added.');
+        return notification('Facility added.', 'success');
     }
 
     // Show edit form
@@ -44,18 +44,32 @@ class FacilityController extends Controller
         $facility = Facility::findOrFail($id);
         $facility->update($request->only('name', 'icon'));
 
-        return redirect_with_notification('Facility updated.');
+        return notification('Facility updated.', 'success');
     }
 
     // Reorder facility
     public function reorder(Request $request)
     {
-        foreach ($request->order as $item) {
-            \App\Models\Facility::where('id', $item['id'])
-                ->update(['position' => $item['position']]);
-        }
+        try {
+            foreach ($request->order as $item) {
+                \App\Models\Facility::where('id', $item['id'])
+                    ->update(['position' => $item['position']]);
+            }
 
-        return response()->json(['status' => 'success']);
+            return response()->json([
+                'message' => 'Facilities rearranged',
+                'type' => 'success',
+                'status' => 'success',
+                'reload' => false // No need to reload since it's a dynamic reorder
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to rearrange facilities: ' . $e->getMessage(),
+                'type' => 'error',
+                'status' => 'error'
+            ], 500);
+        }
     }
 
 
@@ -64,14 +78,13 @@ class FacilityController extends Controller
     {
         $facility = Facility::findOrFail($id);
 
-//        if ($facility->rooms()->count() > 0) {
-
-//        return redirect_with_notification("Facility in use - can't delete.");
-//        }
+        if ($facility->rooms()->count() > 0) {
+        return notification("Facility in use - can't delete.");
+        }
 
         $facility->delete();
 
-        return redirect_with_notification('Facility updated.');
+        return notification('Facility updated.', 'success');
 
     }
 }

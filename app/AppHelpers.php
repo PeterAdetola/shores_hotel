@@ -2,6 +2,8 @@
 use Illuminate\Support\Facades\Auth;
 use App\Models\RoomCategory;
 use App\Models\Facility;
+use Illuminate\Support\Facades\File;
+use Symfony\Component\Yaml\Yaml;
 
 
 // Get user's id
@@ -68,21 +70,59 @@ if (!function_exists('getFacilities')) {
 }
 
 
-if (!function_exists('redirect_with_notification')) {
-
-    function redirect_with_notification(
+// app/Helpers/NotificationHelper.php
+if (!function_exists('notification')) {
+    function notification(
         string $message,
         string $type = 'success',
-        array $additional = [],
-        string $route = null
+        bool $isAjax = false,
+        array $additional = []
     ) {
-        $notification = array_merge([
-            'message' => $message,
-            'type' => $type
-        ], $additional);
+        $response = [
+                'message' => $message,
+                'type' => $type,
+                'status' => $type === 'success' ? 'success' : 'error'
+            ] + $additional;
 
-        return $route
-            ? redirect()->route($route)->with($notification)
-            : redirect()->back()->with($notification);
+        return $isAjax
+            ? response()->json($response)
+            : redirect()->back()->with($response);
+    }
+}
+
+if (!function_exists('loadFrontMatter')) {
+    function loadFrontMatter(string $relativePath): array
+    {
+        $path = storage_path('app/' . ltrim($relativePath, '/'));
+
+        if (!File::exists($path)) {
+            return [];
+        }
+
+        $raw = File::get($path) ?? '';
+
+        // Extract YAML front matter between ---
+        if (preg_match('/^---\s*\R(.*?)\R---\s*\R?/s', $raw, $m)) {
+            return Yaml::parse($m[1]) ?? [];
+        }
+
+        // Or treat whole file as YAML if no delimiters
+        return Yaml::parse($raw) ?? [];
+    }
+}
+
+if (!function_exists('getContactContent')) {
+    function getContactContent(): array
+    {
+        return loadFrontMatter('content/contact/contact.md') ?: [];
+    }
+}
+
+if (!function_exists('getAllAccommodation')) {
+    function getAllAccommodation()
+    {
+        $accommodations = App\Models\Room::all();
+
+        return $accommodations;
     }
 }
