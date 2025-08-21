@@ -61,9 +61,12 @@
                     <nav class="mil-menu">
                         <ul>
                             <li class="{{ ($route == 'home')? 'mil-current' : '' }}"><a href="{{ url('/') }}">Home</a></li>
-                            <li class="{{ ($route == 'getlodged')? 'mil-current' : '' }}"><a href="{{ route('getlodged') }}">Get Lodged</a></li>
+                            <li class="{{ ($route == 'getlodged' || $route == 'chosen_lodge') ? 'mil-current' : '' }}">
+                                <a href="{{ route('getlodged') }}">Get Lodged</a>
+                            </li>
 
-{{--                            <li class="">--}}
+
+                            {{--                            <li class="">--}}
 {{--                                <a href="#.">Get Lodged</a>--}}
 {{--                                <ul>--}}
 {{--                                    <li class="{{ ($route == 'getlodged')? 'mil-current' : '' }}"><a href="{{ route('getlodged') }}">Get Lodged</a></li>--}}
@@ -125,7 +128,8 @@
                                         <li class="{{ ($route == 'home')? 'mil-active' : '' }}">
                                             <a href="{{ url('/') }}">Home</a>
                                         </li>
-                                        <li class="{{ ($route == 'getlodged')? 'mil-active' : '' }}">
+                                        <li class="{{ request()->routeIs('getlodged', 'chosen_lodge') ? 'mil-active' : '' }}"
+                                        >
                                             <a href="{{ route('getlodged') }}">Get Lodged</a>
                                         </li>
                                         <li class="{{ ($route == 'citibar')? 'mil-active' : '' }}">
@@ -325,15 +329,15 @@
 <!-- wrapper end -->
 
 <!-- jQuery js -->
-<script src="js/plugins/jquery.min.js"></script>
+<script src="{{ asset('js/plugins/jquery.min.js') }}"></script>
 <!-- smooth scroll js -->
-<script src="js/plugins/smooth-scroll.js"></script>
+<script src="{{ asset('js/plugins/smooth-scroll.js') }}"></script>
 <!-- swiper js -->
-<script src="js/plugins/swiper.min.js"></script>
+<script src="{{ asset('js/plugins/swiper.min.js') }}"></script>
 <!-- datepicker js -->
-<script src="js/plugins/datepicker.js"></script>
+<script src="{{ asset('js/plugins/datepicker.js') }}"></script>
 <!-- aquarelle js -->
-<script src="js/main.js"></script>
+<script src="{{ asset('js/main.js') }}"></script>
 @stack('scripts')
 </body>
 

@@ -121,8 +121,11 @@ if (!function_exists('getContactContent')) {
 if (!function_exists('getAllAccommodation')) {
     function getAllAccommodation()
     {
-        $accommodations = App\Models\Room::all();
-
-        return $accommodations;
+        return App\Models\RoomCategory::with([
+            'rooms.galleryImages',
+            'rooms.featuredImage'
+        ])->get();
     }
 }
+
+

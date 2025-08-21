@@ -235,7 +235,8 @@
 
             <div class="swiper-container mil-reco-slider mil-mb-40">
                 <div class="swiper-wrapper">
-                    @forelse (getAllAccommodation() as $room)
+                    @forelse (getAllAccommodation() as $category)
+                        @foreach ($category->rooms as $room)
                         <div class="swiper-slide">
 
                             <div class="mil-card mil-mb-40-adapt mil-fade-up">
@@ -346,7 +347,7 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
                                             ?>
                                         <div class="mil-price"><span class="mil-symbol">₦</span><span class="mil-number" style="font-size: 1.2em">{{ $formatted_price }}</span>/per night
                                         </div>
-                                        <a href="{{ route('chosen_lodge') }}" class="mil-button mil-icon-button mil-accent-1">
+                                        <a href="{{ route('chosen_lodge', ['categorySlug' => $room->category->slug, 'roomId' => $room->id]) }}" class="mil-button mil-icon-button mil-accent-1">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                  stroke-linejoin="round" class="feather feather-bookmark">
@@ -358,6 +359,7 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
                             </div>
 
                         </div>
+                        @endforeach
                     @empty
                     <div class="swiper-slide">
 

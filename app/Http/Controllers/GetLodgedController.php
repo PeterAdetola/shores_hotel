@@ -49,4 +49,34 @@ class GetLodgedController extends Controller
 
         return response()->json($rooms);
     }
+
+
+    public function getlodge($slug)
+    {
+        // Find the category by slug
+        $category = RoomCategory::where('slug', $slug)
+            ->with(['rooms.galleryImages', 'rooms.featuredImage'])
+            ->firstOrFail();
+
+        // Get the first room under this category
+        $room = $category->rooms()->with(['galleryImages', 'featuredImage'])->first();
+
+        return view('chosen_lodge', compact('category', 'room'));
+    }
+
+    public function showRoom($categorySlug, $roomId)
+    {
+        $category = RoomCategory::where('slug', $categorySlug)->firstOrFail();
+
+        $room = $category->rooms()
+            ->with(['category', 'galleryImages', 'featuredImage'])
+            ->where('id', $roomId)
+            ->firstOrFail();
+
+        return view('chosen_lodge', compact('room', 'category'));
+    }
+
+
+
+
 }

@@ -22,11 +22,10 @@ Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 //Route::get('/rooms/filter', [GetLodgedController::class, 'filter'])->name('rooms.filter');
 Route::get('/getlodged', [GetLodgedController::class, 'index'])->name('getlodged');
 Route::get('/getlodged/filter', [GetLodgedController::class, 'filter'])->name('getlodged.filter');
-//Route::get('/contact', function () {
-//    return view('contact');
-//})->name('contact');
-//Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-//Route::get('/citibar', [App\Http\Controllers\CitibarController::class, 'index'])->name('citibar');
+//Route::get('/chosen_lodge/{slug}', [GetLodgedController::class, 'getlodge'])->name('chosen_lodge');
+//Route::get('/room/{categorySlug}/{roomId}', [GetLodgedController::class, 'showRoom'])->name('chosen_lodge');
+Route::get('/chosen_lodge/{categorySlug}/{roomId}', [GetLodgedController::class, 'showRoom'])->name('chosen_lodge')->where(['roomId' => '[0-9]+']);
+
 
 //Route::get('/getlodged', function () {
 //    return view('getlodged');
@@ -38,9 +37,9 @@ Route::get('/typesOfApartment', function () {
     return view('typesOfApartment');
 })->name('typesOfApartment');
 
-Route::get('/chosen_lodge', function () {
-    return view('chosen_lodge');
-})->name('chosen_lodge');
+//Route::get('/chosen_lodge', function () {
+//    return view('chosen_lodge');
+//})->name('chosen_lodge');
 Route::get('/confirmReservation', function () {
     return view('confirmReservation');
 })->name('confirmReservation');
@@ -66,9 +65,9 @@ Route::get('/rooms/create', [RoomController::class, 'create'])->name('rooms.crea
 Route::post('/rooms', [RoomController::class, 'store'])->name('rooms.store');
 //Route::get('/rooms', [RoomController::class, 'index'])->name('rooms.index');
 
-Route::get('/room_management', function () {
-    return view('/admin/room/room_management');
-})->name('room_management');
+//Route::get('/room_management', function () {
+//    return view('/admin/room/room_management');
+//})->name('room_management');
 Route::get('/add_room', function () {
     return view('/admin/room/add_room');
 })->name('add_room');
@@ -93,7 +92,7 @@ Route::prefix('facilities')->group(function () {
     Route::put('/{id}', [FacilityController::class, 'update'])->name('facilities.update');
     Route::delete('/{id}', [FacilityController::class, 'destroy'])->name('facilities.destroy');
     Route::post('/facilities/reorder', [FacilityController::class, 'reorder'])->name('facilities.reorder');
-    Route::delete('/facilities/{id}', [FacilityController::class, 'destroy'])->name('facilities.destroy');
+//    Route::delete('/facilities/{id}', [FacilityController::class, 'destroy'])->name('facilities.destroy');
 });
 
 // --------------| Room Management Routes |----------------------------------------

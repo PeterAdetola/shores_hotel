@@ -11,10 +11,19 @@ $(document).ready(function() {
         }
     });
 
-    // Handle filter clicks
-    $('.mil-filter a').on('click', function(e) {
+    // DEBUGGING: Check if filter elements exist
+    console.log('Filter elements found:', $('.mil-filter a').length);
+    $('.mil-filter a').each(function(index) {
+        console.log(`Filter ${index}:`, $(this).text(), $(this).attr('href'));
+    });
+
+    // Handle filter clicks - Using event delegation to ensure it works even after DOM changes
+    $(document).on('click', '.mil-filter a', function(e) {
         e.preventDefault();
         console.log('Filter button clicked:', $(this).text());
+
+        // DEBUGGING: Check if event is firing
+        console.log('Filter click event fired successfully');
 
         // Remove active class from all filter links
         $('.mil-filter a').removeClass('mil-active');
@@ -26,12 +35,15 @@ $(document).ready(function() {
         let filterText = $(this).text().toLowerCase().trim();
         let filterType = '';
 
-        if (filterText === 'rooms') {
-            // Try different possible enum values for rooms
-            filterType = 'room'; // or could be 'rooms', 'ROOM', 'ROOMS'
-        } else if (filterText === 'apartments') {
-            // Try different possible enum values for apartments
-            filterType = 'apartment'; // or could be 'apartments', 'APARTMENT', 'APARTMENTS'
+        console.log('Raw filter text:', filterText);
+
+        // More comprehensive filter mapping
+        if (filterText === 'rooms' || filterText === 'room') {
+            filterType = 'room'; // Adjust based on your enum values
+        } else if (filterText === 'apartments' || filterText === 'apartment') {
+            filterType = 'apartment'; // Adjust based on your enum values
+        } else if (filterText === 'all' || filterText === 'show all') {
+            filterType = ''; // Empty for all results
         }
 
         console.log('Filter text:', filterText);
@@ -47,6 +59,18 @@ $(document).ready(function() {
             beforeSend: function() {
                 console.log('AJAX request starting with type:', filterType);
                 $('.row.mil-mb-40').addClass('filtering');
+
+                // Add loading indicator
+                $('.row.mil-mb-40').html(`
+                    <div class="col-12">
+                        <div class="text-center">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <p>Filtering accommodations...</p>
+                        </div>
+                    </div>
+                `);
             },
             success: function(response) {
                 console.log('AJAX success, response:', response);
@@ -55,6 +79,7 @@ $(document).ready(function() {
                 // Log each room's category info
                 response.forEach((room, index) => {
                     console.log(`Room ${index + 1} category:`, room.category);
+                    console.log(`Room ${index + 1} full data:`, room);
                 });
 
                 updateRoomsDisplay(response);
@@ -63,6 +88,7 @@ $(document).ready(function() {
                 console.error('Filter request failed:', error);
                 console.error('Status:', status);
                 console.error('Response:', xhr.responseText);
+                console.error('Status Code:', xhr.status);
 
                 // Try to parse error response for more details
                 try {
@@ -71,6 +97,18 @@ $(document).ready(function() {
                 } catch (e) {
                     console.error('Could not parse error response');
                 }
+
+                // Show error message to user
+                $('.row.mil-mb-40').html(`
+                    <div class="col-12">
+                        <div class="alert alert-danger text-center">
+                            <h4>Error Loading Accommodations</h4>
+                            <p>There was an error filtering the accommodations. Please try again.</p>
+                            <p><small>Error: ${error} (Status: ${xhr.status})</small></p>
+                            <button class="btn btn-primary" onclick="location.reload()">Refresh Page</button>
+                        </div>
+                    </div>
+                `);
             },
             complete: function() {
                 console.log('AJAX request completed');
@@ -101,6 +139,7 @@ $(document).ready(function() {
 
         // Generate HTML for each room
         rooms.forEach(function(room) {
+            console.log('Generating card for room:', room);
             const roomHtml = generateRoomCard(room);
             container.append(roomHtml);
         });
@@ -116,6 +155,8 @@ $(document).ready(function() {
     }
 
     function generateRoomCard(room) {
+        console.log('Generating room card for:', room);
+
         // Generate gallery images HTML
         let galleryHtml = '';
         if (room.gallery_images && room.gallery_images.length > 0) {
@@ -149,6 +190,28 @@ $(document).ready(function() {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
+
+        // Generate dynamic route URL with better error handling
+        let categorySlug = 'uncategorized';
+        let roomId = room.id || 0;
+
+        if (room.category && room.category.slug) {
+            categorySlug = room.category.slug;
+        }
+
+        // Option 1: Use route pattern from Blade template (recommended)
+        let chosenLodgeUrl;
+        if (window.routePatterns && window.routePatterns.chosen_lodge) {
+            chosenLodgeUrl = window.routePatterns.chosen_lodge
+                .replace('CATEGORY_SLUG', encodeURIComponent(categorySlug))
+                .replace('ROOM_ID', roomId);
+        } else {
+            // Option 2: Fallback to manual URL construction
+            chosenLodgeUrl = `/chosen_lodge/${encodeURIComponent(categorySlug)}/${roomId}`;
+        }
+
+        console.log('Generated URL:', chosenLodgeUrl);
+        console.log('Category slug:', categorySlug, 'Room ID:', roomId);
 
         // Generate room card HTML - matching exact Blade structure
         return `
@@ -268,7 +331,7 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
                                 <span class="mil-symbol">₦</span>
                                 <span class="mil-number" style="font-size: 1.2em">${formattedPrice}</span>/per night
                             </div>
-                            <a href="/chosen_lodge" class="mil-button mil-icon-button mil-accent-1">
+                            <a href="${chosenLodgeUrl}" class="mil-button mil-icon-button mil-accent-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                      stroke-linejoin="round" class="feather feather-bookmark">
@@ -290,11 +353,6 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
                 const container = $(this);
                 const parentWidth = container.parent().width();
                 container.width(parentWidth);
-
-                // Don't force height, let it be determined by aspect ratio or content
-                // if (container.height() === 0) {
-                //     container.height(250); // Removed fixed height
-                // }
             });
 
             // Reinitialize Swiper sliders
@@ -324,7 +382,7 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
                         observeParents: true,
                         observeSlideChildren: true,
                         watchSlidesProgress: true,
-                        autoHeight: false, // Disable auto height
+                        autoHeight: false,
                         centeredSlides: true,
                         navigation: {
                             nextEl: $(swiperContainer).find('.mil-card-next')[0],
@@ -336,7 +394,6 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
                         },
                         on: {
                             init: function() {
-                                // Force update after initialization
                                 setTimeout(() => {
                                     this.update();
                                     this.updateSize();
@@ -356,7 +413,6 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
                     const img = $(this);
                     const container = img.closest('.mil-card-cover');
 
-                    // Ensure image fills container completely
                     img.css({
                         'width': '100%',
                         'height': '100%',
@@ -366,7 +422,6 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
                         'min-height': '100%'
                     });
 
-                    // Update swiper after image adjustments
                     const swiper = img.closest('.mil-card-slider')[0].swiper;
                     if (swiper) {
                         swiper.update();
@@ -380,6 +435,6 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
                 AOS.refresh();
             }
 
-        }, 150); // Increased delay for better DOM settling
+        }, 150);
     }
 });

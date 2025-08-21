@@ -9,13 +9,15 @@
             <h2 class="mil-mb-100 mil-fade-up">Our best rooms</h2>
         </div>
         <div class="row mil-mb-40">
-            @forelse (getAllAccommodation() as $room)
+            @forelse (getAllAccommodation() as $category)
+                @foreach ($category->rooms as $room)
+
                 <div class="col-md-6 col-xl-4">
 
                     <div class="mil-card mil-mb-40-adapt mil-fade-up">
                         <div class="swiper-container mil-card-slider">
                             <div class="swiper-wrapper">
-                                @foreach ($room->galleryImages as $img)
+                                @foreach ($category->all_images as $img)
                                     <div class="swiper-slide">
                                         <div class="mil-card-cover">
                                             <img src="{{ asset('storage/' . $img->image_path) }}" alt="cover"
@@ -128,7 +130,7 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
                             </li>
                         </ul>
                         <div class="mil-descr">
-                            <h3 class="mil-mb-20">{{ $room->category->name ?? '—' }}</h3>
+                            <h3 class="mil-mb-20">{{ $category->name ?? '—' }}</h3>
                             {{--<p class="mil-mb-40">Accusantium doloremque laudantium, totam rem aperiam beatae vitae dicta sunt, explicabo</p>--}}
                             <div class="mil-divider"></div>
                             <div class="mil-card-bottom">
@@ -138,18 +140,20 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
                                     ?>
                                 <div class="mil-price"><span class="mil-symbol">₦</span><span class="mil-number" style="font-size: 1.2em">{{ $formatted_price }}</span>/per night
                                 </div>
-                                <a href="{{ route('chosen_lodge') }}" class="mil-button mil-icon-button mil-accent-1">
+                                <a href="{{ route('chosen_lodge', ['categorySlug' => $room->category->slug, 'roomId' => $room->id]) }}" class="mil-button mil-icon-button mil-accent-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                          stroke-linejoin="round" class="feather feather-bookmark">
                                         <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
                                     </svg>
                                 </a>
+{{--                                <a href="/room/{{ $room->category->slug }}/{{ $room->id }}">Direct Test Link</a>--}}
                             </div>
                         </div>
                     </div>
 
                 </div>
+                @endforeach
             @empty
                 <div class="col-md-6 col-xl-4">
 
@@ -261,8 +265,9 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
                                 <div class="mil-price"><span class="mil-symbol">$</span><span
                                         class="mil-number">49</span>/per night
                                 </div>
-                                <a href="{{ route('chosen_lodge') }}" class="mil-button mil-icon-button mil-accent-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                <a href="{{ route('chosen_lodge', ['categorySlug' => $category->slug, 'roomId' => $room->id]) }}">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                          stroke-linejoin="round" class="feather feather-bookmark">
                                         <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
