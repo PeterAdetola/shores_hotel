@@ -78,5 +78,4 @@ class GetLodgedController extends Controller
 
 
 
-
 }

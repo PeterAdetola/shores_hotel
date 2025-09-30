@@ -52,7 +52,7 @@
     </style>
 </head>
 <!-- END: Head-->
-<body class="vertical-layout vertical-menu-collapsible page-header-dark vertical-modern-menu preload-transitions 2-columns   " data-open="click" data-menu="vertical-modern-menu" data-col="2-columns">
+<body class="vertical-layout vertical-menu-collapsible page-header-dark vertical-modern-menu preload-transitions 2-columns" data-open="click" data-menu="vertical-modern-menu" data-col="2-columns">
 
 
 @include('admin.component.header')
@@ -115,13 +115,13 @@
     // Global AJAX notification handler
     function handleAjaxResponse(response) {
         if (response && response.message) {
-            const type = response.type || 'info';
+            const type = response.type || 'success';
             const classes = {
-                'success': 'green',
+                'success': '',
                 'error': 'red',
                 'warning': 'orange',
                 'info': 'blue'
-            }[type] || 'blue';
+            }[type] || '';
 
             M.toast({
                 html: response.message,
@@ -166,7 +166,7 @@
         let bgColor = '';
         switch(type) {
             case 'success':
-                bgColor = 'green';
+                bgColor = '';
                 break;
             case 'error':
                 bgColor = 'red';

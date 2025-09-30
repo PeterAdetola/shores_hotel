@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('room_categories', function (Blueprint $table) {
-            $table->string('slug')->unique()->after('id');
+        Schema::table('rooms', function (Blueprint $table) {
+            $table->string('room_type')->nullable()->after('position');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('room_categories', function (Blueprint $table) {
-            //
+        Schema::table('rooms', function (Blueprint $table) {
+            $table->dropColumn('room_type');
         });
     }
 };

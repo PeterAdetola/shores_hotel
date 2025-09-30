@@ -89,7 +89,7 @@
         margin-top: 10px;
     }
     .preview-container img {
-        width: 100px;
+        width: 150px;
         height: 100px;
         margin: 5px;
         object-fit: cover;

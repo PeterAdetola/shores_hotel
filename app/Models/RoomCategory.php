@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str; // This is likely missing!
+use Illuminate\Support\Str;
 use App\Models\Room;
 use App\Models\RoomImage;
 
@@ -25,12 +25,29 @@ class RoomCategory extends Model
             }
         });
     }
+
     public function rooms()
     {
-        return $this->hasMany(Room::class);
+        return $this->hasMany(Room::class, 'room_category_id');
     }
+
     public function getAllImagesAttribute()
     {
-        return RoomImage::whereIn('room_id', $this->rooms()->pluck('id'))->get();
+        try {
+            $roomIds = $this->rooms()->pluck('id');
+            if ($roomIds->isEmpty()) {
+                return collect(); // Return empty collection if no rooms
+            }
+            return RoomImage::whereIn('room_id', $roomIds)->get();
+        } catch (\Exception $e) {
+            \Log::error('Error getting category images: ' . $e->getMessage());
+            return collect();
+        }
+    }
+
+    // Add this method for better slug handling
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }

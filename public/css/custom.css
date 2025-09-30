@@ -39,3 +39,19 @@
         padding: 40px 20px; /* Tighter padding on small screens */
     }
 }
+
+.cookie-consent {
+    @apply fixed bottom-5 left-1/2 transform -translate-x-1/2 w-[80%] md:w-[60%] lg:w-[30%] p-4 rounded-lg shadow-sm z-50 bg-white text-gray-500 flex items-center;
+}
+
+
+/* Gradient */
+.custom-bg-gradient-1 {
+    background-image: linear-gradient(to right, var(--secondary-rgba-30) 30%, var(--dark) 200%) !important;
+}
+
+@media (max-width: 991px) {
+    .custom-bg-gradient-1 {
+        border-radius: 0 !important;
+    }
+}

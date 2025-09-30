@@ -216,12 +216,52 @@
                                 <div>Adults: {{ $room->adult_max ?? 4 }}</div>
                             </li>
                             <li>
+
                                 <div class="mil-icon">
-                                    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M10.9578 14.6084H12.7089C13.1733 14.6084 13.6187 14.4239 13.9471 14.0955C14.2755 13.7671 14.46 13.3217 14.46 12.8573V11.1062" stroke="black" stroke-width="1.00189" stroke-linecap="round" stroke-linejoin="round" />
-                                        <path d="M14.46 6.10644V4.35534C14.46 3.89092 14.2755 3.44553 13.9471 3.11713C13.6187 2.78874 13.1733 2.60425 12.7089 2.60425H10.9578" stroke="black" stroke-width="1.00189" stroke-linecap="round" stroke-linejoin="round" />
-                                        <path d="M5.95898 14.6084H4.20788C3.74346 14.6084 3.29806 14.4239 2.96967 14.0955C2.64128 13.7671 2.45679 13.3217 2.45679 12.8573V11.1062" stroke="black" stroke-width="1.00189" stroke-linecap="round" stroke-linejoin="round" />
-                                        <path d="M2.45679 6.10644V4.35534C2.45679 3.89092 2.64128 3.44553 2.96967 3.11713C3.29806 2.78874 3.74346 2.60425 4.20788 2.60425H5.95898" stroke="black" stroke-width="1.00189" stroke-linecap="round" stroke-linejoin="round" />
+                                    <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+                                         width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
+                                         preserveAspectRatio="xMidYMid meet">
+
+                                        <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+                                           fill="#000000" stroke="none">
+                                            <path d="M1030 4891 c0 -5 5 -44 11 -87 22 -159 101 -316 215 -428 63 -61 174
+-135 237 -157 20 -7 37 -16 37 -19 0 -4 -19 -17 -42 -30 -136 -75 -298 -201
+-434 -337 -206 -207 -370 -459 -476 -735 -32 -86 -45 -108 -60 -108 -34 0
+-151 -51 -220 -97 -295 -194 -384 -592 -201 -898 79 -130 229 -246 378 -291
+33 -10 61 -19 63 -20 2 -1 18 -43 37 -92 46 -124 146 -318 223 -431 89 -133
+163 -220 288 -342 316 -307 694 -496 1149 -576 143 -24 500 -25 646 0 311 52
+592 161 839 324 145 96 237 172 361 299 218 225 370 468 482 775 16 42 21 46
+66 58 112 29 249 114 326 203 56 66 101 145 131 233 24 70 28 96 28 200 1 99
+-3 133 -22 195 -47 152 -142 279 -270 364 -69 45 -186 96 -220 96 -15 0 -27
+21 -56 99 -186 489 -553 900 -1020 1140 -290 149 -627 231 -950 231 -220 0
+-309 27 -416 127 -71 65 -116 149 -132 246 l-11 67 -148 0 c-171 0 -158 10
+-138 -109 14 -89 44 -174 87 -251 20 -36 38 -68 40 -72 5 -12 -96 -10 -162 3
+-89 16 -164 56 -232 124 -70 69 -108 142 -124 238 l-12 67 -149 0 c-85 0 -149
+-4 -149 -9z m1672 -751 c355 -109 465 -553 203 -815 -153 -153 -374 -187 -575
+-87 -137 68 -259 256 -260 400 l0 32 -150 0 -150 0 0 -40 c0 -118 60 -295 139
+-407 101 -143 239 -246 411 -305 90 -30 102 -32 240 -32 138 0 150 2 240 32
+121 42 214 97 301 179 160 151 249 356 249 573 0 90 -21 207 -51 283 -11 27
+-18 52 -15 54 9 10 243 -119 336 -185 123 -87 336 -300 422 -422 73 -104 181
+-304 223 -415 14 -38 39 -115 54 -170 l28 -100 97 -7 c148 -11 245 -61 311
+-161 102 -156 79 -346 -56 -471 -72 -67 -135 -92 -259 -103 l-93 -8 -37 -125
+c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
+392 -1618 991 -67 134 -86 182 -129 329 l-37 125 -93 8 c-124 11 -187 36 -259
+103 -85 78 -116 151 -116 269 1 77 5 98 28 145 41 86 89 135 170 175 62 31 86
+37 171 43 l99 7 28 100 c48 172 102 301 184 440 324 551 913 898 1531 904 96
+1 136 -3 186 -19z"/>
+                                            <path d="M1640 2769 c-109 -12 -196 -53 -282 -135 -86 -82 -148 -211 -148
+-310 l0 -45 147 3 147 3 9 44 c12 60 78 126 138 138 58 12 124 -1 166 -33 38
+-29 73 -91 73 -129 l0 -25 150 0 150 0 0 38 c0 89 -56 217 -128 295 -114 121
+-257 174 -422 156z"/>
+                                            <path d="M3360 2769 c-116 -12 -214 -63 -302 -156 -74 -80 -128 -204 -128
+-295 l0 -38 150 0 150 0 0 25 c0 38 35 100 73 129 42 32 108 45 166 33 60 -12
+126 -78 138 -138 l9 -44 147 -3 147 -3 0 44 c0 167 -148 361 -323 423 -59 21
+-151 30 -227 23z"/>
+                                            <path d="M1973 1596 c-67 -39 -125 -75 -129 -79 -13 -12 106 -156 179 -217 86
+-72 222 -142 332 -171 112 -30 298 -30 409 0 178 47 340 153 452 295 35 44 63
+84 61 89 -1 4 -58 41 -126 82 l-124 74 -20 -27 c-216 -288 -599 -318 -838 -66
+-25 27 -52 59 -60 71 -14 21 -15 21 -136 -51z"/>
+                                        </g>
                                     </svg>
                                 </div>
                                 <div>Children: {{ $room->children_max ?? 2 }}</div>
@@ -229,30 +269,62 @@
                         </ul>
 
                         <div class="mil-book-window">
-                            <form>
+                            <form method="POST" action="{{ route('make.booking') }}">
+                                @csrf
+
+                                {{-- Hidden fields to carry room info --}}
+                                <input type="hidden" name="room_id" value="{{ $room->id }}">
+                                <input type="hidden" name="lodging_type" value="{{ $room->category->name }}">
+
                                 <div class="mil-field-frame mil-mb-20">
                                     <label>Check-in</label>
-                                    <input id="check-in" type="text" class="datepicker-here" data-position="bottom left" placeholder="Select date" autocomplete="off" readonly="readonly">
+                                    <input name="check_in" id="check-in" type="text"
+                                           class="datepicker-here"
+                                           data-position="bottom left"
+                                           placeholder="Select date"
+                                           autocomplete="off"
+                                           readonly required>
                                 </div>
+
                                 <div class="mil-field-frame mil-mb-20">
                                     <label>Check-out</label>
-                                    <input id="check-out" type="text" class="datepicker-here" data-position="bottom left" placeholder="Select date" autocomplete="off" readonly="readonly">
+                                    <input name="check_out" id="check-out" type="text"
+                                           class="datepicker-here"
+                                           data-position="bottom left"
+                                           placeholder="Select date"
+                                           autocomplete="off"
+                                           readonly required>
                                 </div>
+
                                 <div class="mil-field-frame mil-mb-20">
                                     <label>Adults</label>
-                                    <input type="text" placeholder="Enter quantity" value="1" max="{{ $room->adult_max ?? 4 }}">
+                                    <input name="adults" type="number"
+                                           placeholder="Enter quantity"
+                                           value="1"
+                                           min="1"
+                                           max="{{ $room->adult_max ?? 4 }}" required>
                                 </div>
+
                                 <div class="mil-field-frame mil-mb-20">
                                     <label>Children</label>
-                                    <input type="text" placeholder="Enter quantity" value="0" max="{{ $room->children_max ?? 2 }}">
+                                    <input name="children" type="number"
+                                           placeholder="Enter quantity"
+                                           value="0"
+                                           min="0"
+                                           max="{{ $room->children_max ?? 2 }}" required>
                                 </div>
+
                                 <button type="submit" class="mil-button mil-accent-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                         class="feather feather-bookmark">
                                         <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
                                     </svg>
                                     <span>Book now</span>
                                 </button>
                             </form>
+
                         </div>
                     </div>
                 </div>
@@ -262,12 +334,6 @@
     </div>
     <!-- room info end -->
 
-    {{-- Debug information (remove in production) --}}
-    @if(config('app.debug'))
-        <script>
-            console.log('Room data:', @json($room ?? null));
-            console.log('Category data:', @json($category ?? null));
-        </script>
-    @endif
+
 
 @endsection

@@ -169,7 +169,7 @@
                                     @foreach ($room->galleryImages as $img)
                                         <div class="swiper-slide">
                                             <div class="mil-card-cover">
-                                                <img src="{{ asset('storage/' . $img->image_path) }}" alt="cover"
+                                                <img src="{{ Storage::url($img->image_path) }}" alt="cover"
                                                      data-swiper-parallax="-100" data-swiper-parallax-scale="1.1">
                                             </div>
                                         </div>

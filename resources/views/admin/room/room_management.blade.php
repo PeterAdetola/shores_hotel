@@ -136,13 +136,7 @@
                         <div class="row">
                             <div class="col s12 m12 l10">
                                 <div class="card subscriber-list-card">
-                                    {{--                                <div class="card-content pb-1">--}}
-                                    {{--                                    <h4 class="card-title mb-0" style="display: inline-block">Facility List</h4>--}}
-                                    {{--                                    <a href="#add_facility-modal" class="modal-trigger" style="float: right"><span--}}
-                                    {{--                                            class="chip btn light-green white-text text-accent-2">Add Facility</span></a>--}}
-                                    {{--                                </div>--}}
                                     <div class="divider"></div>
-                                    {{--                                @include('admin.room.modals.facility.add_facility-modal')--}}
                                     <table class="subscription-table responsive-table" id="room-table">
                                         <thead>
                                         <tr>
@@ -155,7 +149,7 @@
                                         </thead>
                                         <tbody id="sortable">
                                         @forelse ($rooms as $room)
-                                            <tr class="hoverable z-depth-1"  data-id="{{ $room->id }}">
+                                            <tr class="hoverable"  data-id="{{ $room->id }}">
                                                 <td style="padding-left:2em">{{ $room->category->name ?? '—' }}</td>
                                                 <td>  <input type="number" class="price-input"
                                                              data-id="{{ $room->id }}"
@@ -182,10 +176,6 @@
                                                            class="modal-trigger action-edit">
                                                             <span class="material-symbols-outlined grey-text">edit_square</span>
                                                         </a>
-                                                        {{--                                                    <a href=""--}}
-                                                        {{--                                                       class="modal-trigger action-delete">--}}
-                                                        {{--                                                        <span class="material-symbols-outlined grey-text">delete</span>--}}
-                                                        {{--                                                    </a>--}}
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                         <a href="javascript:void(0)" class="drag_handle">
                                                             <span class="material-symbols-outlined grey-text" style="cursor: grab;">drag_indicator</span>
@@ -194,8 +184,6 @@
                                                 </td>
 
                                             @include('admin.room.modals.management.room_overview-modal')
-                                            {{--                                        @include('admin.room.modals.facility.edit_facility-modal')--}}
-                                            {{--                                        @include('admin.room.modals.facility.delete_facility-modal')--}}
                                         @empty
                                             <tr>
                                                 <td style="padding-left:2em">Room Category</td>
@@ -220,10 +208,6 @@
                                                            class="modal-trigger action-edit">
                                                             <span class="material-symbols-outlined grey-text">edit_square</span>
                                                         </a>
-                                                        {{--                                                    <a href=""--}}
-                                                        {{--                                                       class="modal-trigger action-delete">--}}
-                                                        {{--                                                        <span class="material-symbols-outlined grey-text">delete</span>--}}
-                                                        {{--                                                    </a>--}}
                                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                         <a href="javascript:void(0)" class="drag_handle">
                                                             <span class="material-symbols-outlined grey-text" style="cursor: grab;">drag_indicator</span>

@@ -90,6 +90,7 @@
                                                     <tr>
                                                         <th>Booking Code</th>
                                                         <th>Guest</th>
+                                                        <th>Date</th>
                                                         <th>Room Type</th>
                                                         <th>Status</th>
                                                         <th>Check-in</th>
@@ -99,61 +100,41 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr>
-                                                        <td>BK-00123</td>
-                                                        <td>John Feller</td>
-                                                        <td>Kings room</td>
-                                                        <td>Confirmed</td>
-                                                        <td>2011/04/25</td>
-                                                        <td>2011/04/25</td>
-                                                        <td>2A / 1C</td>
-                                                        <td>[View] [Cancel]</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>BK-00123</td>
-                                                        <td>John Feller</td>
-                                                        <td>Kings room</td>
-                                                        <td>Confirmed</td>
-                                                        <td>2011/04/25</td>
-                                                        <td>2011/04/25</td>
-                                                        <td>2A / 1C</td>
-                                                        <td>[View] [Cancel]</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>BK-00123</td>
-                                                        <td>John Feller</td>
-                                                        <td>Kings room</td>
-                                                        <td>Confirmed</td>
-                                                        <td>2011/04/25</td>
-                                                        <td>2011/04/25</td>
-                                                        <td>2A / 1C</td>
-                                                        <td>[View] [Cancel]</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>BK-00123</td>
-                                                        <td>John Feller</td>
-                                                        <td>Kings room</td>
-                                                        <td>Confirmed</td>
-                                                        <td>2011/04/25</td>
-                                                        <td>2011/04/25</td>
-                                                        <td>2A / 1C</td>
-                                                        <td>[View] [Cancel]</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>BK-00123</td>
-                                                        <td>John Feller</td>
-                                                        <td>Kings room</td>
-                                                        <td>Confirmed</td>
-                                                        <td>2011/04/25</td>
-                                                        <td>2011/04/25</td>
-                                                        <td>2A / 1C</td>
-                                                        <td>[View] [Cancel]</td>
-                                                    </tr>
+                                                    @foreach(getAllBookings(5) as $booking)
+                                                        <tr>
+                                                            <td>{{ $booking->booking_code ?? 'N/A' }}</td>
+                                                            <td>{{ $booking->customer_name }}</td>
+                                                            <td title="{{ $booking->created_at->format('Y-m-d H:i') }}">
+                                                                {{ $booking->created_at->diffForHumans() }}
+                                                            </td>
+                                                            <td>{{ $booking->lodging_type ?? optional($booking->room->category)->name }}</td>
+                                                            <td>{{ ucfirst($booking->status) }}</td>
+                                                            <td title="{{ $booking->check_in->format('Y-m-d') }}">
+                                                                {{ \Carbon\Carbon::parse($booking->check_in)->diffForHumans() }}
+                                                            </td>
+
+                                                            <td title="{{ $booking->check_out->format('Y-m-d') }}">
+                                                                {{ \Carbon\Carbon::parse($booking->check_out)->diffForHumans() }}
+                                                            </td>
+
+                                                            <td>{{ $booking->adults }}A / {{ $booking->children }}C</td>
+                                                            <td>
+                                                                <a class="gradient-45deg-indigo-blue mb-1 chip waves-effect waves-light accent-2 white-text">
+                                                                    confirm
+                                                                </a>
+                                                                &nbsp;&nbsp;
+                                                                <a class="gradient-45deg-blue-grey-blue-grey mb-1 chip waves-effect waves-light accent-2 white-text">
+                                                                    cancel
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
                                                     </tbody>
                                                     <tfoot>
                                                     <tr>
                                                         <th>Booking Code</th>
                                                         <th>Guest</th>
+                                                        <th>Date</th>
                                                         <th>Room Type</th>
                                                         <th>Status</th>
                                                         <th>Check-in</th>

@@ -1,7 +1,7 @@
 @extends('admin.admin_master')
 @section('admin')
     @php
-        $pageTitle = 'Add Room';
+        $pageTitle = 'Edit '.$room->category->name;
     @endphp
     @section('vendor_styles')
         <link rel="stylesheet" type="text/css"
@@ -12,6 +12,7 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/form-wizard.css') }}">
         @include('admin.room.partials.form_stepper_style')
     @endsection
+
     <!-- BEGIN: Page Main-->
     <div id="main">
         <div class="row">
@@ -23,15 +24,14 @@
                         <div class="col s10 m6 l6">
                             <h5 class="breadcrumbs-title mt-0 mb-0"><span>{{ $pageTitle }}</span></h5>
                             <ol class="breadcrumbs mb-0">
-                                <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Admin Home</a>
-                                </li>
+                                <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Admin Home</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('room_management') }}">Manage
+                                    Accommodation</a></li>
                                 <li class="breadcrumb-item active">{{ $pageTitle }}
                                 </li>
                             </ol>
                         </div>
-
                         <!-- Something's removed here -->
-
                     </div>
                 </div>
             </div>
@@ -58,6 +58,9 @@
                                         <h4 class="card-title">{{ $pageTitle }}</h4>
                                     </div>
                                     <ul class="stepper horizontal" id="horizStepper">
+{{--                                                    --}}
+{{--                                                    --}}
+{{--                                        Information --}}
                                         <li class="step active">
                                             <div class="step-title waves-effect">Information</div>
                                             <form action="{{ route('rooms.update.info', $room->id) }}" method="POST">
@@ -65,46 +68,55 @@
                                                 @method('PUT')
                                                 <div class="step-content">
                                                     <div class="row">
-                                                        <div class="input-field col m6 s12">
-                                                            <select name="room_category_id" required>
-                                                                <option value="" disabled selected>Select Category
-                                                                </option>
-                                                                @foreach (getRoomCategories() as $category)
-                                                                    <option value="{{ $category->id }}" {{ $room->room_category_id == $category->id ? 'selected' : '' }}>
-                                                                        {{ $category->name }}
-                                                                    </option>
-                                                                @endforeach
+                                                        <div class="input-field col m3 s6">
+                                                            <select name="room_type" required>
+                                                                <option value="0" {{ $room->room_type == 0 ? 'selected' : '' }}>Hotel</option>
+                                                                <option value="1" {{ $room->room_type == 1 ? 'selected' : '' }}>Apartment</option>
                                                             </select>
                                                         </div>
 
-                                                        <div class="input-field col m4 s610">
-                                                            <label for="pricePerNight">Price Per Night: <span
-                                                                    class="red-text">*</span></label>
-                                                            <input type="number" id="pricePerNight" name="price_per_night"
-                                                                   value="{{ old('price_per_night', $room->price_per_night) }}" min="0.00" step="0.01" required>
+                                                        <div class="input-field col m3 s6">
+                                                            <select name="room_category_id" class="browser-default" required>
+                                                                <option value="" disabled selected>Select Category</option>
+                                                                @foreach (getRoomCategories() as $category)
+                                                                    <option value="{{ $category->id }}" {{ $room->room_category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="input-field col m3 s6">
+                                                            <label for="pricePerNight">Price Per Night: <span class="red-text">*</span></label>
+                                                            <input type="number" id="pricePerNight" name="price_per_night" value="{{ old('price_per_night', $room->price_per_night) }}" min="0.00" step="0.01" required>
 
                                                         </div>
-                                                        <div class="input-field col m2 s2">
-                                                            <label for="numUnit">Number of Units: <span
-                                                                    class="red-text">*</span></label>
-                                                            <input type="number" id="numUnit" name="num_units"
-                                                                   value="{{ old('num_units', $room->num_units) }}" min="1" max="10" required>
+                                                        <div class="input-field col m3 s6">
+                                                            <label for="numUnit">Number of Units: <span class="red-text">*</span></label>
+                                                            <input type="number" id="numUnit" name="num_units" value="{{ old('num_units', $room->num_units) }}" min="1" max="10" required>
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="input-field col m6 s12">
-                                                            <label for="adultMax">Adult Maximum No. : <span id="adultValue">{{ $room->adult_max }}</span></label><br><br>
-                                                            <span class="range-field">
-                           <input id="adultMax" name="adult_max" type="range" min="1" max="5" value="{{ $room->adult_max }}">
-                        </span>
+                                                        <div class="input-field col m3 s6">
+                                                            <label for="adultMax">Adult Maximum No. : <span id="adultValue">{{ $room->adult_max }}</span></label>
+                                                                <input type="number" id="adultMax" name="adult_max" value="{{ old('num_units', $room->adult_max) }}" min="1" max="10" required>
+
                                                         </div>
 
-                                                        <div class="input-field col m6 s12">
-                                                            <label for="childrenMax">Children Maximum No. : <span id="childrenValue">{{ $room->children_max }}</span></label><br><br>
-                                                            <span class="range-field">
-                            <input id="childrenMax" name="children_max" type="range" min="0" max="5" value="{{ $room->children_max }}">
-                        </span>
+                                                        <div class="input-field col m3 s6">
+                                                            <label for="childrenMax">Children Maximum No. : <span id="childrenValue">{{ $room->children_max }}</span></label>
+                                                                <input type="number" id="childrenMax" name="children_max" value="{{ old('num_units', $room->children_max) }}" min="1" max="5" required>
+
                                                         </div>
+                                                        <div class="input-field col m3 s6">
+                                                            <div class="availability-box">
+                                                            <div class="switch">
+                                                                <label>
+                                                                    <input type="checkbox" name="availability" value="1" {{ $room->availability ? 'checked' : '' }}>
+                                                                    <span class="lever"></span> Availability
+                                                                </label>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
                                                     </div>
                                                     <div class="step-actions">
                                                         <div class="row">
@@ -113,7 +125,6 @@
                                                                     class="waves-effect waves dark  btn-large btn-primary"
                                                                     type="submit">
                                                                     Update Information
-                                                                    {{--                                                                    <i class="material-icons right">arrow_forward</i>--}}
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -121,6 +132,9 @@
                                                 </div>
                                             </form>
                                         </li>
+{{--                                                    --}}
+{{--                                                    --}}
+{{--                                        Images      --}}
                                         <li class="step">
                                             <div class="step-title waves-effect">Images</div>
                                             <form action="{{ route('rooms.update.featuredImage', $room->id) }}" method="POST" enctype="multipart/form-data">
@@ -128,44 +142,35 @@
                                                 @method('PUT')
                                                 <div class="step-content">
                                                     <div class="row">
-                                                        <div class="input-field col m6 s12">
-                                                            <input name="image" type="file" id="input-file-now-custom-2"
-                                                                   class="dropify"
-                                                                   data-default-file="{{ $room->featured_image_url }}"
-                                                                   data-height='200'
-                                                            />
-                                                            <small>Upload JPG (1500 x 844)</small>
-                                                        </div>
                                                         {{-- Gallery Images --}}
-                                                        <div class="input-field col m6 s12">
+                                                        <div class="input-field col s12">
                                                             <div id="simpleList" class="preview-container">
                                                                 @foreach ($room->galleryImages as $img)
-                                                                    <img src="{{ asset('storage/' . $img->image_path) }}" width="80" style="margin:4px;">
+                                                                    <img src="{{ asset('storage/' . $img->image_path) }}" width="100" style="margin:4px;">
                                                                 @endforeach
 
-                                                            </div>
-                                                            <div class="file-field input-field">
-                                                                <div class="btn">
-                                                                    <span>Edit Images</span>
-                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     <div class="step-actions">
                                                         <div class="row">
-                                                            <div class="col m4 s12 mb-3">
-                                                                <button
-                                                                    class="waves-effect waves dark btn-large btn-primary"
-                                                                    type="submit">
-                                                                    Update Images
-                                                                </button>
+                                                            <div class="col s12">
+
+                                                                <div class="file-field input-field">
+                                                                    <a href="{{ route('rooms.manage_gallery', $room->id) }}" class="btn">
+                                                                        <span>Edit Images</span>
+                                                                    </a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </form>
                                         </li>
+{{--                                                    --}}
+{{--                                                    --}}
+{{--                                        Facilities  --}}
                                         <li class="step">
                                             <div class="step-title waves-effect">Facilities</div>
                                             <form action="{{ route('rooms.update.facilities', $room->id) }}" method="POST">
@@ -191,14 +196,6 @@
                                                         </div>
                                                         <div class="col l6">
                                                             <div class="input-field col s12">
-                                                                <div class="switch">
-                                                                    <label>
-                                                                        <input type="checkbox" name="availability" value="1" {{ $room->availability ? 'checked' : '' }}>
-                                                                        <span class="lever"></span> Availability
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="input-field col s12">
                                                                 <textarea name="description" id="textarea2" class="materialize-textarea">{{ old('description', $room->description) }}</textarea>
                                                                 <label for="textarea2">Textarea</label>
                                                             </div>
@@ -221,12 +218,12 @@
                                     </ul>
 
 
-                                    <div class="row">
-                                        <div class="progress collection">
-                                            <div id="add_room-preloader" class="indeterminate"
-                                                 style="display:none; border:2px #ebebeb solid"></div>
-                                        </div>
-                                    </div>
+{{--                                    <div class="row">--}}
+{{--                                        <div class="progress collection">--}}
+{{--                                            <div id="add_room-preloader" class="indeterminate"--}}
+{{--                                                 style="display:none; border:2px #ebebeb solid"></div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
                                 </div>
 
                             </div>
@@ -251,10 +248,10 @@
     <script src="{{ asset('admin/assets/js/custom/stepper-form.js') }}"></script>
 
     <script>
-        document.getElementById("addRoomBtn").addEventListener("click", function () {
-            var preloader = document.getElementById("add_room-preloader");
-            preloader.style.display = "block";
-        });
+        // document.getElementById("addRoomBtn").addEventListener("click", function () {
+        //     var preloader = document.getElementById("add_room-preloader");
+        //     preloader.style.display = "block";
+        // });
 
         function disableSubmit(form) {
             const button = form.querySelector('button[type="submit"]');

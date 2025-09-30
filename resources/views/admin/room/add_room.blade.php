@@ -66,8 +66,16 @@
                                                 <div class="step-title waves-effect">Information</div>
                                                 <div class="step-content">
                                                     <div class="row">
-                                                        <div class="input-field col m6 s12">
+                                                        <div class="input-field col m3 s6">
                                                             <select name="room_category_id" required>
+                                                                <option value="" disabled selected>Select Type
+                                                                </option>
+                                                                <option value="0">Hotel</option>
+                                                                <option value="1">Apartment</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="input-field col m3 s6">
+                                                            <select name="room_category_id" class="browser-default" required>
                                                                 <option value="" disabled selected>Select Category
                                                                 </option>
                                                                 @forelse (getRoomCategories() as $category)
@@ -80,7 +88,7 @@
                                                             </select>
                                                         </div>
 
-                                                        <div class="input-field col m4 s610">
+                                                        <div class="input-field col m3 s6">
                                                             <label for="pricePerNight">Price Per Night: <span
                                                                     class="red-text">*</span></label>
                                                             <input type="number" id="pricePerNight" class="validate"
@@ -88,32 +96,49 @@
                                                                    required>
 
                                                         </div>
-                                                        <div class="input-field col m2 s2">
+                                                        <div class="input-field col m3 s6">
                                                             <label for="numUnit">Number of Units: <span
                                                                     class="red-text">*</span></label>
                                                             <input type="number" id="numUnit" class="validate"
                                                                    name="num_units" value="1" min="1" max="10" required>
                                                         </div>
+
                                                     </div>
+
                                                     <div class="row">
-                                                        <div class="input-field col m6 s12">
-                                                            <label for="adultMax">Adult Maximum No. : <span
-                                                                    id="adultValue">1</span> <span
-                                                                    class="red-text">*</span></label><br><br>
-                                                            <span class="range-field">
-                            <input id="adultMax" name="adult_max" type="range" min="1" max="5" value="1"/>
-                        </span>
+                                                        <div class="input-field col m3 s6">
+                                                            <label for="adultMax">Adult Maximum No. :
+                                                                <span id="adultValue">1</span> <span class="red-text">*</span>
+                                                            </label>
+                                                            <input id="adultMax" name="adult_max" type="number" min="1" max="5" value="1"/>
                                                         </div>
 
-                                                        <div class="input-field col m6 s12">
-                                                            <label for="childrenMax">Children Maximum No. : <span
-                                                                    id="childrenValue">0</span> <span
-                                                                    class="red-text">*</span></label><br><br>
-                                                            <span class="range-field">
-                            <input id="childrenMax" name="children_max" type="range" min="0" max="5" value="0"/>
-                        </span>
+                                                        <div class="input-field col m3 s6">
+                                                            <label for="childrenMax">
+                                                                Children Maximum No. :
+                                                                <span id="childrenValue">0</span> <span class="red-text">*</span>
+                                                            </label>
+                                                            <input id="childrenMax" name="children_max" type="number" min="0" max="5" value="0"/>
+                                                        </div>
+                                                        <div class="input-field col m3 s6">
+                                                            <div class="availability-box">
+                                                                <div class="switch">
+                                                                    <label>
+                                                                        <input type="checkbox" name="availability"
+                                                                               class="hidden-checkbox" value="1"
+                                                                               checked>
+                                                                        <span class="lever"></span>
+                                                                        <span
+                                                                            class="availability-text">Availability</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
+
+                                                    <div class="row">
+                                                    </div>
+
                                                     <div class="step-actions">
                                                         <div class="row">
                                                             <div class="col m4 s12 mb-3">
@@ -123,16 +148,13 @@
                                                                 </button>
                                                             </div>
                                                             <div class="col m4 s12 mb-3">
-                                                                <button class="btn btn-light previous-step"
-                                                                        type="button" disabled>
+                                                                <button class="btn btn-light previous-step" type="button" disabled>
                                                                     <i class="material-icons left">arrow_back</i>
                                                                     Prev
                                                                 </button>
                                                             </div>
                                                             <div class="col m4 s12 mb-3">
-                                                                <button
-                                                                    class="waves-effect waves dark btn btn-primary next-step"
-                                                                    type="button">
+                                                                <button class="waves-effect waves dark btn btn-primary next-step" type="button">
                                                                     Next
                                                                     <i class="material-icons right">arrow_forward</i>
                                                                 </button>
@@ -146,10 +168,8 @@
                                                 <div class="step-content">
                                                     <div class="row">
                                                         <div class="input-field col m6 s12">
-                                                            <input name="image" type="file" id="input-file-now-custom-2"
-                                                                   class="dropify" data-height='200'/>
-                                                            <small class="errorTxt3  grey-text">Upload image in JPG
-                                                                (1500 x 844)</small>
+                                                            <input name="image" type="file" id="input-file-now-custom-2" class="dropify" data-height='200'/>
+                                                            <small class="errorTxt3  grey-text">Upload image in JPG (1500 x 844)</small>
                                                         </div>
                                                         <div class="input-field col m6 s12">
                                                             <div id="simpleList" class="preview-container"></div>
@@ -224,20 +244,6 @@
                                                             </div>
                                                         </div>
                                                         <div class="col l6">
-                                                            <div class="input-field col s12">
-                                                                <div class="availability-box">
-                                                                    <div class="switch">
-                                                                        <label>
-                                                                            <input type="checkbox" name="availability"
-                                                                                   class="hidden-checkbox" value="1"
-                                                                                   checked>
-                                                                            <span class="lever"></span>
-                                                                            <span
-                                                                                class="availability-text">Availability</span>
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
                                                             <div class="input-field col s12">
                                                                 <textarea name="description" id="textarea2"
                                                                           class="materialize-textarea"></textarea>

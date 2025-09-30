@@ -151,7 +151,7 @@
                                     </thead>
                                     <tbody id="sortable">
                                     @forelse (getFacilities() as $facility)
-                                        <tr class="hoverable z-depth-1"  data-id="{{ $facility->id }}">
+                                        <tr class="hoverable"  data-id="{{ $facility->id }}">
                                             <td>&nbsp;&nbsp;&nbsp;&nbsp;{{ $facility->name }}</td>
                                             <td>&nbsp;&nbsp;<span
                                                     class="material-symbols-outlined">{{ $facility->icon }}</span></td>

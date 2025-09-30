@@ -9,6 +9,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\CitibarController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\GetLodgedController;
+use App\Http\Controllers\BookingController;
 
 
 
@@ -22,27 +23,37 @@ Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 //Route::get('/rooms/filter', [GetLodgedController::class, 'filter'])->name('rooms.filter');
 Route::get('/getlodged', [GetLodgedController::class, 'index'])->name('getlodged');
 Route::get('/getlodged/filter', [GetLodgedController::class, 'filter'])->name('getlodged.filter');
+//Route::get('/getRoom', [GetRoomController::class, 'getRoom'])->name('getRoom');
+//Route::get('/getApartment', [GetApartmentController::class, 'getApartment'])->name('getApartment');
 //Route::get('/chosen_lodge/{slug}', [GetLodgedController::class, 'getlodge'])->name('chosen_lodge');
 //Route::get('/room/{categorySlug}/{roomId}', [GetLodgedController::class, 'showRoom'])->name('chosen_lodge');
 Route::get('/chosen_lodge/{categorySlug}/{roomId}', [GetLodgedController::class, 'showRoom'])->name('chosen_lodge')->where(['roomId' => '[0-9]+']);
 
 
+
 //Route::get('/getlodged', function () {
 //    return view('getlodged');
 //})->name('getlodged');
-Route::get('/typesOfRoom', function () {
-    return view('typesOfRoom');
-})->name('typesOfRoom');
-Route::get('/typesOfApartment', function () {
-    return view('typesOfApartment');
-})->name('typesOfApartment');
+
+Route::get('/getRooms', function () {
+    return view('getRooms');
+})->name('getRooms');
+
+Route::get('/getApartments', function () {
+    return view('getApartments');
+})->name('getApartments');
 
 //Route::get('/chosen_lodge', function () {
 //    return view('chosen_lodge');
 //})->name('chosen_lodge');
+
 Route::get('/confirmReservation', function () {
     return view('confirmReservation');
 })->name('confirmReservation');
+
+Route::get('/bookedSuccessfully', function () {
+    return view('bookedSuccessfully');
+})->name('bookedSuccessfully');
 
 
 //ADMIN SECTION
@@ -58,6 +69,10 @@ Route::middleware('auth')->group(function () {
 
 
 
+// --------------| Booking Routes |----------------------------------------
+Route::post('/make_booking', [BookingController::class, 'storeRoomDetails'])->name('make.booking');
+Route::post('/store_booking', [BookingController::class, 'storeBooking'])->name('store.booking');
+Route::get('/all_bookings', [BookingController::class, 'getAllBookings'])->name('get.all_bookings');
 
 // --------------| Room Routes |----------------------------------------
 
@@ -108,8 +123,21 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');
     Route::post('/rooms/reorder', [RoomController::class, 'reorder'])->name('rooms.reorder');
     Route::post('/rooms/update-availability', [RoomController::class, 'updateAvailability'])->name('rooms.updateAvailability');
-    Route::get('/rooms/{room}/manage-gallery', [RoomController::class, 'manageGallery'])->name('rooms.manage_gallery');
+    // routes/web.php
+//    Route::get('/rooms/{room}/manage-gallery', [RoomController::class, 'manageGallery'])->name('rooms.manage_gallery');
+    Route::prefix('rooms/{room}')->group(function () {
+        Route::get('/manage-gallery', [RoomController::class, 'manageGallery'])->name('rooms.manage_gallery');
+        Route::post('/gallery/add', [RoomController::class, 'addImages'])->name('room.gallery.add');
+        Route::post('/gallery/add-image', [RoomController::class, 'addImage'])->name('room.gallery.add_image');
+        Route::patch('/gallery/{image}/update', [RoomController::class, 'updateGalleryImage'])->name('room.gallery.update');
+        Route::patch('/gallery/{image}/toggle-featured', [RoomController::class, 'toggleFeatured'])->name('room.gallery.toggle_featured');
+        Route::delete('/gallery/{image}', [RoomController::class, 'deleteImage'])->name('room.gallery.delete');
 
+    });
+
+//    Route::post('/rooms/{room}/upload-gallery', [RoomController::class, 'uploadGallery'])->name('rooms.upload_gallery');
+//    Route::delete('/rooms/gallery/{image}', [RoomController::class, 'deleteGalleryImage'])->name('rooms.delete_gallery_image');
+    Route::post('rooms/{room}/images/reorder', [RoomController::class, 'reorderImages'])->name('rooms.images.reorder');
     Route::post('/rooms/{room}/update-gallery', [RoomController::class, 'updateGallery'])->name('rooms.update_gallery');
 
     Route::delete('/rooms/images/{image}', [RoomController::class, 'deleteImage'])->name('rooms.delete_image');

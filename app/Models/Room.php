@@ -8,6 +8,7 @@ class Room extends Model
 {
     protected $table = 'rooms';
     protected $fillable = [
+        'room_type',
         'room_category_id',
         'position',
         'price_per_night',
@@ -16,6 +17,12 @@ class Room extends Model
         'children_max',
         'availability',
         'description',
+    ];
+
+    protected $casts = [
+        'price_per_night' => 'decimal:2',
+        'adult_max' => 'integer',
+        'children_max' => 'integer',
     ];
 
     public function category()
@@ -30,7 +37,7 @@ class Room extends Model
 
     public function galleryImages()
     {
-        return $this->hasMany(RoomImage::class, 'room_id');
+        return $this->hasMany(RoomImage::class)->orderBy('position')->orderBy('id');
     }
 
     public function featuredImage()
@@ -40,14 +47,23 @@ class Room extends Model
 
     public function getFeaturedImageUrlAttribute()
     {
-        if ($this->featuredImage && $this->featuredImage->image_path) {
-            return asset('storage/' . $this->featuredImage->image_path);
+        try {
+            if ($this->featuredImage && $this->featuredImage->image_path) {
+                return asset('storage/' . $this->featuredImage->image_path);
+            }
+
+            // Try to get first gallery image
+            $firstImage = $this->galleryImages()->first();
+            if ($firstImage) {
+                return asset('storage/' . $firstImage->image_path);
+            }
+
+            // Fallback to default placeholder
+            return asset('images/default.jpg');
+        } catch (\Exception $e) {
+            \Log::error('Error getting featured image: ' . $e->getMessage());
+            return asset('images/default.jpg');
         }
-
-        // Fallback to default placeholder
-        return asset('images/default.jpg');
     }
-
-
 }
 

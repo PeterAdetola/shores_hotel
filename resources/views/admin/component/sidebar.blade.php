@@ -35,7 +35,7 @@ $route = Route::current()->getName()
           <div class="collapsible-body">
             <ul class="collapsible collapsible-sub" data-collapsible="accordion">
               <li>
-                <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
+                <a class="{{ ($route == 'get.all_bookings')? 'active' : '' }} waves-effect waves-cyan" href="{{ route('get.all_bookings') }}"><i class="material-icons">radio_button_unchecked</i>
                   <span data-i18n="Home Slide">All Bookings</span>
                 </a>
               </li>

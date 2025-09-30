@@ -5,6 +5,7 @@
     $contact = getContactContent();
     $socials = $contact['social'] ?? [];
     $route = Route::current()->getName();
+    $rooms = getAllRooms();
 @endphp
 <head>
     <meta charset="UTF-8">
@@ -61,21 +62,19 @@
                     <nav class="mil-menu">
                         <ul>
                             <li class="{{ ($route == 'home')? 'mil-current' : '' }}"><a href="{{ url('/') }}">Home</a></li>
-                            <li class="{{ ($route == 'getlodged' || $route == 'chosen_lodge') ? 'mil-current' : '' }}">
-                                <a href="{{ route('getlodged') }}">Get Lodged</a>
+                            <li class="{{ ($route == 'getRooms' || ($route == 'chosen_lodge' && isset($room) && $room->room_type == 0)) ? 'mil-current' : '' }}">
+                                <a href="{{ route('getRooms') }}">Hotel</a>
+                            </li>
+
+                            <li class="{{ ($route == 'getApartments' || ($route == 'chosen_lodge' && isset($room) && $room->room_type == 1)) ? 'mil-current' : '' }}">
+                                <a href="{{ route('getApartments') }}">Apartments</a>
+                            </li>
+
+                            <li class="{{ ($route == 'citibar') ? 'mil-current' : '' }}">
+                                <a href="{{ route('citibar') }}">Citibar</a>
                             </li>
 
 
-                            {{--                            <li class="">--}}
-{{--                                <a href="#.">Get Lodged</a>--}}
-{{--                                <ul>--}}
-{{--                                    <li class="{{ ($route == 'getlodged')? 'mil-current' : '' }}"><a href="{{ route('getlodged') }}">Get Lodged</a></li>--}}
-{{--                                    <li class="{{ ($route == 'typesOfRoom')? 'mil-current' : '' }}"><a href="{{ route('typesOfRoom') }}">Rooms</a></li>--}}
-{{--                                    <li class="{{ ($route == 'typesOfApartment')? 'mil-current' : '' }}"><a href="{{ route('typesOfApartment') }}">Apartments</a></li>--}}
-{{--                                </ul>--}}
-{{--                            </li>--}}
-{{--                            <li><a href="#.">Apartments</a></li>--}}
-                            <li class="{{ ($route == 'citibar')? 'mil-current' : '' }}"><a href="{{ route('citibar') }}">Citibar</a></li>
                             <li class="{{ ($route == 'contact')? 'mil-current' : '' }}"><a href="{{ route('contact') }}">Contact</a></li>
                         </ul>
                     </nav>
@@ -128,8 +127,21 @@
                                         <li class="{{ ($route == 'home')? 'mil-active' : '' }}">
                                             <a href="{{ url('/') }}">Home</a>
                                         </li>
-                                        <li class="{{ request()->routeIs('getlodged', 'chosen_lodge') ? 'mil-active' : '' }}"
-                                        >
+{{--                                        <li class="{{ (request()->routeIs('getRooms') || (isset($room) && $room->room_type == 0)) ? 'mil-active' : '' }}">--}}
+{{--                                            <a href="{{ route('getRooms') }}">Hotel</a>--}}
+{{--                                        </li>--}}
+                                        <li class="{{ (request()->routeIs('getRooms') || (request()->routeIs('chosen_lodge') && isset($room) && $room->room_type == 0)) ? 'mil-active' : '' }}">
+                                            <a href="{{ route('getRooms') }}">Hotel</a>
+                                        </li>
+
+{{--                                        <li class="{{ (request()->routeIs('getApartments') || (isset($room) && $room->room_type == 1)) ? 'mil-active' : '' }}">--}}
+{{--                                            <a href="{{ route('getApartments') }}">Apartments</a>--}}
+{{--                                        </li>--}}
+                                        <li class="{{ (request()->routeIs('getApartments') || (request()->routeIs('chosen_lodge') && isset($room) && $room->room_type == 1)) ? 'mil-active' : '' }}">
+                                            <a href="{{ route('getApartments') }}">Apartments</a>
+                                        </li>
+
+                                        <li class="{{ request()->routeIs('getlodged') ? 'mil-active' : '' }}">
                                             <a href="{{ route('getlodged') }}">Get Lodged</a>
                                         </li>
                                         <li class="{{ ($route == 'citibar')? 'mil-active' : '' }}">
@@ -147,8 +159,6 @@
                                 <ul class="mil-menu-list">
                                     <li><a href="#." class="mil-light-soft">Privacy Policy</a></li>
                                     <li><a href="#." class="mil-light-soft">Terms and conditions</a></li>
-{{--                                    <li><a href="#." class="mil-light-soft">Cookie Policy</a></li>--}}
-{{--                                    <li><a href="#." class="mil-light-soft">Careers</a></li>--}}
                                 </ul>
 
                             </div>
@@ -228,8 +238,9 @@
                             </ul>
                         </div>
                         <p class="mil-light-soft">© Copyright 2025 - Shores Hotel. All Rights Reserved.</p><br>
-                        <p>Developed by Pacmedia Creatives</p>
+                        <p>Developed by {!! signature() !!}</p>
 
+{{--                        <p class="mil-light-soft">© Copyright 2025 - Shores Hotel. All Rights Reserved.</p><br>--}}
                     </div>
                 </div>
             </div>
@@ -250,73 +261,67 @@
                 </div>
             </div>
             <div class="mil-modal-form">
-                <form>
+                <form method="POST" action="{{ route('make.booking') }}">
+                    @csrf
+
                     <div class="mil-field-frame mil-mb-20">
                         <label>Check-in</label>
-                        <input id="check-in-2" type="text" class="datepicker-here" data-position="bottom left" placeholder="Select date" autocomplete="off" readonly="readonly">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                            <line x1="16" y1="2" x2="16" y2="6"></line>
-                            <line x1="8" y1="2" x2="8" y2="6"></line>
-                            <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
+                        <input name="check_in" id="check-in-2" type="text" class="datepicker-here"
+                               data-position="bottom left" placeholder="Select date" autocomplete="off" readonly>
                     </div>
+
                     <div class="mil-field-frame mil-mb-20">
                         <label>Check-out</label>
-                        <input id="check-out-2" type="text" class="datepicker-here" data-position="bottom left" placeholder="Select date" autocomplete="off" readonly="readonly">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                            <line x1="16" y1="2" x2="16" y2="6"></line>
-                            <line x1="8" y1="2" x2="8" y2="6"></line>
-                            <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
+                        <input name="check_out" id="check-out-2" type="text" class="datepicker-here"
+                               data-position="bottom left" placeholder="Select date" autocomplete="off" readonly>
                     </div>
+
                     <div class="mil-field-frame mil-mb-20">
                         <label>Lodging type</label>
-                        <select>
-                            <option value="" disabled selected>Select lodging</option>
-                            <option value="Kings room">Kings room</option>
-                            <option value="Queens room">Queens room</option>
-                            <option value="Deluxe room">Deluxe room</option>
-                            <option value="Superior room">Superior room</option>
-                            <option value="Master suites">Master suites</option>
-                            <option disabled>-------------</option>
-                            <option value="Studio apartment">Studio apartment</option>
-                            <option value="Suite apartment">Suite apartment</option>
+                        <select name="room_id" required>
+                            <option value="">Select Lodging</option>
+
+                            {{-- Rooms group --}}
+                            @if($rooms->where('room_type', 0)->count() > 0)
+                                <optgroup label="Rooms">
+                                    @foreach($rooms->where('room_type', 0) as $room)
+                                        <option value="{{ $room->id }}">
+                                            {{ $room->category->name }} - ₦{{ number_format($room->price_per_night) }}/night
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+                            @endif
+
+                            {{-- Apartments group --}}
+                            @if($rooms->where('room_type', 1)->count() > 0)
+                                <optgroup label="Apartments">
+                                    @foreach($rooms->where('room_type', 1) as $room)
+                                        <option value="{{ $room->id }}">
+                                            {{ $room->category->name }} - ₦{{ number_format($room->price_per_night) }}/night
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+                            @endif
                         </select>
+
                     </div>
+
                     <div class="mil-field-row mil-mb-20">
                         <div class="mil-field-frame mil-field-col">
                             <label>Adults</label>
-                            <input type="text" placeholder="Enter quantity" value="1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                            </svg>
+                            <input name="adults" type="number" placeholder="Enter quantity" value="1" min="1">
                         </div>
                         <div class="mil-field-frame mil-field-col">
                             <label>Children</label>
-                            <input type="text" placeholder="Enter quantity" value="0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                            </svg>
+                            <input name="children" type="number" placeholder="Enter quantity" value="0" min="0">
                         </div>
                     </div>
+
                     <button type="submit" class="mil-button mil-accent-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                             class="feather feather-arrow-right">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
                         <span>Make Booking</span>
                     </button>
                 </form>
+
             </div>
 
         </div>
@@ -339,6 +344,22 @@
 <!-- aquarelle js -->
 <script src="{{ asset('js/main.js') }}"></script>
 @stack('scripts')
+
+@if (config('cookie-consent.enabled') && ! request()->hasCookie(config('cookie-consent.cookie_name')))
+    @include('vendor.cookie-consent.dialogContents')
+@endif
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toast = document.getElementById("toast");
+        if (toast) {
+            // Optional: remove element from DOM after fadeout animation
+            setTimeout(() => {
+                toast.remove(); // or toast.style.display = "none";
+            }, 5000);
+        }
+    });
+</script>
+
 </body>
 
 </html>
