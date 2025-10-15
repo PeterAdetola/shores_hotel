@@ -40,12 +40,12 @@ $route = Route::current()->getName()
                 </a>
               </li>
                 <li>
-                    <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
+                    <a class="{{ ($route == 'get.unprocessed_bookings')? 'active' : '' }} waves-effect waves-cyan" href="{{ route('get.unprocessed_bookings') }}"><i class="material-icons">radio_button_unchecked</i>
                         <span data-i18n="Home Slide">Unprocessed Bookings</span>
                     </a>
                 </li>
                 <li>
-                    <a class="{{ ($route == 'instantRecords')? 'active' : '' }} waves-effect waves-cyan" href=""><i class="material-icons">radio_button_unchecked</i>
+                    <a class="{{ ($route == 'get.processed_bookings')? 'active' : '' }} waves-effect waves-cyan" href="{{ route('get.processed_bookings') }}"><i class="material-icons">radio_button_unchecked</i>
                         <span data-i18n="Home Slide">Processed Bookings</span>
                     </a>
                 </li>

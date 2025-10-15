@@ -129,12 +129,12 @@
                                 <div class="image-card">
 
                                     <!-- Featured star -->
-                                    @if($img->is_featured)
+                                    @if((int) $img->position === 1)
                                         <span class="featured-badge">
-                <i class="material-icons">star</i>
-            </span>
+                                            <i class="material-icons">star</i>
+                                        </span>
                                     @endif
-                                    <img src="{{ asset('storage/' . $img->image_path) }}" alt="Room Image">
+                                    <img src="{{ asset('uploads/' . $img->image_path) }}" alt="Room Image">
                                     <div class="overlay">
                                         <a href="#edit_img-modal{{ $img->id }}" class="edit-btn modal-trigger"><span class="material-symbols-outlined grey-text">edit_square</span></a>
                                         <button type="button" class="drag-handle btn-flat" title="Drag to reorder">
@@ -201,37 +201,6 @@
             });
         });
 
-        document.querySelectorAll('.toggle-featured').forEach(cb => {
-            cb.addEventListener('change', function () {
-                fetch(this.dataset.url, {
-                    method: 'PATCH',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json'
-                    }
-                })
-                    .then(r => r.json())
-                    .then(data => {
-                        // Show toast first
-                        if (typeof M !== 'undefined' && M.toast) {
-                            M.toast({
-                                html: data.featured ? 'Featured image updated!' : 'Image unfeatured',
-                                displayLength: 1500 // 1.5s
-                            });
-                        }
-
-                        // Reload after short delay (so toast can show)
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 1600);
-                    })
-                    .catch(() => {
-                        if (typeof M !== 'undefined' && M.toast) {
-                            M.toast({ html: 'Error updating featured image' });
-                        }
-                    });
-            });
-        });
 
 
 

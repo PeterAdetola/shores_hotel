@@ -73,10 +73,12 @@ Route::middleware('auth')->group(function () {
 Route::post('/make_booking', [BookingController::class, 'storeRoomDetails'])->name('make.booking');
 Route::post('/store_booking', [BookingController::class, 'storeBooking'])->name('store.booking');
 Route::get('/all_bookings', [BookingController::class, 'getAllBookings'])->name('get.all_bookings');
+Route::get('/processed_bookings', [BookingController::class, 'getProcessedBookings'])->name('get.processed_bookings');
+Route::get('/unprocessed_bookings', [BookingController::class, 'getUnprocessedBookings'])->name('get.unprocessed_bookings');
 
 // --------------| Room Routes |----------------------------------------
 
-Route::get('/rooms/create', [RoomController::class, 'create'])->name('rooms.create');
+//Route::get('/room/create', [RoomController::class, 'create'])->name('room.create');
 Route::post('/rooms', [RoomController::class, 'store'])->name('rooms.store');
 //Route::get('/rooms', [RoomController::class, 'index'])->name('rooms.index');
 
@@ -120,20 +122,31 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
     Route::get('/rooms/{id}/edit', [RoomController::class, 'edit'])->name('edit_room');
     Route::put('/rooms/{room}', [RoomController::class, 'update'])->name('rooms.update');
-    Route::delete('/rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');
+    Route::delete('/room/{room}', [RoomController::class, 'destroy'])->name('room.destroy');
     Route::post('/rooms/reorder', [RoomController::class, 'reorder'])->name('rooms.reorder');
     Route::post('/rooms/update-availability', [RoomController::class, 'updateAvailability'])->name('rooms.updateAvailability');
     // routes/web.php
 //    Route::get('/rooms/{room}/manage-gallery', [RoomController::class, 'manageGallery'])->name('rooms.manage_gallery');
     Route::prefix('rooms/{room}')->group(function () {
-        Route::get('/manage-gallery', [RoomController::class, 'manageGallery'])->name('rooms.manage_gallery');
-        Route::post('/gallery/add', [RoomController::class, 'addImages'])->name('room.gallery.add');
-        Route::post('/gallery/add-image', [RoomController::class, 'addImage'])->name('room.gallery.add_image');
-        Route::patch('/gallery/{image}/update', [RoomController::class, 'updateGalleryImage'])->name('room.gallery.update');
-        Route::patch('/gallery/{image}/toggle-featured', [RoomController::class, 'toggleFeatured'])->name('room.gallery.toggle_featured');
-        Route::delete('/gallery/{image}', [RoomController::class, 'deleteImage'])->name('room.gallery.delete');
+        Route::get('/manage-gallery', [RoomController::class, 'manageGallery'])
+            ->name('rooms.manage_gallery');
 
+        Route::post('/gallery/add', [RoomController::class, 'addImages'])
+            ->name('room.gallery.add');
+
+        Route::post('/gallery/add-image', [RoomController::class, 'addImage'])
+            ->name('room.gallery.add_image');
+
+        Route::patch('/gallery/{roomImage}/update', [RoomController::class, 'updateGalleryImage'])
+            ->name('room.gallery.update');
+
+//        Route::patch('/gallery/{roomImage}/toggle-featured', [RoomController::class, 'toggleFeatured'])
+//            ->name('room.gallery.toggle_featured');
+
+        Route::delete('/gallery/{roomImage}', [RoomController::class, 'deleteImage'])
+            ->name('room.gallery.delete');
     });
+
 
 //    Route::post('/rooms/{room}/upload-gallery', [RoomController::class, 'uploadGallery'])->name('rooms.upload_gallery');
 //    Route::delete('/rooms/gallery/{image}', [RoomController::class, 'deleteGalleryImage'])->name('rooms.delete_gallery_image');
@@ -142,40 +155,142 @@ Route::middleware(['auth'])->group(function () {
 
     Route::delete('/rooms/images/{image}', [RoomController::class, 'deleteImage'])->name('rooms.delete_image');
 });
+
+
+// -----------------------------
+// ROOMS routes
+// -----------------------------
 Route::prefix('rooms')->name('rooms.')->group(function () {
     // Room update sections
     Route::put('{room}/info', [RoomController::class, 'updateInfo'])->name('update.info');
-    Route::put('{room}/featured-image', [RoomController::class, 'updateFeaturedImage'])->name('update.featuredImage');
+//    Route::put('{room}/featured-image', [RoomController::class, 'updateFeaturedImage'])->name('update.featuredImage');
     Route::put('{room}/facilities', [RoomController::class, 'updateFacilities'])->name('update.facilities');
 
-    // Gallery routes grouped
+    // Gallery routes grouped by room
     Route::prefix('{room}/gallery')->name('gallery.')->group(function () {
         Route::get('/', [RoomController::class, 'editGallery'])->name('edit');
         Route::post('/', [RoomController::class, 'storeGallery'])->name('store');
     });
-
-    // Actions on individual gallery images
-    Route::prefix('gallery')->name('gallery.')->group(function () {
-        Route::delete('{image}', [RoomController::class, 'destroyGalleryImage'])->name('destroy');
-        Route::put('{image}', [RoomController::class, 'updateGalleryImage'])->name('update');
-    });
 });
 
+Route::get('/view-logs', function() {
+    $logFile = storage_path('logs/laravel.log');
 
+    if (!file_exists($logFile)) {
+        return 'Log file not found';
+    }
 
-// --------------| Booking Routes |----------------------------------------
+    $logs = file_get_contents($logFile);
+    $lastLogs = collect(explode("\n", $logs))->reverse()->take(100)->reverse()->implode("\n");
 
-//Route::get('/room_management', function () {
-//    return view('/admin/room/room_management');
-//})->name('room_management');
-Route::get('/add_room', function () {
-    return view('/admin/room/add_room');
-})->name('add_room');
-//Route::get('/edit_room', function () {
-//    return view('/admin/room/edit_room');
-//})->name('edit_room');
-Route::get('/room_config', function () {
-    return view('/admin/room/room_config');
-})->name('room_config');
+    return '<pre>' . $lastLogs . '</pre>';
+});
+
+Route::get('/clear-cache', function() {
+    try {
+        // Clear all caches
+        Artisan::call('config:clear');
+        Artisan::call('cache:clear');
+        Artisan::call('route:clear');
+        Artisan::call('view:clear');
+        Artisan::call('optimize:clear');
+
+        return response()->json([
+            'message' => 'All caches cleared successfully!',
+            'details' => [
+                'config' => 'cleared',
+                'cache' => 'cleared',
+                'route' => 'cleared',
+                'view' => 'cleared',
+                'optimize' => 'cleared'
+            ]
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'Failed to clear cache',
+            'message' => $e->getMessage()
+        ], 500);
+    }
+});
+
+Route::get('/migrate-images', function() {
+    $moved = 0;
+    $failed = 0;
+
+    try {
+        // Create directory if not exists
+        if (!file_exists(public_path('uploads/rooms'))) {
+            mkdir(public_path('uploads/rooms'), 0755, true);
+        }
+
+        $images = \App\Models\RoomImage::all();
+
+        foreach ($images as $image) {
+            $oldPath = public_path('storage/' . $image->image_path);
+            $newPath = public_path('uploads/' . $image->image_path);
+
+            if (file_exists($oldPath)) {
+                // Create subdirectories if needed
+                $dir = dirname($newPath);
+                if (!file_exists($dir)) {
+                    mkdir($dir, 0755, true);
+                }
+
+                // Copy file
+                if (copy($oldPath, $newPath)) {
+                    $moved++;
+                } else {
+                    $failed++;
+                }
+            }
+        }
+
+        return "Migration complete! Moved: $moved, Failed: $failed";
+
+    } catch (\Exception $e) {
+        return "Error: " . $e->getMessage();
+    }
+});
+
+Route::get('/deep-search-images', function() {
+    $targetImage = '68ea82a22261a.jpg';
+
+    $searchPaths = [
+        'storage/app/public/rooms' => storage_path('app/public/rooms'),
+        'storage/app/public/room_images' => storage_path('app/public/room_images'),
+        'public/storage/rooms' => public_path('storage/rooms'),
+        'public/storage/room_images' => public_path('storage/room_images'),
+        'public/uploads/rooms' => public_path('uploads/rooms'),
+        'public_html/storage/rooms' => '/home/jupiterc/domains/shoreshotelng.com/public_html/storage/rooms',
+        'public_html/uploads/rooms' => '/home/jupiterc/domains/shoreshotelng.com/public_html/uploads/rooms',
+        'public_html/img/rooms' => '/home/jupiterc/domains/shoreshotelng.com/public_html/img/rooms',
+    ];
+
+    $allImages = [];
+    foreach ($searchPaths as $label => $path) {
+        if (file_exists($path)) {
+            $files = scandir($path);
+            $imageFiles = array_filter($files, function($file) {
+                return preg_match('/\.(jpg|jpeg|png|webp)$/i', $file);
+            });
+
+            if (!empty($imageFiles)) {
+                $allImages[$label] = [
+                    'path' => $path,
+                    'count' => count($imageFiles),
+                    'files' => array_values($imageFiles),
+                    'has_target' => in_array($targetImage, $imageFiles),
+                ];
+            }
+        }
+    }
+
+    return response()->json([
+        'searching_for' => $targetImage,
+        'all_locations_with_images' => $allImages,
+    ]);
+});
+
 
 require __DIR__.'/auth.php';

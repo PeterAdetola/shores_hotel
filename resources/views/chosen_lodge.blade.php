@@ -42,7 +42,7 @@
                                 @forelse($room->galleryImages ?? [] as $image)
                                     <div class="swiper-slide">
                                         <div class="mil-image-frame">
-                                            <img src="{{ asset('storage/' . $image->image_path) }}" alt="room" data-swiper-parallax="0" data-swiper-parallax-scale="1.2">
+                                            <img src="{{ asset('uploads/' . $image->image_path) }}" alt="room" data-swiper-parallax="0" data-swiper-parallax-scale="1.2">
                                         </div>
                                     </div>
                                 @empty
@@ -128,17 +128,17 @@
                         </div>
 
 
-                            <!-- Default amenities if none exist -->
-                            <div class="col-xl-6">
-                                <div class="mil-iconbox mil-mb-40-adapt mil-fade-up">
-                                    <div class="mil-bg-icon"></div>
-                                    <div class="mil-icon mil-icon-fix">
-                                        <span class="material-symbols-outlined light-text">fluorescent</span>
-                                    </div>
-                                    <h3 class="mil-mb-20 grey-text">Enchanting Atmosphere</h3>
-                                    <p>Escape into an alluring, vibrant, and elegant ambiance.</p>
+                        <!-- Default amenities if none exist -->
+                        <div class="col-xl-6">
+                            <div class="mil-iconbox mil-mb-40-adapt mil-fade-up">
+                                <div class="mil-bg-icon"></div>
+                                <div class="mil-icon mil-icon-fix">
+                                    <span class="material-symbols-outlined light-text">fluorescent</span>
                                 </div>
+                                <h3 class="mil-mb-20 grey-text">Enchanting Atmosphere</h3>
+                                <p>Escape into an alluring, vibrant, and elegant ambiance.</p>
                             </div>
+                        </div>
 
                         <div class="col-xl-6">
                             <div class="mil-iconbox mil-mb-40-adapt mil-fade-up">
@@ -177,12 +177,12 @@
                     <!-- amenity end -->
 
                     <!-- map -->
-{{--                    <div>--}}
-{{--                        <h3 class="mil-fade-up mil-mb-40">Location</h3>--}}
-{{--                        <div class="mil-map-frame mil-fade-up mil-mb-100">--}}
-{{--                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6393.16599479736!2d-2.430872248702666!3d36.81379446199894!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd7a9db1a1de493f%3A0xc6d411d11ab69d33!2sParque%20de%20Bici!5e0!3m2!1suk!2suk!4v1701096541420!5m2!1suk!2suk" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
+                    {{--                    <div>--}}
+                    {{--                        <h3 class="mil-fade-up mil-mb-40">Location</h3>--}}
+                    {{--                        <div class="mil-map-frame mil-fade-up mil-mb-100">--}}
+                    {{--                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6393.16599479736!2d-2.430872248702666!3d36.81379446199894!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd7a9db1a1de493f%3A0xc6d411d11ab69d33!2sParque%20de%20Bici!5e0!3m2!1suk!2suk!4v1701096541420!5m2!1suk!2suk" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>--}}
+                    {{--                        </div>--}}
+                    {{--                    </div>--}}
                     <!-- map end -->
 
                 </div>

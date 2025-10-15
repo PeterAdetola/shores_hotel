@@ -67,9 +67,8 @@
                                                 <div class="step-content">
                                                     <div class="row">
                                                         <div class="input-field col m3 s6">
-                                                            <select name="room_category_id" required>
-                                                                <option value="" disabled selected>Select Type
-                                                                </option>
+                                                            <select name="room_type" required>
+                                                                <option value="" disabled selected>Select Type</option>
                                                                 <option value="0">Hotel</option>
                                                                 <option value="1">Apartment</option>
                                                             </select>

@@ -198,5 +198,34 @@
     .availability-box .switch label input[type="checkbox"]:checked + .lever:after {
         background-color: #26a69a;
     }
+    /* CSS */
+    .centered-button-container {
+        /* 1. Use Flexbox to align items */
+        display: flex;
+        /* 2. Vertically center them (for perfect alignment with the line) */
+        align-items: center;
+        /* 3. Add padding to separate the line from the button */
+        padding: 0 10%; /* Adjust as needed */
+        /* 4. Center the whole group on the page (if the container itself is smaller than the screen) */
+        margin: 20px auto;
+        /* 5. Ensure the container takes up the necessary width */
+        width: 80%; /* Example width, adjust for your layout */
+    }
+
+    .line {
+        /* The line should fill the available space on the left and right */
+        flex-grow: 1;
+        height: 1px;
+        background-color: #ccc; /* Light gray color for the line */
+        margin: 0 15px; /* Spacing between the line and the button */
+    }
+
+    /* Optional: Adjust Materialize's 'right' alignment class */
+    .btn-floating {
+        /* Override the 'right' class if it's interfering with centering */
+        margin: 0;
+        float: none;
+    }
+
 </style>
 

@@ -119,15 +119,17 @@
 
                                                             <td>{{ $booking->adults }}A / {{ $booking->children }}C</td>
                                                             <td>
-                                                                <a class="gradient-45deg-indigo-blue mb-1 chip waves-effect waves-light accent-2 white-text">
+
+                                                                <a href="#confirm_booking-modal{{ $booking->id }}" class="modal-trigger gradient-45deg-indigo-blue mb-1 chip waves-effect waves-light accent-2 white-text">
                                                                     confirm
                                                                 </a>
                                                                 &nbsp;&nbsp;
-                                                                <a class="gradient-45deg-blue-grey-blue-grey mb-1 chip waves-effect waves-light accent-2 white-text">
+                                                                <a href="#decline_booking{{ $booking->id }}" class="modal-trigger gradient-45deg-deep-orange-orange mb-1 chip waves-effect waves-light accent-2 white-text">
                                                                     cancel
                                                                 </a>
                                                             </td>
                                                         </tr>
+                                                        @include('admin.bookings.modals.confirm_booking-modal')
                                                     @endforeach
                                                     </tbody>
                                                     <tfoot>
@@ -172,27 +174,33 @@
                                             <table>
                                                 <thead>
                                                 <tr>
-                                                    <th>Name</th>
-                                                    <th>Item Name</th>
-                                                    <th>Item Price</th>
+                                                    <th>Guest</th>
+                                                    <th>Date</th>
+                                                    <th>Room Type</th>
+                                                    <th>Check-in</th>
+                                                    <th>Check-out</th>
+                                                    <th>Guest-No.</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
+                                                @foreach(getUnprocessedBookings(5) as $booking)
                                                 <tr>
-                                                    <td>Alvin</td>
-                                                    <td>Eclair</td>
-                                                    <td>$0.87</td>
+                                                    <td>{{ $booking->customer_name }}</td>
+                                                    <td title="{{ $booking->created_at->format('Y-m-d H:i') }}">
+                                                        {{ $booking->created_at->diffForHumans() }}
+                                                    </td>
+                                                    <td>{{ $booking->lodging_type ?? optional($booking->room->category)->name }}</td>
+                                                    <td title="{{ $booking->check_in->format('Y-m-d') }}">
+                                                        {{ \Carbon\Carbon::parse($booking->check_in)->diffForHumans() }}
+                                                    </td>
+
+                                                    <td title="{{ $booking->check_out->format('Y-m-d') }}">
+                                                        {{ \Carbon\Carbon::parse($booking->check_out)->diffForHumans() }}
+                                                    </td>
+
+                                                    <td>{{ $booking->adults }}A / {{ $booking->children }}C</td>
                                                 </tr>
-                                                <tr>
-                                                    <td>Alan</td>
-                                                    <td>Jellybean</td>
-                                                    <td>$3.76</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Jonathan</td>
-                                                    <td>Lollipop</td>
-                                                    <td>$7.00</td>
-                                                </tr>
+                                                @endforeach
                                                 </tbody>
                                             </table>
                                         </div>
@@ -200,27 +208,33 @@
                                             <table>
                                                 <thead>
                                                 <tr>
-                                                    <th>Name</th>
-                                                    <th>Item Name</th>
-                                                    <th>Item Price</th>
+                                                    <th>Guest</th>
+                                                    <th>Date</th>
+                                                    <th>Room Type</th>
+                                                    <th>Check-in</th>
+                                                    <th>Check-out</th>
+                                                    <th>Guest-No.</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                <tr>
-                                                    <td>Alvin</td>
-                                                    <td>Eclair</td>
-                                                    <td>$0.87</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Alan</td>
-                                                    <td>Jellybean</td>
-                                                    <td>$3.76</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Jonathan</td>
-                                                    <td>Lollipop</td>
-                                                    <td>$7.00</td>
-                                                </tr>
+                                                @foreach(getProcessedBookings(5) as $booking)
+                                                    <tr>
+                                                        <td>{{ $booking->customer_name }}</td>
+                                                        <td title="{{ $booking->created_at->format('Y-m-d H:i') }}">
+                                                            {{ $booking->created_at->diffForHumans() }}
+                                                        </td>
+                                                        <td>{{ $booking->lodging_type ?? optional($booking->room->category)->name }}</td>
+                                                        <td title="{{ $booking->check_in->format('Y-m-d') }}">
+                                                            {{ \Carbon\Carbon::parse($booking->check_in)->diffForHumans() }}
+                                                        </td>
+
+                                                        <td title="{{ $booking->check_out->format('Y-m-d') }}">
+                                                            {{ \Carbon\Carbon::parse($booking->check_out)->diffForHumans() }}
+                                                        </td>
+
+                                                        <td>{{ $booking->adults }}A / {{ $booking->children }}C</td>
+                                                    </tr>
+                                                @endforeach
                                                 </tbody>
                                             </table>
                                         </div>

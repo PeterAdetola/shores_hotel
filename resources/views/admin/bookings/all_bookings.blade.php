@@ -31,9 +31,6 @@
                                 </li>
                             </ol>
                         </div>
-
-                        <!-- Something is removed here -->
-
                     </div>
                 </div>
             </div><br>
@@ -50,17 +47,17 @@
                                             <div class="col s12">
                                                 <table id="data-table-row-grouping" class="display">
                                                     <thead>
-                                                    <tr>
-                                                        <th>Booking Code</th>
-                                                        <th>Guest</th>
-                                                        <th>Date</th>
-                                                        <th>Room Type</th>
-                                                        <th>Status</th>
-                                                        <th>Check-in</th>
-                                                        <th>Check-out</th>
-                                                        <th>Guest-No.</th>
-                                                        <th>Actions</th>
-                                                    </tr>
+                                                        <tr>
+                                                            <th>Booking Code</th>
+                                                            <th>Guest</th>
+                                                            <th>Date</th>
+                                                            <th>Room Type</th>
+                                                            <th>Status</th>
+                                                            <th>Check-in</th>
+                                                            <th>Check-out</th>
+                                                            <th>Guest-No.</th>
+                                                            <th>Actions</th>
+                                                        </tr>
                                                     </thead>
                                                     <tbody>
                                                     @foreach($bookings as $booking)
@@ -82,10 +79,17 @@
 
                                                             <td>{{ $booking->adults }}A / {{ $booking->children }}C</td>
                                                             <td>
-                                                                <a class="gradient-45deg-indigo-blue mb-1 chip waves-effect waves-light accent-2 white-text">confirm</a> &nbsp;&nbsp;
-                                                                <a class="gradient-45deg-blue-grey-blue-grey mb-1 chip waves-effect waves-light accent-2 white-text">cancel</a>
+                                                                <a href="#confirm_booking-modal{{ $booking->id }}" class="modal-trigger gradient-45deg-indigo-blue mb-1 chip waves-effect waves-light accent-2 white-text">
+                                                                    confirm
+                                                                </a>
+                                                                &nbsp;&nbsp;
+                                                                <a href="#decline_booking{{ $booking->id }}" class="modal-trigger gradient-45deg-deep-orange-orange mb-1 chip waves-effect waves-light accent-2 white-text">
+                                                                    cancel
+                                                                </a>
                                                             </td>
                                                         </tr>
+                                                        @include('admin.bookings.modals.confirm_booking-modal')
+{{--                                                        @include('admin.room.modals.category.delete_category-modal')--}}
                                                     @endforeach
                                                     </tbody>
 

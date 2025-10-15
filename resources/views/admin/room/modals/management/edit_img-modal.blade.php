@@ -1,15 +1,7 @@
 <div id="edit_img-modal{{ $img->id }}" class="modal" style="padding:1em;">
     <div class="modal-content">
         <h6 class="card-title ml-2 left" style="display:inline-block;">Update Image</h6>
-        <div class="switch right">
-            <label>
-                <input type="checkbox"
-                       class="toggle-featured"
-                       data-url="{{ route('room.gallery.toggle_featured', [$room->id, $img->id]) }}"
-                    {{ $img->is_featured ? 'checked' : '' }}>
-                <span class="lever"></span>
-            </label>
-        </div>
+{{--        --}}
 
 
         <div class="progress collection">
@@ -22,12 +14,12 @@
             <form method="POST" action="{{ route('room.gallery.update', [$room->id, $img->id]) }}" enctype="multipart/form-data" class="update-form">
                 @csrf
                 @method('PATCH')
-            <div class="col s12">
+                <div class="col s12">
 
                     <div class="row">
                         <div class="input-field col m7 s12">
                             <input name="image"
-                                   data-default-file="{{ asset('storage/' . $img->image_path) }}"
+                                   data-default-file="{{ asset('uploads/' . $img->image_path) }}"
                                    type="file"
                                    class="dropify"
                                    data-height='200'/>
@@ -37,21 +29,25 @@
 
                     <div class="divider mt-1 mb-2"></div>
 
-                    <button id="editImgBtn{{ $img->id }}" type="submit"
+                    <button id="editImgBtn" type="submit"
                             class="modal-action waves-effect waves-green btn-large">Update</button>
-                </form>
+            </form>
 
-                <!-- Delete form (separate) -->
-                <form method="POST" action="{{ route('room.gallery.delete', ['room' => $room->id, 'image' => $img->id]) }}" style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn-floating waves-effect waves-light gradient-45deg-purple-deep-orange right">
-                        <i class="material-icons">delete</i>
-                    </button>
-                </form>
-
-                <!-- users edit account form ends -->
-            </div>
+            <!-- Delete form (separate) -->
+            <form method="POST" action="{{ route('room.gallery.delete', ['room' => $room->id, 'roomImage' => $img->id]) }}" style="display:inline;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn-floating waves-effect waves-light gradient-45deg-purple-deep-orange right">
+                    <i class="material-icons">delete</i>
+                </button>
+            </form>
         </div>
     </div>
 </div>
+</div>
+<script>
+    document.getElementById("editImgBtn").addEventListener("click", function () {
+        var preloader = document.getElementById("edit_img-preloader");
+        preloader.style.display = "block";
+    });
+</script>

@@ -278,7 +278,7 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
                                 <div class="mil-price"><span class="mil-symbol">$</span><span
                                         class="mil-number">49</span>/per night
                                 </div>
-                                <a href="{{ route('chosen_lodge', ['categorySlug' => $category->slug, 'roomId' => $room->id]) }}">
+                                <a href="">
 
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"

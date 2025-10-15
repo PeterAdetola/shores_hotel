@@ -10,6 +10,7 @@ class RoomImage extends Model
 
     protected $casts = [
         'is_featured' => 'boolean',
+        'position' => 'integer',
     ];
 
     public function scopeOrdered($query)

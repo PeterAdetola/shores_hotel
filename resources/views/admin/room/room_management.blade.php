@@ -222,6 +222,9 @@
                             </div>
                         </div>
                     </div>
+                    <div style="bottom: 50px; right: 19px;" class=" fixed-action-btn direction-top">
+                        <a href="{{ route('add_room') }}" class="btn-floating btn-large gradient-45deg-black-grey gradient-shadow"><i class="material-icons">add</i></a>
+                    </div>
                     <!-- users view ends -->
                 </div>
             </div>

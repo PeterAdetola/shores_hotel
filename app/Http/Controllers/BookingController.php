@@ -46,9 +46,9 @@ class BookingController extends Controller
 
         // Create booking
         $booking = Booking::create(array_merge($roomDetails, $guestDetails, [
-            'total_amount'   => $total_amount,
-            'status'         => 'pending',
-            'lodging_type'  => $room->category->name, // ✅ Save category name directly
+            'total_amount' => $total_amount,
+            'status' => 'pending',
+            'lodging_type' => $room->category->name, // ✅ Save category name directly
         ]));
 
         // Clear session
@@ -57,6 +57,7 @@ class BookingController extends Controller
         return redirect()->route('bookedSuccessfully', $booking->id)
             ->with('success', 'Your booking request has been received. Please check your email for payment details.');
     }
+
     public function getAllBookings()
     {
         // Fetch bookings with the related room & category just in case
@@ -65,5 +66,26 @@ class BookingController extends Controller
         return view('admin.bookings.all_bookings', compact('bookings'));
     }
 
+    public function getProcessedBookings()
+    {
+        // Fetch only confirmed or cancelled bookings with related room & category
+        $bookings = Booking::with('room.category')
+            ->whereIn('status', ['confirmed', 'paid', 'cancelled', 'completed'])
+            ->latest()
+            ->get();
+
+        return view('admin.bookings.processed_bookings', compact('bookings'));
+    }
+
+    public function getUnprocessedBookings()
+    {
+        // Fetch only confirmed or cancelled bookings with related room & category
+        $bookings = Booking::with('room.category')
+            ->whereIn('status', ['pending'])
+            ->latest()
+            ->get();
+
+        return view('admin.bookings.unprocessed_bookings', compact('bookings'));
+    }
 
 }

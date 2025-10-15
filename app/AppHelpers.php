@@ -80,12 +80,32 @@ if (!function_exists('getFacilities')) {
 
 
 // app/Helpers/NotificationHelper.php
+//if (!function_exists('notification')) {
+//    function notification(
+//        string $message,
+//        string $type = 'success',
+//        bool $isAjax = false,
+//        array $additional = []
+//    ) {
+//        $response = [
+//                'message' => $message,
+//                'type' => $type,
+//                'status' => $type === 'success' ? 'success' : 'error'
+//            ] + $additional;
+//
+//        return $isAjax
+//            ? response()->json($response)
+//            : redirect()->back()->with($response);
+//    }
+//}
+
 if (!function_exists('notification')) {
     function notification(
         string $message,
         string $type = 'success',
         bool $isAjax = false,
-        array $additional = []
+        array $additional = [],
+        string $redirectRoute = null // Add this parameter
     ) {
         $response = [
                 'message' => $message,
@@ -93,9 +113,16 @@ if (!function_exists('notification')) {
                 'status' => $type === 'success' ? 'success' : 'error'
             ] + $additional;
 
-        return $isAjax
-            ? response()->json($response)
-            : redirect()->back()->with($response);
+        if ($isAjax) {
+            return response()->json($response);
+        }
+
+        // Redirect to specific route if provided, otherwise back
+        if ($redirectRoute) {
+            return redirect()->route($redirectRoute)->with($response);
+        }
+
+        return redirect()->back()->with($response);
     }
 }
 
@@ -266,6 +293,28 @@ if (!function_exists('getAllBookings')) {
     function getAllBookings($limit = 10)
     {
         return Booking::with('room.category')
+            ->latest()
+            ->take($limit)
+            ->get();
+    }
+}
+
+if (!function_exists('getProcessedBookings')) {
+    function getProcessedBookings($limit = 10)
+    {
+        return Booking::with('room.category')
+            ->whereIn('status', ['confirmed', 'paid', 'cancelled', 'completed'])
+            ->latest()
+            ->take($limit)
+            ->get();
+    }
+}
+
+if (!function_exists('getUnprocessedBookings')) {
+    function getUnprocessedBookings($limit = 10)
+    {
+        return Booking::with('room.category')
+            ->whereIn('status', ['pending'])
             ->latest()
             ->take($limit)
             ->get();
