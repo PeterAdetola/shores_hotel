@@ -14,6 +14,24 @@ class ContactController extends Controller
         return view('contact', compact('contactContent'));
     }
 
+    public function hotel()
+    {
+        $contactContent = $this->loadFrontMatter('content/contact/contact.md') ?: [];
+        $hotelInfo = $contactContent['hotel_info'] ?? [];
+
+        return view('getRooms', ['hotelInfo' => $hotelInfo]);
+    }
+
+    public function apartment()
+    {
+        $contactContent = $this->loadFrontMatter('content/contact/contact.md') ?: [];
+        $apartmentInfo = $contactContent['apartment_info'] ?? [];
+
+        return view('getApartments', ['apartmentInfo' => $apartmentInfo]);
+    }
+
+
+
     /**
      * Safe loader for markdown front matter.
      */

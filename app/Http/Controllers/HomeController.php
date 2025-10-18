@@ -16,7 +16,15 @@ class HomeController extends Controller
 
         return view('index.index', compact('heroContent', 'aboutContent1', 'aboutContent2', 'featuresContent'));
     }
+    public function about()
+    {
+        $aboutContent1 = $this->loadFrontMatter('content/home/about_1.md') ?: [];
+        $aboutContent2 = $this->loadFrontMatter('content/home/about_2.md') ?: [];
+        $featuresContent = $this->loadFrontMatter('content/home/features.md') ?: [];
+        $citibarContent = $this->loadFrontMatter('content/home/gallery.md') ?: [];
 
+        return view('about_page', compact( 'aboutContent1', 'aboutContent2', 'featuresContent', 'citibarContent'));
+    }
     /**
      * Load a markdown file from storage/app and parse YAML front matter (if present).
      */

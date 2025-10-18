@@ -11,6 +11,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no">
+
 
     <link rel="icon" href="{{ asset('img/favicon/favicon.ico') }}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
@@ -27,7 +29,14 @@
     <!-- custom css -->
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
     <!-- page name -->
-    <title>Shores Hotels</title>
+    <title>Shores Hotel</title>
+<style>
+    @media (max-width: 768px) {
+        .space {
+            margin-bottom: 5.6em;
+        }
+    }
+</style>
 </head>
 
 <body>
@@ -62,6 +71,10 @@
                     <nav class="mil-menu">
                         <ul>
                             <li class="{{ ($route == 'home')? 'mil-current' : '' }}"><a href="{{ url('/') }}">Home</a></li>
+
+                            <li class="{{ ($route == 'aboutUs')? 'mil-current' : '' }}"><a href="{{ route('aboutUs') }}">About us</a></li>
+
+
                             <li class="{{ ($route == 'getRooms' || ($route == 'chosen_lodge' && isset($room) && $room->room_type == 0)) ? 'mil-current' : '' }}">
                                 <a href="{{ route('getRooms') }}">Hotel</a>
                             </li>
@@ -74,8 +87,6 @@
                                 <a href="{{ route('citibar') }}">Citibar</a>
                             </li>
 
-
-                            <li class="{{ ($route == 'contact')? 'mil-current' : '' }}"><a href="{{ route('contact') }}">Contact</a></li>
                         </ul>
                     </nav>
                     <a href="#." class="mil-button mil-open-book-popup mil-top-panel-btn">
@@ -127,16 +138,15 @@
                                         <li class="{{ ($route == 'home')? 'mil-active' : '' }}">
                                             <a href="{{ url('/') }}">Home</a>
                                         </li>
-{{--                                        <li class="{{ (request()->routeIs('getRooms') || (isset($room) && $room->room_type == 0)) ? 'mil-active' : '' }}">--}}
-{{--                                            <a href="{{ route('getRooms') }}">Hotel</a>--}}
-{{--                                        </li>--}}
+
+                                        <li class="{{ ($route == 'aboutUs')? 'mil-active' : '' }}">
+                                            <a href="{{ route('aboutUs') }}">About</a>
+                                        </li>
+
                                         <li class="{{ (request()->routeIs('getRooms') || (request()->routeIs('chosen_lodge') && isset($room) && $room->room_type == 0)) ? 'mil-active' : '' }}">
                                             <a href="{{ route('getRooms') }}">Hotel</a>
                                         </li>
 
-{{--                                        <li class="{{ (request()->routeIs('getApartments') || (isset($room) && $room->room_type == 1)) ? 'mil-active' : '' }}">--}}
-{{--                                            <a href="{{ route('getApartments') }}">Apartments</a>--}}
-{{--                                        </li>--}}
                                         <li class="{{ (request()->routeIs('getApartments') || (request()->routeIs('chosen_lodge') && isset($room) && $room->room_type == 1)) ? 'mil-active' : '' }}">
                                             <a href="{{ route('getApartments') }}">Apartments</a>
                                         </li>
@@ -144,11 +154,9 @@
                                         <li class="{{ request()->routeIs('getlodged') ? 'mil-active' : '' }}">
                                             <a href="{{ route('getlodged') }}">Get Lodged</a>
                                         </li>
+
                                         <li class="{{ ($route == 'citibar')? 'mil-active' : '' }}">
                                             <a href="{{ route('citibar') }}">Citibar</a>
-                                        </li>
-                                        <li class="{{ ($route == 'contact')? 'mil-active' : '' }}">
-                                            <a href="{{ route('contact') }}">Contact</a>
                                         </li>
                                     </ul>
                                 </nav>
@@ -157,8 +165,10 @@
                             <div class="col-md-6 col-lg-5 mil-mb-60">
 
                                 <ul class="mil-menu-list">
-                                    <li><a href="#." class="mil-light-soft">Privacy Policy</a></li>
-                                    <li><a href="#." class="mil-light-soft">Terms and conditions</a></li>
+                                    <li><a href="{{ route('aboutUs') }}#gallery" class="mil-light-soft">Our Gallery</a></li>
+                                    <li><a href="{{ route('contact') }}" class="mil-light-soft">Reach out to us</a></li>
+{{--                                    <li><a href="#." class="mil-light-soft">Privacy Policy</a></li>--}}
+{{--                                    <li><a href="#." class="mil-light-soft">Terms and conditions</a></li>--}}
                                 </ul>
 
                             </div>

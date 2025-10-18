@@ -19,7 +19,7 @@
                                     @forelse ($room->galleryImages as $img)
                                         <div class="swiper-slide">
                                             <div class="mil-card-cover">
-                                                <img src="{{ Storage::url($img->image_path) }}" alt="cover"
+                                                <img src="{{ asset('uploads/' . $img->image_path) }}" alt="cover"
                                                      data-swiper-parallax="-100" data-swiper-parallax-scale="1.1">
                                             </div>
                                         </div>
@@ -280,7 +280,7 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
                                 </div>
                                 <a href="">
 
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                          stroke-linejoin="round" class="feather feather-bookmark">
                                         <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
@@ -298,13 +298,6 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
                 <p class="mil-fade-up" style="text-align: center">Shores Hotel offers luxury accommodations, from hotel rooms with all amenities to
                     fully-equipped apartments, ensuring a perfect stay for every guest.</p>
             </div>
-{{--            <div class="col-lg-5">--}}
-{{--                <div class="mil-desctop-right mil-fade-up">--}}
-{{--                    <a href="search.html" class="mil-button">--}}
-{{--                        <span>View all</span>--}}
-{{--                    </a>--}}
-{{--                </div>--}}
-{{--            </div>--}}
         </div>
     </div>
 </div>

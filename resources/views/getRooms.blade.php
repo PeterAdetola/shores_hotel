@@ -26,7 +26,7 @@
                 position: absolute;
                 top: 0;
                 left: 0;
-                z-index: 2;
+                z-index: 0;
             }
 
             /* Loading state for images */
@@ -90,7 +90,17 @@
                 opacity: 1;
                 transition: opacity 0.3s ease;
             }
+            a.no-underline {
+                text-decoration: none !important;
+                color: inherit; /* keeps same text color */
+            }
+
+            a.no-underline:hover {
+                text-decoration: none !important;
+                color: var(--accent-color, #007bff); /* optional hover color */
+            }
         </style>
+
     @endpush
 
     <!-- banner -->
@@ -163,7 +173,7 @@
                                         @foreach ($room->galleryImages as $img)
                                             <div class="swiper-slide">
                                                 <div class="mil-card-cover">
-                                                    <img src="{{ Storage::url($img->image_path) }}" alt="cover"
+                                                    <img src="{{ asset('uploads/' . $img->image_path) }}" alt="cover"
                                                          data-swiper-parallax="-100" data-swiper-parallax-scale="1.1">
                                                 </div>
                                             </div>
@@ -423,6 +433,48 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
         </div>
     </div>
     <!-- rooms end -->
+
+    <div class="mil-contact mil-p-100-60 space">
+        <img src="img/shapes/4.png" class="mil-shape mil-fade-up" style="width: 85%; top: -20%; right: -30%; transform: rotate(-30deg) scaleX(-1);" alt="shape">
+        <img src="img/shapes/4.png" class="mil-shape mil-fade-up" style="width: 110%; bottom: 15%; left: -30%; opacity: .2" alt="shape">
+        <div class="container">
+            <div class="mil-suptitle mil-mb-20 mil-fade-up">contact/shores hotel</div>
+            <h2 class="mil-mb-40 mil-fade-up grey-text" >Reach out to Shores Hotel</h2>
+            <div class="row">
+                @foreach(hotelContact() ?? [] as $info)
+                    <div class="col-xl-6">
+                        <div class="mil-iconbox mil-mb-40-adapt mil-fade-up">
+                            <div class="mil-bg-icon"></div>
+                            <div class="mil-icon mil-icon-fix">
+                                <span class="material-symbols-outlined light-text">{{ $info['icon'] ?? 'circle' }}</span>
+                            </div>
+
+                            <h3 class="mil-mb-20 grey-text">
+                                @if($info['type'] == 'phone')
+                                    <a href="tel:{{ preg_replace('/\s+/', '', $info['title']) }}"
+                                       class="grey-text"
+                                       style="text-decoration: none; color: inherit;">
+                                        {{ $info['title'] }}
+                                    </a>
+                                @elseif($info['type'] == 'email')
+                                    <a href="mailto:{{ $info['title'] }}"
+                                       class="grey-text"
+                                       style="text-decoration: none; color: inherit; word-break: break-all;">
+                                        {{ $info['title'] }}
+                                    </a>
+                                @else
+                                    {{ $info['title'] }}
+                                @endif
+                            </h3>
+
+                            <p>{{ $info['text'] ?? '' }}</p>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+
+        </div>
+    </div>
 
 @endsection
 @push('scripts')

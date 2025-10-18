@@ -320,3 +320,63 @@ if (!function_exists('getUnprocessedBookings')) {
             ->get();
     }
 }
+
+// Existing loadFrontMatter() remains unchanged
+if (!function_exists('loadFrontMatter')) {
+    function loadFrontMatter(string $relativePath): array
+    {
+        $path = storage_path('app/' . ltrim($relativePath, '/'));
+
+        if (!File::exists($path)) {
+            return [];
+        }
+
+        $raw = File::get($path) ?? '';
+
+        // Extract YAML front matter between ---
+        if (preg_match('/^---\s*\R(.*?)\R---\s*\R?/s', $raw, $m)) {
+            return Yaml::parse($m[1]) ?? [];
+        }
+
+        // Or treat whole file as YAML if no delimiters
+        return Yaml::parse($raw) ?? [];
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Private-like helper for extracting contact sections
+|--------------------------------------------------------------------------
+| Not global, but used internally by hotelContact() and apartmentContact()
+*/
+if (!function_exists('_getContactSection')) {
+    function _getContactSection(string $sectionKey): array
+    {
+        $contactContent = loadFrontMatter('content/contact/contact.md') ?: [];
+        return $contactContent[$sectionKey] ?? [];
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Hotel Contact Helper
+|--------------------------------------------------------------------------
+*/
+if (!function_exists('hotelContact')) {
+    function hotelContact(): array
+    {
+        return _getContactSection('hotel_info');
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Apartment Contact Helper
+|--------------------------------------------------------------------------
+*/
+if (!function_exists('apartmentContact')) {
+    function apartmentContact(): array
+    {
+        return _getContactSection('apartment_info');
+    }
+}

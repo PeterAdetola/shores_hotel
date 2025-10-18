@@ -31,16 +31,16 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-lg-6">
-                <p class="mil-fade-up" style="text-align: center">Shores Hotel offers a complete hospitality experience: a luxury hotel, residential apartments, and an exciting bar for all your needs.</p>
+            <div class="col-lg-7">
+                <p class="mil-fade-up" style="">Shores Hotel offers a complete hospitality experience: a luxury hotel, residential apartments, and an exciting bar for all your needs.</p>
             </div>
-{{--            <div class="col-lg-5">--}}
-{{--                <div class="mil-desctop-right mil-fade-up">--}}
-{{--                    <a href="services.html" class="mil-button">--}}
-{{--                        <span>Read more</span>--}}
-{{--                    </a>--}}
-{{--                </div>--}}
-{{--            </div>--}}
+            <div class="col-lg-5">
+                <div class="mil-desctop-right mil-fade-up">
+                    <a href="{{ route('aboutUs') }}" class="mil-button">
+                        <span>Shores Hotel at a glance</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>

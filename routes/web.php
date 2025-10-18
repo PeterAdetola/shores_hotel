@@ -17,6 +17,8 @@ use App\Http\Controllers\BookingController;
 //    return view('index.index');
 //});
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/aboutUs', [HomeController::class, 'about'])->name('aboutUs');
+
 Route::get('/citibar', [CitibarController::class, 'index'])->name('citibar');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 //Route::get('/getlodged', [GetLodgedController::class, 'getlodged'])->name('getlodged');
@@ -29,7 +31,10 @@ Route::get('/getlodged/filter', [GetLodgedController::class, 'filter'])->name('g
 //Route::get('/room/{categorySlug}/{roomId}', [GetLodgedController::class, 'showRoom'])->name('chosen_lodge');
 Route::get('/chosen_lodge/{categorySlug}/{roomId}', [GetLodgedController::class, 'showRoom'])->name('chosen_lodge')->where(['roomId' => '[0-9]+']);
 
-
+//
+//Route::get('/aboutUs', function () {
+//    return view('about_page');
+//})->name('aboutUs');
 
 //Route::get('/getlodged', function () {
 //    return view('getlodged');
@@ -43,9 +48,6 @@ Route::get('/getApartments', function () {
     return view('getApartments');
 })->name('getApartments');
 
-//Route::get('/chosen_lodge', function () {
-//    return view('chosen_lodge');
-//})->name('chosen_lodge');
 
 Route::get('/confirmReservation', function () {
     return view('confirmReservation');

@@ -187,7 +187,7 @@
 
                 </div>
                 <!-- sidebar -->
-                <div class="col-xl-4" data-sticky-container>
+                <div class="col-xl-4 space" data-sticky-container>
                     <div class="mil-sticky mil-stycky-right mil-p-0-100" data-margin-top="140">
                         <div class="mil-price-frame mil-mb-20">
                             <div class="mil-price">

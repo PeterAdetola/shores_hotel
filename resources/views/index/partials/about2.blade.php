@@ -1,11 +1,14 @@
+<?php $route = Route::current()->getName(); ?>
 <div class="mil-about">
     <div class="container">
         <div class="row justify-content-between align-items-center flex-sm-row-reverse">
             <div class="col-xl-5 mil-mb-100">
 
                 <div class="mil-text-frame">
+                    @if($route == 'home')
                     <div class="mil-suptitle mil-mb-20 mil-fade-up">{{ $aboutContent2['suptitle'] }}</div>
-                    <h2 class="mil-mb-40 mil-fade-up grey-text">{{ $aboutContent2['title'] }}</h2>
+                    @endif
+                    <h2 class="mil-mb-40 mil-fade-up grey-text" @if($route == 'aboutUs') style="margin-top: 3em" @endif >{{ $aboutContent2['title'] }}</h2>
 
                     {{-- Paragraphs --}}
                     @foreach($aboutContent2['paragraphs'] as $paragraph)
