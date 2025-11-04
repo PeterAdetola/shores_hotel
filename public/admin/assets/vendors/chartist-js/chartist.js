@@ -858,7 +858,7 @@
      * @memberof Chartist.Core
      * @param {Object} svg The svg element for the chart
      * @param {Object} options The Object that contains all the optional values for the chart
-     * @param {Number} [fallbackPadding] The fallback padding if partial padding objects are used
+     * @param {Number} [fallbackPadding] The fallback padding if partials padding objects are used
      * @return {Object} The chart rectangles coordinates inside the svg element plus the rectangles measurements
      */
     Chartist.createChartRect = function (svg, options, fallbackPadding) {

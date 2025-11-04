@@ -20,7 +20,7 @@
     <meta name="author" content="Pacmedia Creatives">
     <title>Web Editor</title>
     <link rel="apple-touch-icon" href="{{ asset('admin/assets/images/favicon/pacmediac_logo.png') }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('admin/assets/images/favicon/favicon.png') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('admin/assets/images/favicon/favicon-32x32.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- BEGIN: VENDOR CSS-->
@@ -80,37 +80,7 @@
 <!-- BEGIN PAGE VENDOR JS-->
 @yield('vendor_scripts')
 <!-- END PAGE VENDOR JS-->
-<!-- BEGIN THEME  JS-->
-<script src="{{ asset('admin/assets/js/plugins.js') }}"></script>
-{{--<script src="{{ asset('admin/assets/js/search.js') }}"></script>--}}
-{{--<script src="{{ asset('admin/assets/js/custom/custom-script.js') }}"></script>--}}
-{{--<script src="{{ asset('admin/assets/js/custom/sweetalert.min.js') }}"></script>--}}
-{{--<script src="{{ asset('admin/assets/js/custom/sweetalert_init.js') }}"></script>--}}
-<!-- END THEME  JS-->
-<!-- BEGIN PAGE LEVEL JS-->
-{{--<script src="{{ asset('admin/assets/js/scripts/dashboard-modern.js') }}"></script>--}}
-<script src="{{ asset('admin/assets/js/scripts/advance-ui-modals.js') }}"></script>
-<script src="{{ asset('admin/assets/js/scripts/ui-alerts.js') }}"></script>
-{{--<script src="{{ asset('admin/assets/js/scripts/ui-alerts.js') }}"></script>--}}
-{{--<script src="{{ asset('admin/assets/js/scripts/app-invoice.js') }}"></script>--}}
-{{--<script src="{{ asset('admin/assets/js/scripts/intro.js') }}"></script>--}}
-@yield('scripts')
 
-<!-- END PAGE LEVEL JS-->
-
-
-
-
-
-
-{{--    @if(Session::has('message'))--}}
-{{--        <script>--}}
-{{--    setTimeout(function () {--}}
-{{--        var toastHTML = "{{ Session::get('message') }}";--}}
-{{--        M.toast({html: toastHTML})--}}
-{{--    }, 2000);--}}
-{{--        </script>--}}
-{{--    @endif--}}
 <script>
     // Global AJAX notification handler
     function handleAjaxResponse(response) {
@@ -154,9 +124,9 @@
         }
         return response;
     };
-{{--</script>--}}
+    {{--</script>--}}
 
-{{--<script>--}}
+    {{--<script>--}}
     @if(Session::has('message'))
     document.addEventListener('DOMContentLoaded', function() {
         const message = "{{ Session::get('message') }}";
@@ -186,6 +156,37 @@
     });
     @endif
 </script>
+<!-- BEGIN THEME  JS-->
+<script src="{{ asset('admin/assets/js/plugins.js') }}"></script>
+{{--<script src="{{ asset('admin/assets/js/search.js') }}"></script>--}}
+{{--<script src="{{ asset('admin/assets/js/custom/custom-script.js') }}"></script>--}}
+{{--<script src="{{ asset('admin/assets/js/custom/sweetalert.min.js') }}"></script>--}}
+{{--<script src="{{ asset('admin/assets/js/custom/sweetalert_init.js') }}"></script>--}}
+<!-- END THEME  JS-->
+<!-- BEGIN PAGE LEVEL JS-->
+{{--<script src="{{ asset('admin/assets/js/scripts/dashboard-modern.js') }}"></script>--}}
+<script src="{{ asset('admin/assets/js/scripts/advance-ui-modals.js') }}"></script>
+<script src="{{ asset('admin/assets/js/scripts/ui-alerts.js') }}"></script>
+{{--<script src="{{ asset('admin/assets/js/scripts/ui-alerts.js') }}"></script>--}}
+{{--<script src="{{ asset('admin/assets/js/scripts/app-invoice.js') }}"></script>--}}
+{{--<script src="{{ asset('admin/assets/js/scripts/intro.js') }}"></script>--}}
+@yield('scripts')
+
+<!-- END PAGE LEVEL JS-->
+
+
+
+
+
+
+{{--    @if(Session::has('message'))--}}
+{{--        <script>--}}
+{{--    setTimeout(function () {--}}
+{{--        var toastHTML = "{{ Session::get('message') }}";--}}
+{{--        M.toast({html: toastHTML})--}}
+{{--    }, 2000);--}}
+{{--        </script>--}}
+{{--    @endif--}}
 
 </body>
 </html>

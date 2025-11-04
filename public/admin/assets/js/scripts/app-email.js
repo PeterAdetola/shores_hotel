@@ -38,7 +38,7 @@ $(document).ready(function () {
          wheelPropagation: false
       });
    }
-   // active class chnage on click
+   // active class change on click
    $(".email-list li").click(function () {
       var $this = $(this);
       if (!$this.hasClass("sidebar-title")) {
@@ -76,7 +76,7 @@ $(document).ready(function () {
          .remove();
    });
 
-   // To delete Single mail
+   // To delete Single email
    $(".app-email .delete-task").on("click", function () {
       $(this)
          .closest(".collection-item")

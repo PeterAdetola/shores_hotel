@@ -15,7 +15,7 @@
 $.extend( $.validator.messages, {
 	required: "Tento údaj je povinný.",
 	remote: "Prosím, opravte tento údaj.",
-	email: "Prosím, zadejte platný e-mail.",
+	email: "Prosím, zadejte platný e-email.",
 	url: "Prosím, zadejte platné URL.",
 	date: "Prosím, zadejte platné datum.",
 	dateISO: "Prosím, zadejte platné datum (ISO).",

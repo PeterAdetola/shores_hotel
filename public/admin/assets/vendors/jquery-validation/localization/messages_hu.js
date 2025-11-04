@@ -17,7 +17,7 @@ $.extend( $.validator.messages, {
 	maxlength: $.validator.format( "Legfeljebb {0} karakter hosszú legyen." ),
 	minlength: $.validator.format( "Legalább {0} karakter hosszú legyen." ),
 	rangelength: $.validator.format( "Legalább {0} és legfeljebb {1} karakter hosszú legyen." ),
-	email: "Érvényes e-mail címnek kell lennie.",
+	email: "Érvényes e-email címnek kell lennie.",
 	url: "Érvényes URL-nek kell lennie.",
 	date: "Dátumnak kell lennie.",
 	number: "Számnak kell lennie.",

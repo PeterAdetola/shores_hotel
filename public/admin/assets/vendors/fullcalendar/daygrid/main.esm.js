@@ -70,7 +70,7 @@ var DayGridDateProfileGenerator = /** @class */ (function (_super) {
         // ensure 6 weeks
         if (this.options.monthMode &&
             this.options.fixedWeekCount) {
-            var rowCnt = Math.ceil(// could be partial weeks due to hiddenDays
+            var rowCnt = Math.ceil(// could be partials weeks due to hiddenDays
             diffWeeks(start, end));
             end = addWeeks(end, 6 - rowCnt);
         }
@@ -558,14 +558,14 @@ var DayGridFillRenderer = /** @class */ (function (_super) {
             '</div>');
         trEl = skeletonEl.getElementsByTagName('tr')[0];
         if (startCol > 0) {
-            appendToElement(trEl, 
+            appendToElement(trEl,
             // will create (startCol + 1) td's
             new Array(startCol + 1).join(EMPTY_CELL_HTML));
         }
         seg.el.colSpan = endCol - startCol;
         trEl.appendChild(seg.el);
         if (endCol < colCnt) {
-            appendToElement(trEl, 
+            appendToElement(trEl,
             // will create (colCnt - endCol) td's
             new Array(colCnt - endCol + 1).join(EMPTY_CELL_HTML));
         }

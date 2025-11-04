@@ -118,8 +118,11 @@
                                                             </td>
 
                                                             <td>{{ $booking->adults }}A / {{ $booking->children }}C</td>
-                                                            <td>
 
+                                                            <td>
+                                                                <a href="#guest_details-modal{{ $booking->id }}" class="modal-trigger gradient-45deg-green-teal mb-1 chip waves-effect waves-light accent-2 white-text">
+                                                                    guest details
+                                                                </a>
                                                                 <a href="#confirm_booking-modal{{ $booking->id }}" class="modal-trigger gradient-45deg-indigo-blue mb-1 chip waves-effect waves-light accent-2 white-text">
                                                                     confirm
                                                                 </a>
@@ -130,6 +133,7 @@
                                                             </td>
                                                         </tr>
                                                         @include('admin.bookings.modals.confirm_booking-modal')
+                                                        @include('admin.bookings.modals.guest_details-modal')
                                                     @endforeach
                                                     </tbody>
                                                     <tfoot>

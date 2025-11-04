@@ -6699,7 +6699,7 @@ $jscomp.polyfill = function (e, r, p, m) {
       }
 
       /**
-       * Highlight partial match
+       * Highlight partials match
        */
 
     }, {

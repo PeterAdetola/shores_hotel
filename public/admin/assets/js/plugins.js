@@ -155,7 +155,6 @@ $(function () {
       inDuration: 300,
       outDuration: 225,
       constrainWidth: false,
-      hover: false,
       gutter: 0,
       coverTrigger: false,
       alignment: "right",
@@ -166,7 +165,6 @@ $(function () {
       inDuration: 300,
       outDuration: 225,
       constrainWidth: false,
-      hover: false,
       gutter: 0,
       coverTrigger: false,
       alignment: "right",
@@ -252,7 +250,7 @@ $(function () {
    // Collapsible inside page not for sidebar
    var allCollapse = document.querySelectorAll(".collapsible");
    M.Collapsible.init(allCollapse);
-   // Collapsible expandable    
+   // Collapsible expandable
    var elem = document.querySelector('.collapsible.expandable');
    var instance = M.Collapsible.init(elem, {
       accordion: false
@@ -408,7 +406,7 @@ $(function () {
       edge: "right"
    });
 
-   // check for if touch device 
+   // check for if touch device
    if (!is_touch_device()) {
       // Right side slide-out (Chat, settings & timeline)
       if ($("#slide-out.leftside-navigation").length > 0) {
@@ -431,7 +429,7 @@ $(function () {
             suppressScrollX: true
          });
       }
-      // for horizonatal nav scroll 
+      // for horizonatal nav scroll
       if ($("#ul-horizontal-nav").length > 0) {
          var ps_horizontal_nav = new PerfectScrollbar("#ul-horizontal-nav", {
             wheelPropagation: false,
@@ -552,7 +550,7 @@ $(function () {
          $(".sidenav-main, #horizontal-nav").localize();
       });
    });
-   // Horizontal-nav active parent  
+   // Horizontal-nav active parent
    if ($("#ul-horizontal-nav li.active").length > 0) {
       $('#ul-horizontal-nav li.active').closest('ul').parents('li').addClass('active');
    }

@@ -26,7 +26,7 @@ $(document).ready(function () {
       placeholder: "Reply Here",
       theme: "snow"
    });
-   //   forward quill mail container
+   //   forward quill email container
    var composeMailEditor = new Quill(".snow-container .forward-email", {
       modules: {
          toolbar: ".forward-email-toolbar"
