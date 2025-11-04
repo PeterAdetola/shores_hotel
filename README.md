@@ -31,6 +31,7 @@ The website is designed to be user-friendly, dynamic, and easy to manage via the
     - Upload galleries & featured images
     - Manage facilities
     - Content management via Markdown/YAML
+    - Email System
 - AJAX-powered filtering for room types
 - Fully Dockerized environment with Laravel Sail
 
