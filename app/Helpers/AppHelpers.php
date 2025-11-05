@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\File;
 use Symfony\Component\Yaml\Yaml;
 use App\Models\Booking;
 
-\Log::info('AppHelpers.php loaded successfully');
+
 // Get user's id
 if (!function_exists('getCurrentUser')) {
     function getCurrentUser()
