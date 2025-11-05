@@ -281,7 +281,33 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
 
 
+Route::get('/clear-cache', function() {
+    try {
+        // Clear all caches
+        Artisan::call('config:clear');
+        Artisan::call('cache:clear');
+        Artisan::call('route:clear');
+        Artisan::call('view:clear');
+        Artisan::call('optimize:clear');
 
+        return response()->json([
+            'message' => 'All caches cleared successfully!',
+            'details' => [
+                'config' => 'cleared',
+                'cache' => 'cleared',
+                'route' => 'cleared',
+                'view' => 'cleared',
+                'optimize' => 'cleared'
+            ]
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'Failed to clear cache',
+            'message' => $e->getMessage()
+        ], 500);
+    }
+});
 
 
 
