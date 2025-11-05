@@ -1,0 +1,45 @@
+# =========================
+# Security & Deployment .htaccess
+# =========================
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # ---------------------------------
+    # Allow access only to deploy files
+    # ---------------------------------
+    <Files "deploy.php">
+        Require all granted
+    </Files>
+
+    <Files "git-setup.php">
+        Require all granted
+    </Files>
+
+    <Files "check-structure.php">
+        Require all granted
+    </Files>
+
+    # ---------------------------------
+    # Deny all other PHP files for safety
+    # ---------------------------------
+    <FilesMatch "\.php$">
+        Require all denied
+    </FilesMatch>
+
+    # ---------------------------------
+    # Protect sensitive files (.env, logs, git, SQL dumps)
+    # ---------------------------------
+    <FilesMatch "\.(env|log|git|sql|yml|yaml|sh|bak|ini)$">
+        Require all denied
+    </FilesMatch>
+
+    # ---------------------------------
+    # Disable directory listing
+    # ---------------------------------
+    Options -Indexes
+</IfModule>
+
+# =========================
+# END
+# =========================
