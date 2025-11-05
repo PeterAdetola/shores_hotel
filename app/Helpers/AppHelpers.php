@@ -1,6 +1,5 @@
 <?php
 use Illuminate\Support\Facades\Auth;
-//use app\AppHelpers;
 use App\Models\RoomCategory;
 use App\Models\Room;
 use App\Models\Facility;
@@ -14,7 +13,6 @@ if (!function_exists('getCurrentUser')) {
     function getCurrentUser()
     {
         $userId = Auth::id();
-
         return $userId;
     }
 }
@@ -31,12 +29,7 @@ if (!function_exists('getUserInitial')) {
             $nameParts = explode(' ', trim($name));
             $firstName = array_shift($nameParts);
             $lastName = array_pop($nameParts);
-//            $initials[$name] = (
-//                AppHelpers . phpmb_substr($firstName, 0, 1) .
-//                mb_substr($lastName, 0, 1)
-//            );
             $initials[$name] = mb_substr($firstName, 0, 1) . mb_substr($lastName, 0, 1);
-
 
             $initials = implode('', $initials);
             return $initials;
@@ -81,34 +74,13 @@ if (!function_exists('getFacilities')) {
     }
 }
 
-
-// app/Helpers/NotificationHelper.php
-//if (!function_exists('notification')) {
-//    function notification(
-//        string $message,
-//        string $type = 'success',
-//        bool $isAjax = false,
-//        array $additional = []
-//    ) {
-//        $response = [
-//                'message' => $message,
-//                'type' => $type,
-//                'status' => $type === 'success' ? 'success' : 'error'
-//            ] + $additional;
-//
-//        return $isAjax
-//            ? response()->json($response)
-//            : redirect()->back()->with($response);
-//    }
-//}
-
 if (!function_exists('notification')) {
     function notification(
         string $message,
         string $type = 'success',
         bool $isAjax = false,
         array $additional = [],
-        string $redirectRoute = null // Add this parameter
+        string $redirectRoute = null
     ) {
         $response = [
                 'message' => $message,
@@ -129,6 +101,7 @@ if (!function_exists('notification')) {
     }
 }
 
+// Load front matter from YAML files
 if (!function_exists('loadFrontMatter')) {
     function loadFrontMatter(string $relativePath): array
     {
@@ -156,16 +129,6 @@ if (!function_exists('getContactContent')) {
         return loadFrontMatter('content/contact/contact.md') ?: [];
     }
 }
-//
-//if (!function_exists('getAllAccommodation')) {
-//    function getAllAccommodation()
-//    {
-//        return App\Models\RoomCategory::with([
-//            'rooms.galleryImages',
-//            'rooms.featuredImage'
-//        ])->get();
-//    }
-//}
 
 if (!function_exists('getAvailbleAccommodation')) {
     function getAvailbleAccommodation()
@@ -173,12 +136,11 @@ if (!function_exists('getAvailbleAccommodation')) {
         try {
             return App\Models\RoomCategory::with([
                 'rooms' => function($query) {
-                    $query->orderBy('position');
                     $query->where('availability', true)->orderBy('position');
                 },
                 'rooms.galleryImages',
                 'rooms.featuredImage',
-                'rooms.category' // Ensure category relationship is loaded
+                'rooms.category'
             ])
                 ->whereHas('rooms', function($query) {
                     $query->where('availability', true);
@@ -186,11 +148,10 @@ if (!function_exists('getAvailbleAccommodation')) {
                 ->get();
         } catch (\Exception $e) {
             \Log::error('Error in getAvailbleAccommodation: ' . $e->getMessage());
-            return collect(); // Return empty collection on error
+            return collect();
         }
     }
 }
-
 
 if (!function_exists('getAllAccommodation')) {
     function getAllAccommodation()
@@ -199,21 +160,18 @@ if (!function_exists('getAllAccommodation')) {
             return App\Models\RoomCategory::with([
                 'rooms' => function($query) {
                     $query->orderBy('position');
-                    // Removed availability filter here
                 },
                 'rooms.galleryImages',
                 'rooms.featuredImage',
-                'rooms.category' // Ensure category relationship is loaded
+                'rooms.category'
             ])
-                // Removed whereHas so it no longer filters categories
                 ->get();
         } catch (\Exception $e) {
             \Log::error('Error in getAllAccommodation: ' . $e->getMessage());
-            return collect(); // Return empty collection on error
+            return collect();
         }
     }
 }
-
 
 if (!function_exists('getRooms')) {
     function getRooms()
@@ -221,12 +179,11 @@ if (!function_exists('getRooms')) {
         try {
             return App\Models\RoomCategory::with([
                 'rooms' => function($query) {
-                    $query->orderBy('position');
                     $query->where('room_type', 0)->orderBy('position');
                 },
                 'rooms.galleryImages',
                 'rooms.featuredImage',
-                'rooms.category' // Ensure category relationship is loaded
+                'rooms.category'
             ])
                 ->whereHas('rooms', function($query) {
                     $query->where('room_type', 0);
@@ -234,11 +191,10 @@ if (!function_exists('getRooms')) {
                 ->get();
         } catch (\Exception $e) {
             \Log::error('Error in getRooms: ' . $e->getMessage());
-            return collect(); // Return empty collection on error
+            return collect();
         }
     }
 }
-
 
 if (!function_exists('getApartments')) {
     function getApartments()
@@ -246,12 +202,11 @@ if (!function_exists('getApartments')) {
         try {
             return App\Models\RoomCategory::with([
                 'rooms' => function($query) {
-                    $query->orderBy('position');
                     $query->where('room_type', 1)->orderBy('position');
                 },
                 'rooms.galleryImages',
                 'rooms.featuredImage',
-                'rooms.category' // Ensure category relationship is loaded
+                'rooms.category'
             ])
                 ->whereHas('rooms', function($query) {
                     $query->where('room_type', 1);
@@ -259,7 +214,7 @@ if (!function_exists('getApartments')) {
                 ->get();
         } catch (\Exception $e) {
             \Log::error('Error in getApartments: ' . $e->getMessage());
-            return collect(); // Return empty collection on error
+            return collect();
         }
     }
 }
@@ -270,24 +225,19 @@ if (!function_exists('getAllRooms')) {
     }
 }
 
-
 if (!function_exists('signature')) {
     function signature($textColor = 'black', $fontWeight = 'bolder'): string
     {
-        // Use default values if parameters are null (though Blade usually passes strings)
         $finalColor = $textColor ?: 'black';
         $finalWeight = $fontWeight ?: 'bolder';
 
-        // Link style: No underline, dynamic color, dynamic weight
         $styleString = "text-decoration: none; color: {$finalColor}; font-weight: {$finalWeight};";
 
         $url = "https://www.thepacmedia.com";
         $companyName = "Pacmedia Creatives";
 
-        // Construct the anchor tag. Note the escaped quotes.
         $linkHtml = "<a href=\"{$url}\" style=\"{$styleString}\">{$companyName}</a>";
 
-        // Wrap the link in a <p> tag and return the complete block
         return "<span>{$linkHtml}</span>";
     }
 }
@@ -324,34 +274,7 @@ if (!function_exists('getUnprocessedBookings')) {
     }
 }
 
-// Existing loadFrontMatter() remains unchanged
-if (!function_exists('loadFrontMatter')) {
-    function loadFrontMatter(string $relativePath): array
-    {
-        $path = storage_path('app/' . ltrim($relativePath, '/'));
-
-        if (!File::exists($path)) {
-            return [];
-        }
-
-        $raw = File::get($path) ?? '';
-
-        // Extract YAML front matter between ---
-        if (preg_match('/^---\s*\R(.*?)\R---\s*\R?/s', $raw, $m)) {
-            return Yaml::parse($m[1]) ?? [];
-        }
-
-        // Or treat whole file as YAML if no delimiters
-        return Yaml::parse($raw) ?? [];
-    }
-}
-
-/*
-|--------------------------------------------------------------------------
-| Private-like helper for extracting contact sections
-|--------------------------------------------------------------------------
-| Not global, but used internally by hotelContact() and apartmentContact()
-*/
+// Private-like helper for extracting contact sections
 if (!function_exists('_getContactSection')) {
     function _getContactSection(string $sectionKey): array
     {
@@ -360,11 +283,7 @@ if (!function_exists('_getContactSection')) {
     }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Hotel Contact Helper
-|--------------------------------------------------------------------------
-*/
+// Hotel Contact Helper
 if (!function_exists('hotelContact')) {
     function hotelContact(): array
     {
@@ -372,11 +291,7 @@ if (!function_exists('hotelContact')) {
     }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Apartment Contact Helper
-|--------------------------------------------------------------------------
-*/
+// Apartment Contact Helper
 if (!function_exists('apartmentContact')) {
     function apartmentContact(): array
     {
