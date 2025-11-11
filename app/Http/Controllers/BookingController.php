@@ -88,7 +88,7 @@ class BookingController extends Controller
         ]);
 
         // Use the manual calculation as it's most reliable
-        $nights = max(1, $manualNights); // Ensure at least 1 night
+        $nights = abs(max(1, $manualNights)); // Ensure at least 1 night
         $total_amount = $room->price_per_night * $nights;
 
         \Log::info("Final calculation", [
@@ -136,33 +136,40 @@ class BookingController extends Controller
 
             // Determine sender email and name based on room type
             if ($room->room_type == 0) {
-                $senderEmail = 'shores_hotel@shoreshotelng.com';
+                $senderEmail = 'book_hotel@shoreshotelng.com';
                 $senderName = 'Shores Hotel';
+                $reportEmail = 'book_hotel@shoreshotelng.com'; // Report to hotel
             } else {
-                $senderEmail = 'shores_apartment@shoreshotelng.com';
+                $senderEmail = 'book_apartment@shoreshotelng.com';
                 $senderName = 'Shores Apartment';
+                $reportEmail = 'book_apartment@shoreshotelng.com'; // Report to apartment
             }
 
             \Log::info("Using sender: {$senderEmail} ({$senderName})");
+            \Log::info("Report will be sent to: {$reportEmail}");
 
-            // Send email immediately (remove the delay for now)
-            Mail::to($booking->customer_email)->send(new BookingRequestMail($booking, $senderEmail, $senderName));
-            \Log::info("Email sent successfully");
+            // Send confirmation email to customer
+            Mail::to($booking->customer_email)->send(new BookingRequestMail($booking, $senderEmail, $senderName, $room));
+            \Log::info("Confirmation email sent to customer successfully");
 
-            // Log the email (with error handling)
+            // Send report email to management
+            $this->sendBookingReportEmail($booking, $room, $reportEmail, $senderName);
+            \Log::info("Report email sent to management successfully");
+
+            // Log the email
             try {
                 $emailLog = \App\Models\EmailLog::create([
                     'booking_id' => $booking->id,
                     'recipient' => $booking->customer_email,
                     'subject' => "Booking Application Received - {$senderName}",
+                    'message' => "Booking confirmation email sent to {$booking->customer_name} for {$senderName}. Room category: {$room->category->name}",
+                    'type' => 'email',
                     'status' => 'sent',
                     'sent_at' => now(),
-                    'sender_email' => $senderEmail,
                 ]);
                 \Log::info("Email log created with ID: " . ($emailLog->id ?? 'unknown'));
             } catch (\Exception $logException) {
                 \Log::warning("Failed to create email log: " . $logException->getMessage());
-                // Continue even if log fails
             }
 
             \Log::info("=== END sendBookingRequestEmail - SUCCESS ===");
@@ -170,6 +177,37 @@ class BookingController extends Controller
         } catch (\Exception $e) {
             \Log::error('Booking Request Email Error: ' . $e->getMessage());
             \Log::error('Stack trace: ' . $e->getTraceAsString());
+        }
+    }
+
+    /**
+     * Send booking report email to management
+     */
+    private function sendBookingReportEmail(Booking $booking, Room $room, $reportEmail, $senderName)
+    {
+        try {
+            $subject = "New Booking Request - {$senderName} - {$booking->customer_name}";
+
+            $nights = abs(\Carbon\Carbon::parse($booking->check_out)->diffInDays(\Carbon\Carbon::parse($booking->check_in)));
+
+            $reportData = [
+                'booking' => $booking,
+                'room' => $room,
+                'senderName' => $senderName,
+                'nights' => $nights,
+            ];
+
+            Mail::send('emails.booking-report', $reportData, function ($message) use ($reportEmail, $subject, $booking, $senderName) {
+                $message->to($reportEmail)
+                    ->from($reportEmail, $senderName)
+                    ->subject($subject)
+                    ->replyTo($booking->customer_email, $booking->customer_name);
+            });
+
+            \Log::info("Booking report sent to: {$reportEmail}");
+
+        } catch (\Exception $e) {
+            \Log::error('Booking Report Email Error: ' . $e->getMessage());
         }
     }
 
@@ -303,6 +341,7 @@ class BookingController extends Controller
             ], 500);
         }
     }
+
 
 
 

@@ -311,9 +311,104 @@ Route::get('/clear-cache', function() {
 
 
 
+Route::get('/update-display-names', function () {
+    try {
+        $output = [];
 
+        // Update shores_hotel display name only
+        $hotel = App\Models\EmailAccount::where('email', 'book_hotel@shoreshotelng.com')->first();
+        if ($hotel) {
+            $hotel->display_name = 'Shores Hotel';
+            $hotel->save();
+            $output[] = "✓ Updated display name to 'Shores Hotel' for book_hotel@shoreshotelng.com";
+        } else {
+            $output[] = "✗ book_hotel account not found";
+        }
 
+        // Update shores_apartment display name only
+        $apartment = App\Models\EmailAccount::where('email', 'book_apartment@shoreshotelng.com')->first();
+        if ($apartment) {
+            $apartment->display_name = 'Shores Apartment';
+            $apartment->save();
+            $output[] = "✓ Updated display name to 'Shores Apartment' for book_apartment@shoreshotelng.com";
+        } else {
+            $output[] = "✗ book_apartment account not found";
+        }
 
+        // Verify changes
+        $output[] = "<br><strong>Current email accounts:</strong>";
+        $accounts = App\Models\EmailAccount::all();
+        foreach ($accounts as $acc) {
+            $output[] = $acc->email . " - " . $acc->display_name;
+        }
+
+        return implode("<br>", $output);
+
+    } catch (Exception $e) {
+        return "Error: " . $e->getMessage();
+    }
+});
+
+Route::get('/test-email-direct', function () {
+    try {
+        // Force log driver for testing
+        config(['mail.default' => 'log']);
+
+        $booking = \App\Models\Booking::latest()->first();
+
+        if (!$booking) {
+            return "No bookings found. Please create a booking first.";
+        }
+
+        $room = \App\Models\Room::find($booking->room_id);
+
+        \Log::info("=== DIRECT EMAIL TEST START ===");
+
+        // Determine sender email based on room type
+        if ($room->room_type == 0) {
+            $senderEmail = 'book_hotel@shoreshotelng.com';
+            $senderName = 'Shores Hotel';
+        } else {
+            $senderEmail = 'book_apartment@shoreshotelng.com';
+            $senderName = 'Shores Apartment';
+        }
+
+        \Log::info("Sending emails for booking ID: {$booking->id}");
+        \Log::info("Customer: {$booking->customer_email}");
+        \Log::info("Sender: {$senderEmail} ({$senderName})");
+
+        // Send customer email
+        \Mail::to($booking->customer_email)
+            ->send(new \App\Mail\BookingRequestMail($booking, $senderEmail, $senderName, $room));
+
+        \Log::info("Customer email sent successfully");
+
+        // Calculate nights for report
+        $nights = \Carbon\Carbon::parse($booking->check_out)->diffInDays(\Carbon\Carbon::parse($booking->check_in));
+
+        // Send report email
+        \Mail::send('emails.booking-report', [
+            'booking' => $booking,
+            'room' => $room,
+            'senderName' => $senderName,
+            'nights' => abs($nights)
+        ], function ($message) use ($senderEmail, $senderName, $booking) {
+            $message->to($senderEmail)
+                ->from($senderEmail, $senderName)
+                ->subject("New Booking Request - {$senderName} - {$booking->customer_name}")
+                ->replyTo($booking->customer_email, $booking->customer_name);
+        });
+
+        \Log::info("Report email sent successfully");
+        \Log::info("=== DIRECT EMAIL TEST COMPLETED ===");
+
+        return "Email test completed for booking ID: " . $booking->id . ". Check storage/logs/laravel.log for email content.";
+
+    } catch (\Exception $e) {
+        \Log::error('Direct test error: ' . $e->getMessage());
+        return "Error: " . $e->getMessage();
+    }
+});
 
 
 

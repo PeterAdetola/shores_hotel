@@ -111,9 +111,9 @@
                                              <small class="red-text">(Not configured)</small>
                                          @endif
                             </span>
-                                     @if(($activeEmail ?? '') == $account['email'])
-                                         <span class="badge new green">Active</span>
-                                     @endif
+{{--                                     @if(($activeEmail ?? '') == $account['email'])--}}
+{{--                                         <span class="badge new green">Active</span>--}}
+{{--                                     @endif--}}
                                  </a>
                              </li>
                          @endforeach
