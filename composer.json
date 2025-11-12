@@ -13,6 +13,7 @@
         "league/commonmark": "^2.7",
         "spatie/laravel-cookie-consent": "^3.3",
         "symfony/yaml": "^7.3",
+        "voku/anti-xss": "^4.1",
         "webklex/php-imap": "^4.1"
     },
     "require-dev": {

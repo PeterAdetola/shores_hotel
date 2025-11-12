@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\Room;
 use Carbon\Carbon;
 use App\Mail\BookingRequestMail;
+use App\Mail\BookingReportMail;
 use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
@@ -182,32 +183,22 @@ class BookingController extends Controller
 
     /**
      * Send booking report email to management
+     * FIXED VERSION - Using Mailable class
      */
     private function sendBookingReportEmail(Booking $booking, Room $room, $reportEmail, $senderName)
     {
         try {
-            $subject = "New Booking Request - {$senderName} - {$booking->customer_name}";
-
             $nights = abs(\Carbon\Carbon::parse($booking->check_out)->diffInDays(\Carbon\Carbon::parse($booking->check_in)));
 
-            $reportData = [
-                'booking' => $booking,
-                'room' => $room,
-                'senderName' => $senderName,
-                'nights' => $nights,
-            ];
-
-            Mail::send('emails.booking-report', $reportData, function ($message) use ($reportEmail, $subject, $booking, $senderName) {
-                $message->to($reportEmail)
-                    ->from($reportEmail, $senderName)
-                    ->subject($subject)
-                    ->replyTo($booking->customer_email, $booking->customer_name);
-            });
+            // Use Mailable class for proper HTML handling
+            Mail::to($reportEmail)
+                ->send(new BookingReportMail($booking, $room, $senderName, $nights));
 
             \Log::info("Booking report sent to: {$reportEmail}");
 
         } catch (\Exception $e) {
             \Log::error('Booking Report Email Error: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
         }
     }
 
