@@ -475,7 +475,7 @@ class EmailController extends Controller
             // FIXED: Get message body with aggressive HTML handling
             $body = '';
             try {
-                // Try to get the raw body first for debugging
+                // Try to get the raw body first
                 $rawBody = '';
 
                 if ($message->hasHTMLBody()) {
@@ -484,8 +484,11 @@ class EmailController extends Controller
                     $rawBody = $message->getTextBody();
                 }
 
-                // Log for debugging (remove this later)
-                \Log::info("Email UID {$uid} raw body preview: " . substr($rawBody, 0, 500));
+                // DIAGNOSTIC: Log what we received
+                \Log::info("=== EMAIL BODY DIAGNOSTIC ===");
+                \Log::info("UID: {$uid}");
+                \Log::info("Has style attributes: " . (strpos($rawBody, 'style=') !== false ? 'YES' : 'NO'));
+                \Log::info("Body preview (first 1000 chars): " . substr($rawBody, 0, 1000));
 
                 if (!empty($rawBody)) {
                     // Aggressive decoding - handle multiple levels of encoding
@@ -511,9 +514,16 @@ class EmailController extends Controller
                         $iterations++;
                     }
 
+                    // DIAGNOSTIC: Log after decoding
+                    \Log::info("After decoding - Has style attributes: " . (strpos($decoded, 'style=') !== false ? 'YES' : 'NO'));
+
                     // Now check if we have valid HTML
                     if ($this->looksLikeHTML($decoded)) {
                         $body = $this->sanitizeEmailBody($decoded);
+
+                        // DIAGNOSTIC: Log after sanitization
+                        \Log::info("After sanitization - Has style attributes: " . (strpos($body, 'style=') !== false ? 'YES' : 'NO'));
+                        \Log::info("Sanitized body preview (first 1000 chars): " . substr($body, 0, 1000));
                     } else {
                         // Still plain text, format it
                         $body = '<pre style="white-space: pre-wrap; font-family: Arial, sans-serif; background: #f5f5f5; padding: 15px; border-radius: 5px;">'
