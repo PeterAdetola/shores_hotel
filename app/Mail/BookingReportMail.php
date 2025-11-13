@@ -39,12 +39,6 @@ class BookingReportMail extends Mailable
     {
         return $this->view('emails.booking-report')
             ->subject("New Booking Request - {$this->senderName} - {$this->booking->customer_name}")
-            ->replyTo($this->booking->customer_email, $this->booking->customer_name)
-            ->with([
-                'booking' => $this->booking,
-                'room' => $this->room,
-                'senderName' => $this->senderName,
-                'nights' => $this->nights,
-            ]);
+            ->replyTo($this->booking->customer_email, $this->booking->customer_name);
     }
 }

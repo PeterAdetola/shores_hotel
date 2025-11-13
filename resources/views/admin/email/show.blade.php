@@ -102,8 +102,8 @@
                                                 <div class="email-content">
                                                     <div class="list-title-area">
                                                         <div class="user-media">
-                                                            <img src="{{ asset('admin/assets/images/user/default.jpg') }}" alt=""
-                                                                 class="circle z-depth-2 responsive-img avtar">
+{{--                                                            <img src="{{ asset('admin/assets/images/user/default.jpg') }}" alt=""--}}
+{{--                                                                 class="circle z-depth-2 responsive-img avtar">--}}
                                                             <div class="list-title">
                                                                 <span class="name">{{ $fromName ?? 'Unknown Sender' }}</span>
                                                                 <span class="to-person">to me</span>

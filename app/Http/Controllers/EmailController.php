@@ -472,50 +472,54 @@ class EmailController extends Controller
             $dateAttr = $message->getDate();
             $dateString = $dateAttr ? $dateAttr->toString() : 'No date';
 
-            // FIXED: Get message body with better HTML handling
+            // FIXED: Get message body with aggressive HTML handling
             $body = '';
             try {
+                // Try to get the raw body first for debugging
+                $rawBody = '';
+
                 if ($message->hasHTMLBody()) {
-                    // For HTML emails, get HTML directly
-                    $body = $message->getHTMLBody();
+                    $rawBody = $message->getHTMLBody();
+                } elseif ($message->hasTextBody()) {
+                    $rawBody = $message->getTextBody();
+                }
 
-                    // Check if the content looks like HTML but is encoded as text
-                    // This happens when HTML is sent as plain text
-                    if (strpos($body, '&lt;') !== false || strpos($body, '&gt;') !== false) {
-                        // Content is HTML-encoded, decode it
-                        $body = html_entity_decode($body, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                // Log for debugging (remove this later)
+                \Log::info("Email UID {$uid} raw body preview: " . substr($rawBody, 0, 500));
 
-                        // Double check - sometimes it needs double decoding
-                        if (strpos($body, '&lt;') !== false || strpos($body, '&gt;') !== false) {
-                            $body = html_entity_decode($body, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                if (!empty($rawBody)) {
+                    // Aggressive decoding - handle multiple levels of encoding
+                    $decoded = $rawBody;
+                    $iterations = 0;
+                    $maxIterations = 5;
+
+                    // Keep decoding until no more HTML entities found or max iterations reached
+                    while ($iterations < $maxIterations &&
+                        (strpos($decoded, '&lt;') !== false ||
+                            strpos($decoded, '&gt;') !== false ||
+                            strpos($decoded, '&quot;') !== false ||
+                            strpos($decoded, '&#') !== false)) {
+
+                        $before = $decoded;
+                        $decoded = html_entity_decode($decoded, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+                        // If nothing changed, break to prevent infinite loop
+                        if ($before === $decoded) {
+                            break;
                         }
+
+                        $iterations++;
                     }
 
-                    // Now sanitize the HTML content
-                    $body = $this->sanitizeEmailBody($body);
-
-                } elseif ($message->hasTextBody()) {
-                    // For plain text emails
-                    $textBody = $message->getTextBody();
-
-                    // Check if the text body actually contains HTML tags
-                    if ($this->looksLikeHTML($textBody)) {
-                        // It's HTML sent as text, decode and sanitize it
-                        $body = html_entity_decode($textBody, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-
-                        // Double decode if needed
-                        if (strpos($body, '&lt;') !== false || strpos($body, '&gt;') !== false) {
-                            $body = html_entity_decode($body, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-                        }
-
-                        $body = $this->sanitizeEmailBody($body);
+                    // Now check if we have valid HTML
+                    if ($this->looksLikeHTML($decoded)) {
+                        $body = $this->sanitizeEmailBody($decoded);
                     } else {
-                        // It's actually plain text, format it nicely
+                        // Still plain text, format it
                         $body = '<pre style="white-space: pre-wrap; font-family: Arial, sans-serif; background: #f5f5f5; padding: 15px; border-radius: 5px;">'
-                            . htmlspecialchars($textBody)
+                            . htmlspecialchars($decoded)
                             . '</pre>';
                     }
-
                 } else {
                     $body = '<p class="grey-text center-align">No content available</p>';
                 }

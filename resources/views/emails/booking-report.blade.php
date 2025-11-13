@@ -38,7 +38,7 @@
         }
 
         .email-header h1 {
-            font-size: 24px;
+            font-size: 18px;
             color: #2c3e50;
             margin: 0 0 10px 0;
             font-weight: bold;
@@ -60,7 +60,7 @@
         }
 
         .content-section h2 {
-            font-size: 18px;
+            font-size: 14px;
             color: #2c3e50;
             margin: 0 0 15px 0;
             font-weight: bold;
@@ -89,7 +89,7 @@
         }
 
         .calculation-box h2 {
-            font-size: 18px;
+            font-size: 16px;
             color: #28a745;
             margin: 0 0 15px 0;
             font-weight: bold;

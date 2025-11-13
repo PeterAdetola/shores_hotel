@@ -309,7 +309,18 @@ Route::get('/clear-cache', function() {
     }
 });
 
+// In routes/web.php - TEMPORARY FOR TESTING
+Route::get('/test-email', function() {
+    $html = '<html><head><meta charset="UTF-8"></head><body style="font-family: Arial, sans-serif;"><h1 style="color: red; font-size: 32px;">TEST HTML EMAIL</h1><p style="font-size: 18px;">This should be <strong>bold</strong> and <em>italic</em></p><div style="background: #e9f7ef; padding: 20px; margin: 20px 0; border-left: 4px solid #28a745;"><h2 style="color: #28a745;">Styled Box</h2><p>If you see this styled, HTML is working!</p></div></body></html>';
 
+    // For Laravel 9+ (no SwiftMailer)
+    Mail::html($html, function($message) {
+        $message->to('book_hotel@shoreshotelng.com')
+            ->subject('Test HTML Email - ' . now());
+    });
+
+    return 'Test email sent! Check your inbox at book_hotel@shoreshotelng.com';
+});
 
 Route::get('/update-display-names', function () {
     try {
@@ -410,6 +421,38 @@ Route::get('/test-email-direct', function () {
     }
 });
 
+// Add to routes/web.php - FOR LOCAL DEVELOPMENT ONLY
+Route::get('/preview-booking-email/{bookingId}', function($bookingId) {
+    $booking = \App\Models\Booking::with('room.category')->findOrFail($bookingId);
+    $room = $booking->room;
 
+    $nights = abs(\Carbon\Carbon::parse($booking->check_out)->diffInDays(\Carbon\Carbon::parse($booking->check_in)));
+
+    $senderName = $room->room_type == 0 ? 'Shores Hotel' : 'Shores Apartment';
+
+    // Return the view directly to your browser
+    return view('emails.booking-report', [
+        'booking' => $booking,
+        'room' => $room,
+        'senderName' => $senderName,
+        'nights' => $nights,
+    ]);
+})->name('preview.booking.email');
+
+// Preview the customer confirmation email
+Route::get('/preview-booking-confirmation/{bookingId}', function($bookingId) {
+    $booking = \App\Models\Booking::with('room.category')->findOrFail($bookingId);
+    $room = $booking->room;
+
+    $senderEmail = $room->room_type == 0 ? 'book_hotel@shoreshotelng.com' : 'book_apartment@shoreshotelng.com';
+    $senderName = $room->room_type == 0 ? 'Shores Hotel' : 'Shores Apartment';
+
+    return view('emails.booking-request', [
+        'booking' => $booking,
+        'senderEmail' => $senderEmail,
+        'senderName' => $senderName,
+        'room' => $room,
+    ]);
+})->name('preview.booking.confirmation');
 
 require __DIR__.'/auth.php';
