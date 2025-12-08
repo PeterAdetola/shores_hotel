@@ -13,36 +13,46 @@ $(function () {
 
   // Row Grouping Table
 
-  var table = $('#data-table-row-grouping').DataTable({
-    "responsive": true,
-    "columnDefs": [{
-      "visible": false,
-      "targets": 2
-    }],
-    "order": [
-      [2, 'asc']
-    ],
-    "displayLength": 25,
-    "drawCallback": function (settings) {
-      var api = this.api();
-      var rows = api.rows({
-        page: 'current'
-      }).nodes();
-      var last = null;
+    var table = $('#data-table-row-grouping').DataTable({
+        "responsive": true,
+        "columnDefs": [
+            {
+                "visible": false,
+                "targets": 2,
+                "type": "date",  // Specify column type
+                "render": function(data, type, row) {
+                    // For sorting and filtering, use the title attribute value
+                    if (type === 'sort' || type === 'type') {
+                        return $(row[2]).attr('title') || data;
+                    }
+                    // For display, use the default data
+                    return data;
+                }
+            }
+        ],
+        "order": [
+            [2, 'desc']  // Changed to 'desc' for newest first
+        ],
+        "displayLength": 25,
+        "drawCallback": function (settings) {
+            var api = this.api();
+            var rows = api.rows({
+                page: 'current'
+            }).nodes();
+            var last = null;
 
-      api.column(2, {
-        page: 'current'
-      }).data().each(function (group, i) {
-        if (last !== group) {
-          $(rows).eq(i).before(
-            '<tr class="group"><td colspan="5">' + group + '</td></tr>'
-          );
-
-          last = group;
+            api.column(2, {
+                page: 'current'
+            }).data().each(function (group, i) {
+                if (last !== group) {
+                    $(rows).eq(i).before(
+                        '<tr class="group"><td colspan="9">' + group + '</td></tr>'
+                    );
+                    last = group;
+                }
+            });
         }
-      });
-    }
-  });
+    });
 
   // Page Length Option Table
 

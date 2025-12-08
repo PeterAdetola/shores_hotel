@@ -64,16 +64,19 @@
                                                         <tr>
                                                             <td>{{ $booking->booking_code ?? 'N/A' }}</td>
                                                             <td>{{ $booking->customer_name }}</td>
-                                                            <td title="{{ $booking->created_at->format('Y-m-d H:i') }}">
+                                                            <td data-order="{{ $booking->created_at->timestamp }}"
+                                                                title="{{ $booking->created_at->format('Y-m-d H:i') }}">
                                                                 {{ $booking->created_at->diffForHumans() }}
                                                             </td>
                                                             <td>{{ $booking->lodging_type ?? optional($booking->room->category)->name }}</td>
                                                             <td>{{ ucfirst($booking->status) }}</td>
-                                                            <td title="{{ $booking->check_in->format('Y-m-d') }}">
+                                                            <td data-order="{{ $booking->check_in->timestamp }}"
+                                                                title="{{ $booking->check_in->format('Y-m-d') }}">
                                                                 {{ \Carbon\Carbon::parse($booking->check_in)->diffForHumans() }}
                                                             </td>
 
-                                                            <td title="{{ $booking->check_out->format('Y-m-d') }}">
+                                                            <td data-order="{{ $booking->check_out->timestamp }}"
+                                                                title="{{ $booking->check_out->format('Y-m-d') }}">
                                                                 {{ \Carbon\Carbon::parse($booking->check_out)->diffForHumans() }}
                                                             </td>
 
