@@ -84,7 +84,7 @@
                             </li>
 
                             <li class="{{ ($route == 'citibar') ? 'mil-current' : '' }}">
-                                <a href="{{ route('citibar') }}">Citibar</a>
+                                <a href="{{ route('citibar') }}">CitiB Lounge</a>
                             </li>
 
                         </ul>
@@ -156,7 +156,7 @@
                                         </li>
 
                                         <li class="{{ ($route == 'citibar')? 'mil-active' : '' }}">
-                                            <a href="{{ route('citibar') }}">Citibar</a>
+                                            <a href="{{ route('citibar') }}">CitiB Lounge</a>
                                         </li>
                                     </ul>
                                 </nav>

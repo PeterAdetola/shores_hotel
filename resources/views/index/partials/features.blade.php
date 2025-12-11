@@ -8,7 +8,7 @@
     }
 </style>
 
-<div class="mil-features mil-p-100-60">
+<div class="mil-features mil-p-100-60" >
     <img src="{{ asset('img/shapes/4.png') }}" class="mil-shape mil-fade-up"
          style="width: 85%; top: -20%; left: -30%; transform: rotate(35deg)" alt="shape">
 

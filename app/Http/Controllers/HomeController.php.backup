@@ -1,0 +1,169 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+
+class HomeController extends Controller
+{
+    public function index()
+    {
+        $heroContent = $this->loadFrontMatter('content/home/hero.md');
+        $aboutContent1 = $this->loadFrontMatter('content/home/about_1.md');
+        $aboutContent2 = $this->loadFrontMatter('content/home/about_2.md');
+        $featuresContent = $this->loadFrontMatter('content/home/features.md');
+
+        return view('index.index', compact('heroContent', 'aboutContent1', 'aboutContent2', 'featuresContent'));
+    }
+
+    public function about()
+    {
+        $aboutContent1 = $this->loadFrontMatter('content/home/about_1.md');
+        $aboutContent2 = $this->loadFrontMatter('content/home/about_2.md');
+        $featuresContent = $this->loadFrontMatter('content/home/features.md');
+        $citibarContent = $this->loadFrontMatter('content/home/gallery.md');
+
+        return view('about_page', compact('aboutContent1', 'aboutContent2', 'featuresContent', 'citibarContent'));
+    }
+
+    /**
+     * Load a markdown file from storage/app and parse YAML front matter.
+     * Uses a simple regex-based parser to avoid symfony/yaml segfaults.
+     * Returns an empty array on any error to prevent crashes.
+     */
+    private function loadFrontMatter(string $relativePath): array
+    {
+        try {
+            $path = storage_path('app/' . ltrim($relativePath, '/'));
+
+            if (!File::exists($path)) {
+                Log::warning("Markdown file not found: {$path}");
+                return [];
+            }
+
+            $content = File::get($path);
+
+            if (empty($content)) {
+                Log::warning("Markdown file is empty: {$path}");
+                return [];
+            }
+
+            // Extract YAML front matter between --- delimiters
+            if (!preg_match('/^---\s*\n(.*?)\n---\s*\n?/s', $content, $matches)) {
+                Log::warning("No front matter found in: {$path}");
+                return [];
+            }
+
+            $yamlContent = trim($matches[1]);
+
+            if (empty($yamlContent)) {
+                return [];
+            }
+
+            // Parse YAML manually to avoid symfony/yaml segfaults
+            return $this->parseSimpleYaml($yamlContent);
+
+        } catch (\Exception $e) {
+            Log::error("Error loading markdown file {$relativePath}: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Simple YAML parser for basic key-value pairs and arrays.
+     * Handles the structure used in your markdown files.
+     */
+    private function parseSimpleYaml(string $yaml): array
+    {
+        $result = [];
+        $lines = explode("\n", $yaml);
+        $currentKey = null;
+        $currentArray = null;
+        $indentLevel = 0;
+
+        foreach ($lines as $line) {
+            $trimmed = trim($line);
+
+            if (empty($trimmed) || $trimmed[0] === '#') {
+                continue;
+            }
+
+            // Count leading spaces for indentation
+            preg_match('/^(\s*)/', $line, $spaces);
+            $currentIndent = strlen($spaces[1]);
+
+            // Handle array items (lines starting with -)
+            if (preg_match('/^-\s+(.+)$/', $trimmed, $match)) {
+                $value = $this->parseValue($match[1]);
+
+                if ($currentKey && isset($result[$currentKey])) {
+                    if (!is_array($result[$currentKey])) {
+                        $result[$currentKey] = [];
+                    }
+                    $result[$currentKey][] = $value;
+                }
+                continue;
+            }
+
+            // Handle key-value pairs
+            if (preg_match('/^([^:]+):\s*(.*)$/', $trimmed, $match)) {
+                $key = trim($match[1]);
+                $value = trim($match[2]);
+
+                if (empty($value)) {
+                    // Key with no value - prepare for array or nested items
+                    $currentKey = $key;
+                    $result[$key] = [];
+                    $indentLevel = $currentIndent;
+                } else {
+                    // Key with value
+                    $result[$key] = $this->parseValue($value);
+                    $currentKey = $key;
+                }
+                continue;
+            }
+
+            // Handle nested key-value pairs (with indentation)
+            if ($currentIndent > $indentLevel && preg_match('/^(\w+):\s*(.*)$/', $trimmed, $match)) {
+                $nestedKey = trim($match[1]);
+                $nestedValue = trim($match[2]);
+
+                if ($currentKey && is_array($result[$currentKey])) {
+                    $lastIndex = count($result[$currentKey]) - 1;
+                    if ($lastIndex >= 0 && is_array($result[$currentKey][$lastIndex])) {
+                        $result[$currentKey][$lastIndex][$nestedKey] = $this->parseValue($nestedValue);
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Parse a YAML value, removing quotes and handling basic types.
+     */
+    private function parseValue(string $value): mixed
+    {
+        $value = trim($value);
+
+        // Remove quotes
+        if ((str_starts_with($value, '"') && str_ends_with($value, '"')) ||
+            (str_starts_with($value, "'") && str_ends_with($value, "'"))) {
+            return substr($value, 1, -1);
+        }
+
+        // Handle booleans
+        if ($value === 'true') return true;
+        if ($value === 'false') return false;
+        if ($value === 'null') return null;
+
+        // Handle numbers
+        if (is_numeric($value)) {
+            return str_contains($value, '.') ? (float) $value : (int) $value;
+        }
+
+        return $value;
+    }
+}

@@ -13,7 +13,7 @@
 
                         @include('index.partials.search_panel')
 
-                        <p><span class="mil-accent-2">*</span>{{ $heroContent['note'] }}</p>
+                        <p style="margin-bottom: 1em"><span class="mil-accent-2">*</span>{{ $heroContent['note'] }}</p>
                     </div>
                 </div>
             </div>

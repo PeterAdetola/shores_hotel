@@ -5,6 +5,10 @@
     @include('index.partials.hero')
     <!-- banner end -->
 
+    <!-- notice -->
+    @include('index.partials.notice')
+    <!-- notice end -->
+
     <!-- services -->
     @include('index.partials.services')
     <!-- services end -->

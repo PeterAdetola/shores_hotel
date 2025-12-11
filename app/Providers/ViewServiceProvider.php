@@ -23,7 +23,7 @@ class ViewServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Share email accounts with all views
-        View::composer('*', function ($view) {
+        View::composer(['admin.email.*', 'layouts.admin'],  function ($view) {
             try {
                 // Get accounts from DirectAdmin
                 $daService = new DirectAdminEmailService();
