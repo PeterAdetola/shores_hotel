@@ -14,7 +14,7 @@
         <div style="display: flex; flex-direction: column; align-items: center; gap: 2em;">
             <div style="max-width: 700px;">
                 <p class="mil-fade-up" style="text-align: center; margin: 0 auto;">
-                    Shores Hotel offers a complete hospitality experience: a luxury hotel, residential apartments, and an exciting bar for all your needs.
+                    Shores Hotel offers a complete hospitality experience: a luxury hotel, residential apartments, and an exciting lounge for all your needs.
                 </p>
             </div>
             <div class="mil-fade-up">
