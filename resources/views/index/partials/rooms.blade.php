@@ -15,26 +15,22 @@
                         <div class="mil-card mil-mb-40-adapt mil-fade-up">
                             <div class="swiper-container mil-card-slider">
                                 <div class="swiper-wrapper">
-                                    {{-- Use room's gallery images instead of category images --}}
-                                    @forelse ($room->galleryImages as $img)
+                                    @foreach ($room->galleryImages as $img)
                                         <div class="swiper-slide">
                                             <div class="mil-card-cover">
                                                 <img src="{{ asset('uploads/' . $img->image_path) }}" alt="cover"
                                                      data-swiper-parallax="-100" data-swiper-parallax-scale="1.1">
-                                            </div>
-                                        </div>
-                                    @empty
-                                        {{-- Fallback if no gallery images --}}
-                                        <div class="swiper-slide">
-                                            <div class="mil-card-cover">
-                                                <img src="{{ asset('img/rooms/default.jpg') }}" alt="cover"
-                                                     data-swiper-parallax="-100" data-swiper-parallax-scale="1.1">
-                                            </div>
-                                        </div>
-                                    @endforelse
-                                </div>
 
-                                <!-- Navigation buttons -->
+                                                {{-- Discount Badge --}}
+                                                @if($room->hasActiveDiscount())
+                                                    <div class="mil-discount-badge">
+                                                        -{{ number_format($room->discount_percentage, 0) }}%
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
                                 <div class="mil-card-nav">
                                     <div class="mil-slider-btn mil-card-prev">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -93,7 +89,6 @@
                                         <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
                                              width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
                                              preserveAspectRatio="xMidYMid meet">
-
                                             <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
                                                fill="#000000" stroke="none">
                                                 <path d="M1030 4891 c0 -5 5 -44 11 -87 22 -159 101 -316 215 -428 63 -61 174
@@ -141,20 +136,32 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
                             </ul>
 
                             <div class="mil-descr">
-                                <h3 class="mil-mb-20">{{ $category->name ?? '—' }}</h3>
+                                <h3 class="mil-mb-20">{{ $room->category->name ?? '—' }}</h3>
                                 <div class="mil-divider"></div>
                                 <div class="mil-card-bottom">
-                                        <?php
-                                        $price = $room->price_per_night ?? 0;
-                                        $formatted_price = number_format($price, 2, '.', ',');
-                                        ?>
-                                    <div class="mil-price">
-                                        <span class="mil-symbol">₦</span>
-                                        <span class="mil-number" style="font-size: 1.2em">{{ $formatted_price }}</span>/per night
+                                    <div class="mil-price-wrapper">
+                                        @if($room->hasActiveDiscount())
+                                            {{-- Display discounted price --}}
+                                            <div class="mil-price">
+                                                <span class="mil-symbol">₦</span>
+                                                <span class="mil-number" style="font-size: 1.2em">{{ number_format($room->discounted_price, 2, '.', ',') }}</span>
+                                                <span>/per night</span>
+                                            </div>
+                                            {{-- Display original price (slashed) --}}
+                                            <div class="mil-original-price">
+                                                <span class="mil-symbol">₦</span>
+                                                <span class="mil-number">{{ number_format($room->price_per_night, 2, '.', ',') }}</span>
+                                            </div>
+                                        @else
+                                            {{-- Display regular price --}}
+                                            <div class="mil-price">
+                                                <span class="mil-symbol">₦</span>
+                                                <span class="mil-number" style="font-size: 1.2em">{{ number_format($room->price_per_night, 2, '.', ',') }}</span>
+                                                <span>/per night</span>
+                                            </div>
+                                        @endif
                                     </div>
-
-                                    {{-- FIXED ROUTE LINK --}}
-                                    <a href="{{ route('chosen_lodge', ['categorySlug' => $category->slug, 'roomId' => $room->id]) }}"
+                                    <a href="{{ route('chosen_lodge', ['categorySlug' => $room->category->slug, 'roomId' => $room->id]) }}"
                                        class="mil-button mil-icon-button mil-accent-1">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"

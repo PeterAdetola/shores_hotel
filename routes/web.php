@@ -11,8 +11,9 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\GetLodgedController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\DiscountController;
 
-//use Webklex\PHPIMAP\ClientManager;
+use Webklex\PHPIMAP\ClientManager;
 
 
 
@@ -70,6 +71,20 @@ Route::middleware('auth')->group(function () {
 });
 
 
+//Route::get('/discount', function () {
+//    return view('/admin/discount');
+//})->name('discount');
+
+
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/discount', [DiscountController::class, 'index'])->name('discount');
+    Route::post('/discount/apply-rooms', [DiscountController::class, 'applyToRooms'])->name('discount.apply-rooms');
+    Route::post('/discount/apply-apartments', [DiscountController::class, 'applyToApartments'])->name('discount.apply-apartments');
+    Route::post('/discount/apply-all', [DiscountController::class, 'applyToAll'])->name('discount.apply-all');
+    Route::get('/discount/remove-rooms', [DiscountController::class, 'removeFromRooms'])->name('discount.remove-rooms');
+    Route::get('/discount/remove-apartments', [DiscountController::class, 'removeFromApartments'])->name('discount.remove-apartments');
+    Route::get('/discount/remove-all', [DiscountController::class, 'removeFromAll'])->name('discount.remove-all');
+});
 
 // --------------| Booking Routes |----------------------------------------
 Route::post('/make_booking', [BookingController::class, 'storeRoomDetails'])->name('make.booking');
@@ -106,6 +121,9 @@ Route::get('/add_room', function () {
 Route::get('/room_config', function () {
     return view('/admin/room/room_config');
 })->name('room_config');
+Route::get('/announcement', function () {
+    return view('/announcement');
+})->name('announcement');
 
 // --------------| Room Category Routes |----------------------------------------
 

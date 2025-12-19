@@ -7,23 +7,35 @@
                 <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
         </div>
+
         <div class="mil-text-center">
-            <div class="mil-suptitle mil-mb-20 mil-fade-up">Be the 1st to know</div>
-            <h2 class="mil-mb-40 mil-fade-up">Announcement of something exciting</h2>
+            <div class="mil-suptitle mil-mb-20 mil-fade-up">
+                🎁 Be the first to unwrap the surprise
+            </div>
+            <h2 class="mil-mb-40 mil-fade-up">
+                🎄 Festive Discounts Are Here!
+            </h2>
         </div>
+
         <div style="display: flex; flex-direction: column; align-items: center; gap: 2em;">
             <div style="max-width: 700px;">
                 <p class="mil-fade-up" style="text-align: center; margin: 0 auto;">
-                    Shores Hotel offers a complete hospitality experience: a luxury hotel, residential apartments, and an exciting lounge for all your needs.
+                    Celebrate the season in comfort and style ✨
+                    Enjoy special festive rates on all Shores Hotel rooms.
+                </p>
+                <p class="mil-fade-up" style="margin-top: 1em;">
+                    ⏰ Limited-time holiday offer — don’t miss out!
                 </p>
             </div>
+
             <div class="mil-fade-up">
-                <a href="{{ route('aboutUs') }}" class="mil-button">
-                    <span>Discover the Excitement</span>
+                <a href="{{ route('getRooms') }}" class="mil-button">
+                    <span>🎅 Reserve Your Room</span>
                 </a>
             </div>
         </div>
     </div>
+
 </div>
 
 <script>

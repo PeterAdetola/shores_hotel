@@ -1,8 +1,8 @@
 <?php
 /**
- * github_update.php - FINAL FIXED VERSION
+ * github_update.php - COMPLETE FIXED VERSION
  * Handles GitHub webhook + manual deployments
- * FIXED: Uses cp instead of rsync for public file sync
+ * FIXED: Properly syncs directory contents without nesting
  */
 
 ini_set('display_errors', 1);
@@ -169,50 +169,114 @@ try {
         runCommand($cmd, $LARAVEL_PATH);
     }
 
-    // ===== FIXED: SYNC PUBLIC FILES USING CP =====
-    logMessage("🔁 Syncing public files using cp...");
+    // ===== FIXED: SYNC PUBLIC FILES - CORRECT METHOD =====
+    logMessage("🔁 Syncing public files...");
 
     // Backup server's index.php
-    runCommand("cp " . escapeshellarg("$PUBLIC_PATH/index.php") . " /tmp/index.php.server.bak", '/');
+    $indexBackup = "/tmp/index.php.server." . time() . ".bak";
+    if (file_exists("$PUBLIC_PATH/index.php")) {
+        copy("$PUBLIC_PATH/index.php", $indexBackup);
+        logMessage("✅ Backed up index.php to $indexBackup");
+    }
 
-    // Copy each item from Laravel public to public_html
     $publicSource = "$LARAVEL_PATH/public";
-    if (is_dir($publicSource)) {
-        $items = scandir($publicSource);
-        $syncedCount = 0;
-        foreach ($items as $item) {
-            if ($item === '.' || $item === '..' || $item === 'index.php') continue;
 
-            $sourcePath = "$publicSource/$item";
-            $destPath = "$PUBLIC_PATH/$item";
+    if (!is_dir($publicSource)) {
+        logMessage("❌ ERROR: Public source directory not found: $publicSource");
+        throw new Exception("Public source directory not found");
+    }
 
-            $result = runCommand("cp -rf " . escapeshellarg($sourcePath) . " " . escapeshellarg($destPath), '/');
+    // Get list of items to sync (excluding index.php)
+    $items = scandir($publicSource);
+    $syncedCount = 0;
+    $failedCount = 0;
+    $syncDetails = [];
 
-            if ($result['exit_code'] === 0) {
-                $syncedCount++;
-                logMessage("  ✓ Synced: $item");
-            } else {
-                logMessage("  ✗ Failed to sync: $item");
-            }
+    foreach ($items as $item) {
+        if ($item === '.' || $item === '..' || $item === 'index.php') {
+            continue;
         }
-        logMessage("✅ Synced $syncedCount items from public/ to public_html/");
-    } else {
-        logMessage("⚠️ Public source directory not found: $publicSource");
+
+        $sourcePath = "$publicSource/$item";
+        $destPath = "$PUBLIC_PATH/$item";
+
+        // CRITICAL FIX: For directories, we need to sync CONTENTS, not the directory itself
+        if (is_dir($sourcePath)) {
+            logMessage("  📁 Syncing directory: $item");
+
+            // Create destination directory if it doesn't exist
+            if (!is_dir($destPath)) {
+                mkdir($destPath, 0755, true);
+                logMessage("    Created directory: $destPath");
+            }
+
+            // Sync contents using wildcard (/* means "contents of")
+            $cpResult = runCommand("cp -rf " . escapeshellarg($sourcePath) . "/* " . escapeshellarg($destPath) . "/", '/');
+
+            // Also copy hidden files if any (suppress errors if none exist)
+            runCommand("cp -rf " . escapeshellarg($sourcePath) . "/.* " . escapeshellarg($destPath) . "/ 2>/dev/null || true", '/');
+
+        } else {
+            // For files, direct copy is fine
+            logMessage("  📄 Syncing file: $item");
+            $cpResult = runCommand("cp -f " . escapeshellarg($sourcePath) . " " . escapeshellarg($destPath), '/');
+        }
+
+        // Verify the sync
+        if (is_file($sourcePath) && file_exists($destPath)) {
+            $sourceSize = filesize($sourcePath);
+            $destSize = filesize($destPath);
+            if ($sourceSize === $destSize) {
+                $syncedCount++;
+                logMessage("  ✅ $item ($sourceSize bytes) - Verified ✓");
+                $syncDetails[] = "✅ $item";
+            } else {
+                $failedCount++;
+                logMessage("  ⚠️ $item - Size mismatch! Source: $sourceSize, Dest: $destSize");
+                $syncDetails[] = "⚠️ $item (size mismatch)";
+            }
+        } elseif (is_dir($sourcePath) && is_dir($destPath)) {
+            $syncedCount++;
+            $fileCount = count(array_diff(scandir($destPath), ['.', '..']));
+            logMessage("  ✅ $item/ ($fileCount items inside) - Verified ✓");
+            $syncDetails[] = "✅ $item/";
+        } else {
+            $failedCount++;
+            logMessage("  ❌ Failed to sync: $item");
+            $syncDetails[] = "❌ $item (failed)";
+        }
     }
 
     // Restore server's index.php
-    runCommand("cp /tmp/index.php.server.bak " . escapeshellarg("$PUBLIC_PATH/index.php"), '/');
-    logMessage("✅ Public sync completed");
+    if (file_exists($indexBackup)) {
+        copy($indexBackup, "$PUBLIC_PATH/index.php");
+        logMessage("✅ Restored index.php");
+        unlink($indexBackup);
+    }
 
-    // FIX PERMISSIONS
-    logMessage("🔒 Fixing permissions...");
+    // Fix permissions on synced files
+    logMessage("🔒 Fixing permissions on public files...");
+    runCommand("chmod -R 755 " . escapeshellarg($PUBLIC_PATH) . "/css 2>/dev/null || true", '/');
+    runCommand("chmod -R 755 " . escapeshellarg($PUBLIC_PATH) . "/js 2>/dev/null || true", '/');
+    runCommand("chmod -R 755 " . escapeshellarg($PUBLIC_PATH) . "/img 2>/dev/null || true", '/');
+    runCommand("chmod -R 755 " . escapeshellarg($PUBLIC_PATH) . "/build 2>/dev/null || true", '/');
+
+    logMessage("✅ Public sync completed: $syncedCount synced, $failedCount failed");
+    logMessage("Details: " . implode(", ", $syncDetails));
+
+    // FIX STORAGE PERMISSIONS
+    logMessage("🔒 Fixing storage permissions...");
     runCommand("chmod -R 775 storage bootstrap/cache", $LARAVEL_PATH);
-    logMessage("✅ Permissions fixed");
+    logMessage("✅ Storage permissions fixed");
 
     logMessage("=== ✅ DEPLOYMENT COMPLETED SUCCESSFULLY ===");
 
     $successMsg = "Deployment completed successfully on " . date('Y-m-d H:i:s') .
         "\n\nBackup created: $backupDir" .
+        "\n\nFiles synced: $syncedCount successfully" .
+        "\nFailed: $failedCount" .
+        "\n\nSync details:\n" . implode("\n", $syncDetails) .
+        "\n\n⚠️ IMPORTANT: Press Ctrl+Shift+R (or Cmd+Shift+R on Mac) to hard refresh and see CSS/JS changes!" .
         "\n\nTriggered via: " . ($isManualTrigger ? "Manual browser" : "GitHub webhook");
 
     sendEmail("✅ Shores Deployment Successful", $successMsg);
@@ -224,9 +288,12 @@ try {
     <title>Deployment Successful</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 40px; background: #f0f0f0; }
-        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 20px; border-radius: 5px; max-width: 600px; margin: 0 auto; }
-        h1 { margin-top: 0; }
-        a { color: #155724; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 20px; border-radius: 5px; max-width: 700px; margin: 0 auto; }
+        h1 { margin-top: 0; color: #155724; }
+        .details { background: white; padding: 15px; border-radius: 3px; margin: 15px 0; font-family: monospace; font-size: 12px; }
+        a { color: #155724; text-decoration: none; font-weight: bold; }
+        a:hover { text-decoration: underline; }
+        .warning { background: #fff3cd; border: 1px solid #ffc107; padding: 10px; border-radius: 3px; margin: 10px 0; }
     </style>
 </head>
 <body>
@@ -234,8 +301,22 @@ try {
         <h1>✅ Deployment Completed Successfully</h1>
         <p><strong>Time:</strong> " . date('Y-m-d H:i:s') . "</p>
         <p><strong>Backup:</strong> " . basename($backupDir) . "</p>
-        <p><a href='?key=$MANUAL_KEY&view_log=1'>View Deployment Log</a></p>
-        <p><strong>Note:</strong> CSS/JS files have been synced using cp (rsync alternative)</p>
+        <p><strong>Files Synced:</strong> $syncedCount</p>
+        <p><strong>Failed:</strong> $failedCount</p>
+
+        <div class='details'>
+            <strong>Sync Details:</strong><br>
+            " . implode("<br>", $syncDetails) . "
+        </div>
+
+        <div class='warning'>
+            <strong>⚠️ Important:</strong> Press <kbd>Ctrl+Shift+R</kbd> (Windows/Linux) or <kbd>Cmd+Shift+R</kbd> (Mac) to hard refresh your browser and see the CSS/JS changes!
+        </div>
+
+        <p>
+            <a href='?key=$MANUAL_KEY&view_log=1'>📋 View Full Deployment Log</a> |
+            <a href='/'>🏠 Go to Homepage</a>
+        </p>
     </div>
 </body>
 </html>";
@@ -244,6 +325,8 @@ try {
         echo json_encode([
             'status' => 'success',
             'backup' => basename($backupDir),
+            'synced' => $syncedCount,
+            'failed' => $failedCount,
             'time'   => date('Y-m-d H:i:s')
         ]);
     }
@@ -251,18 +334,38 @@ try {
 } catch (Exception $e) {
     $errorMsg = "❌ Deployment failed: " . $e->getMessage();
     logMessage($errorMsg);
-    sendEmail("🚨 Shores Deployment Failed", $errorMsg);
+    logMessage("Stack trace: " . $e->getTraceAsString());
+    sendEmail("🚨 Shores Deployment Failed", $errorMsg . "\n\n" . $e->getTraceAsString());
 
     if ($isManualTrigger) {
         http_response_code(500);
         echo "<!DOCTYPE html>
 <html>
-<head><title>Deployment Failed</title>
-<style>body{font-family:Arial;padding:40px;background:#f0f0f0}.error{background:#f8d7da;border:1px solid #f5c6cb;color:#721c24;padding:20px;border-radius:5px;max-width:600px;margin:0 auto}</style>
+<head>
+    <title>Deployment Failed</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 40px; background: #f0f0f0; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 20px; border-radius: 5px; max-width: 700px; margin: 0 auto; }
+        h1 { margin-top: 0; color: #721c24; }
+        pre { background: white; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        a { color: #721c24; }
+    </style>
 </head>
-<body><div class='error'><h1>❌ Deployment Failed</h1><p>" . htmlspecialchars($errorMsg) . "</p></div></body></html>";
+<body>
+    <div class='error'>
+        <h1>❌ Deployment Failed</h1>
+        <p><strong>Error:</strong></p>
+        <pre>" . htmlspecialchars($errorMsg) . "</pre>
+        <p><a href='?key=$MANUAL_KEY&view_log=1'>View Full Log</a></p>
+    </div>
+</body>
+</html>";
     } else {
         http_response_code(500);
-        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        echo json_encode([
+            'status' => 'error',
+            'message' => $e->getMessage()
+        ]);
     }
 }
+?>
