@@ -8,14 +8,14 @@
             <div class="mil-banner-head">
                 <div class="row align-items-center">
                     <div class="col-xl-6">
-                        <h1 class="mil-h2-lg mil-mb-40">Welcome to Citibar</h1>
+                        <h1 class="mil-h2-lg mil-mb-40">Welcome to CitiB&nbsp;Lounge</h1>
                     </div>
                     <div class="col-xl-6">
                         <div class="mil-desctop-right mil-fade-up mil-mb-40">
                             <div class="mil-suptitle mil-breadcrumbs mil-light">
                                 <ul>
                                     <li><a href="home-1.html">Home</a></li>
-                                    <li><a href="room-2.html">Citibar</a></li>
+                                    <li><a href="room-2.html">CitiB Lounge</a></li>
                                 </ul>
                             </div>
                         </div>

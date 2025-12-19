@@ -26,7 +26,7 @@
                     <div class="mil-img-frame">
                         <img src="{{ asset('img/services/3.jpg') }}" alt="img">
                     </div>
-                    <div class="mil-description">Citibar</div>
+                    <div class="mil-description">CitiB Lounge</div>
                 </a>
             </div>
         </div>
