@@ -42,7 +42,7 @@ class BookingEmailHelper
             return true;
 
         } catch (\Exception $e) {
-            \Log::error('Booking Email Error: ' . $e->getMessage());
+//            \Log::error('Booking Email Error: ' . $e->getMessage());
             return false;
         }
     }

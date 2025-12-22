@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\BookingEmail;
 use Carbon\Carbon;
 use App\Services\DirectAdminEmailService;
+use App\Services\ImapEmailService;
 use App\Models\EmailAccount;
+
+
 
 class EmailController extends Controller
 {
@@ -18,8 +21,7 @@ class EmailController extends Controller
 
     public function __construct()
     {
-        $this->clientManager = new ClientManager();
-        $this->clientManager = new ClientManager();
+        $this->clientManager = new ClientManager(config('imap')); // ← Add config here
         $this->daService = new DirectAdminEmailService();
     }
 
@@ -31,8 +33,8 @@ class EmailController extends Controller
         // Get from DirectAdmin API
         $daAccounts = $this->daService->getEmailAccounts();
 
-        // Merge with database accounts (which have passwords)
-        $dbAccounts = EmailAccount::getActive();
+        // Get database accounts (which have passwords and display names)
+        $dbAccounts = EmailAccount::where('is_active', true)->get();
 
         // Map DirectAdmin accounts with database info
         $accounts = collect($daAccounts)->map(function ($daAccount) use ($dbAccounts) {
@@ -40,15 +42,58 @@ class EmailController extends Controller
 
             return [
                 'email' => $daAccount['email'],
-                'display_name' => $dbAccount->display_name ?? $daAccount['email'],
+                'display_name' => $dbAccount ? $dbAccount->display_name : $daAccount['email'],
                 'has_password' => $dbAccount ? true : false,
                 'is_active' => $dbAccount ? $dbAccount->is_active : false,
                 'quota' => $daAccount['quota'] ?? 'unlimited',
                 'usage' => $daAccount['usage'] ?? 0,
+                'unread_count' => 0, // We'll add this later
             ];
         })->toArray();
 
         return $accounts;
+    }
+
+    /**
+     * Get unread count for each email account
+     */
+    private function getEmailAccountsWithUnread()
+    {
+        $accounts = $this->getEmailAccounts();
+
+        foreach ($accounts as &$account) {
+            if ($account['has_password']) {
+                try {
+                    // Get unread count using ImapEmailService
+                    $unreadCount = ImapEmailService::getUnreadCount(
+                        $this->getAccountKeyFromEmail($account['email'])
+                    );
+                    $account['unread_count'] = $unreadCount;
+                } catch (\Exception $e) {
+                    \Log::error("Failed to get unread count for {$account['email']}: " . $e->getMessage());
+                    $account['unread_count'] = 0;
+                }
+            } else {
+                $account['unread_count'] = 0;
+            }
+        }
+
+        return $accounts;
+    }
+
+    /**
+     * Map email address to config account key
+     */
+    private function getAccountKeyFromEmail($email)
+    {
+        // Map email addresses to their config keys
+        $mapping = [
+            'hello@shoreshotelng.com' => 'default',
+            'book_hotel@shoreshotelng.com' => 'booking_hotel',
+            'book_apartment@shoreshotelng.com' => 'booking_apartment',
+        ];
+
+        return $mapping[$email] ?? 'default';
     }
 
     /**
@@ -67,6 +112,7 @@ class EmailController extends Controller
     public function clearEmailCache()
     {
         $this->daService->clearCache();
+        clearEmailAccountsCache();
 
         return redirect()->back()->with('success', 'Email accounts cache cleared');
     }
@@ -75,15 +121,17 @@ class EmailController extends Controller
     {
         if (!$this->client) {
             try {
+                $accountConfig = config('imap.accounts.default');
+
                 $this->client = $this->clientManager->make([
-                    'host' => 'mail.jupitercorporateservices.com',
-                    'port' => 993,
-                    'encryption' => 'ssl',
-                    'validate_cert' => false,
-                    'username' => 'hello@shoreshotelng.com',
-                    'password' => 'hello@shoresEmailLogin',
-                    'protocol' => 'imap',
-                    'authentication' => null,
+                    'host' => $accountConfig['host'],
+                    'port' => $accountConfig['port'],
+                    'protocol' => $accountConfig['protocol'],
+                    'encryption' => $accountConfig['encryption'],
+                    'validate_cert' => $accountConfig['validate_cert'],
+                    'username' => $accountConfig['username'],
+                    'password' => $accountConfig['password'],
+                    'timeout' => $accountConfig['timeout'] ?? 30,
                 ]);
 
                 $this->client->connect();
@@ -335,7 +383,10 @@ class EmailController extends Controller
 
             // Get email accounts for sidebar
             $emailAccounts = $this->getEmailAccounts();
+            \Log::info("Email accounts for sidebar: " . count($emailAccounts));
+            \Log::info("Email accounts data: " . json_encode($emailAccounts));
 
+//            $emailAccounts = $this->getEmailAccountsWithUnread();
             return view('admin.email.inbox', compact('emails', 'folder', 'emailAccounts', 'activeEmail'));
 
         } catch (\Exception $e) {
@@ -414,16 +465,19 @@ class EmailController extends Controller
 
             \Log::info("Connecting to IMAP for: {$email}");
 
-            // Create new client with account-specific credentials
+            // Get the full config to pass to ClientManager
+            $imapConfig = config('imap');
+
+            // Create new client with account-specific credentials using make()
             $this->client = $this->clientManager->make([
                 'host' => 'mail.jupitercorporateservices.com',
                 'port' => 993,
+                'protocol' => 'imap',
                 'encryption' => 'ssl',
                 'validate_cert' => false,
                 'username' => $account->username,
                 'password' => $account->password, // Automatically decrypted by model
-                'protocol' => 'imap',
-                'authentication' => null,
+                'timeout' => 30,
             ]);
 
             $this->client->connect();
@@ -1260,4 +1314,6 @@ class EmailController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
+
+
 }

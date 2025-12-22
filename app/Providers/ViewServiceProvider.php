@@ -22,8 +22,12 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Share email accounts with all views
-        View::composer(['admin.email.*', 'layouts.admin'],  function ($view) {
+        View::composer([
+            'admin.email.*',           // All email views
+            'admin.components.*', // Sidebar component
+            'admin'            // Admin layout (if it exists)
+        ], function ($view) {
+            \Log::info('ViewComposer triggered for: ' . $view->name());
             try {
                 // Get accounts from DirectAdmin
                 $daService = new DirectAdminEmailService();
@@ -51,7 +55,7 @@ class ViewServiceProvider extends ServiceProvider
 
                 $activeEmail = session('active_email', $defaultAccount ? $defaultAccount->email : null);
 
-                // Share with all views
+                // Share with views
                 $view->with('emailAccounts', $emailAccounts);
                 $view->with('activeEmail', $activeEmail);
 

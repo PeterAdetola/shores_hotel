@@ -1,7 +1,10 @@
  <!-- BEGIN: SideNav -->
 @php
 
-    $route = Route::current()->getName()
+    $route = Route::current()->getName();
+    $emailAccounts = getEmailAccountsForSidebar();
+    $activeEmail = getActiveEmailAccount();
+
 
 @endphp
  <aside class="sidenav-main nav-expanded nav-lock nav-collapsible sidenav-light sidenav-active-square">
@@ -99,11 +102,11 @@
                      @if(!empty($emailAccounts) && count($emailAccounts) > 0)
                          @foreach($emailAccounts as $account)
                              <li>
-                                 <a class="waves-effect waves-cyan {{ ($activeEmail ?? '') == $account['email'] ? 'active' : '' }}"
+                                 <a class="waves-effect waves-cyan {{ $activeEmail == $account['email'] ? 'active' : '' }}"
                                     href="{{ route('admin.email.switch-and-view', ['email' => $account['email']]) }}"
                                      {{ !$account['has_password'] ? 'onclick="return false;" style="opacity: 0.5; cursor: not-allowed;"' : '' }}>
                                      <i class="material-icons">
-                                         {{ $account['has_password'] ? 'check_circle' : 'cancel' }}
+                                         {{ $account['has_password'] ? 'radio_button_checked' : 'cancel' }}
                                      </i>
                                      <span data-i18n="Email">
                                 {{ $account['display_name'] ?? $account['email'] }}
@@ -111,9 +114,11 @@
                                              <small class="red-text">(Not configured)</small>
                                          @endif
                             </span>
-{{--                                     @if(($activeEmail ?? '') == $account['email'])--}}
-{{--                                         <span class="badge new green">Active</span>--}}
-{{--                                     @endif--}}
+
+                                     {{-- Show unread count badge --}}
+                                     @if($account['has_password'] && isset($account['unread_count']) && $account['unread_count'] > 0)
+                                         <span class="new badge red" data-badge-caption="">{{ $account['unread_count'] }}</span>
+                                     @endif
                                  </a>
                              </li>
                          @endforeach

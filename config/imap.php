@@ -24,18 +24,38 @@ return [
     |
     */
     'accounts' => [
-
         'default' => [
-            'host'  => env('IMAP_HOST', 'email.jupitercorporateservices.com'),
+            'host'  => env('IMAP_HOST', 'mail.jupitercorporateservices.com'),
             'port'  => env('IMAP_PORT', 993),
             'protocol'  => env('IMAP_PROTOCOL', 'imap'),
             'encryption'    => env('IMAP_ENCRYPTION', 'ssl'),
             'validate_cert' => env('IMAP_VALIDATE_CERT', true),
-            'username' => env('MAIL_USERNAME', 'hello@shoreshotelng.com'),
-            'password' => env('MAIL_PASSWORD', ''),
-            'authentication' => env('IMAP_AUTHENTICATION', null),
+            'username' => env('IMAP_USERNAME', 'hello@shoreshotelng.com'),
+            'password' => env('IMAP_PASSWORD', ''),
+            'timeout' => 30,
         ],
 
+        'booking_hotel' => [
+            'host'  => 'mail.jupitercorporateservices.com',
+            'port'  => 993,
+            'protocol'  => 'imap',
+            'encryption'    => 'ssl',
+            'validate_cert' => true,
+            'username' => 'book_hotel@shoreshotelng.com',
+            'password' => env('IMAP_HOTEL_PASSWORD', ''),
+            'timeout' => 30,
+        ],
+
+        'booking_apartment' => [
+            'host'  => 'mail.jupitercorporateservices.com',
+            'port'  => 993,
+            'protocol'  => 'imap',
+            'encryption'    => 'ssl',
+            'validate_cert' => true,
+            'username' => 'book_apartment@shoreshotelng.com',
+            'password' => env('IMAP_APARTMENT_PASSWORD', ''),
+            'timeout' => 30,
+        ],
     ],
 
     /*

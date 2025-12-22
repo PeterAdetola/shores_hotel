@@ -18,6 +18,9 @@
     <meta name="description" content="Pacmedia - Your Tactical Digital Solutions. Brand Strategy, Development & Intelligent Automation.">
     <meta name="keywords" content="brand strategy, digital experience design, web development, AI automation systems, brand identity systems, conversion-focused design, custom development, intelligent customer operations, digital presence strategy, tactical digital solutions">
     <meta name="author" content="Pacmedia Creatives">
+{{--    @if(request()->is('admin/control-panel*'))--}}
+{{--        <meta name="csrf-token" content="{{ csrf_token() }}">--}}
+{{--    @endif--}}
     <title>Web Editor</title>
     <link rel="apple-touch-icon" href="{{ asset('admin/assets/images/favicon/pacmediac_logo.png') }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('admin/assets/images/favicon/favicon-32x32.png') }}">
@@ -59,8 +62,11 @@
 
 
 
-@include('admin.component.sidebar')
-
+{{--@include('admin.component.sidebar')--}}
+@include('admin.component.sidebar', [
+    'emailAccounts' => $emailAccounts ?? [],
+    'activeEmail' => $activeEmail ?? null
+])
 <!-- BEGIN: Page Main-->
 
 @yield('admin')

@@ -1,4 +1,7 @@
 <?php
+use App\Http\Controllers\CacheClearController;
+use App\Http\Controllers\LogController;
+use App\Http\Controllers\Admin\ControlPanelController;
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +23,68 @@ use Webklex\PHPIMAP\ClientManager;
 //Route::get('/', function () {
 //    return view('index.index');
 //});
+
+
+// Admin Control Panel Routes - SPECIFIC ROUTES FIRST!
+Route::prefix('admin')->group(function () {
+    // SPECIFIC routes first (longer paths)
+    Route::get('/control-panel/log-files', [ControlPanelController::class, 'logFiles']);
+    Route::get('/control-panel/download-log', [ControlPanelController::class, 'downloadLog']);
+
+    // GENERAL routes last (shorter paths)
+    Route::get('/control-panel', [ControlPanelController::class, 'index']);
+    Route::post('/control-panel/execute', [ControlPanelController::class, 'execute']);
+    Route::get('/control-panel/logs', [ControlPanelController::class, 'logs']);
+    Route::post('/control-panel/clear-log', [ControlPanelController::class, 'clearLog']);
+});
+
+
+// Public route (only works in local environment)
+Route::get('/clear-cache', [CacheClearController::class, 'clearAll'])
+    ->middleware('throttle:3,1'); // Limit to 3 requests per minute
+
+// Secure route with token (for production)
+Route::get('/admin/clear-cache/{token}', [CacheClearController::class, 'clearAll']);
+
+// Or use middleware for better security
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/clear-cache', [CacheClearController::class, 'clearAll']);
+});
+
+// Log Viewer Routes
+Route::prefix('logs')->group(function () {
+    // List all log files (JSON)
+    Route::get('/', [LogController::class, 'index'])->name('logs.index');
+
+    // View specific log file in HTML
+    Route::get('/view/{filename?}', [LogController::class, 'view'])->name('logs.view');
+
+    // Get log file contents (JSON)
+    Route::get('/show/{filename?}', [LogController::class, 'show'])->name('logs.show');
+
+    // Tail last N lines (JSON)
+    Route::get('/tail/{lines}/{filename?}', [LogController::class, 'tail'])->name('logs.tail');
+    Route::get('/tail/{filename?}', [LogController::class, 'tail'])->name('logs.tail.default');
+
+    // Clear log file
+    Route::delete('/clear/{filename?}', [LogController::class, 'clear'])->name('logs.clear');
+
+    // Download log file
+    Route::get('/download/{filename?}', [LogController::class, 'download'])->name('logs.download');
+});
+
+// Quick access routes (with token protection)
+Route::get('/laravel-log', function (Request $request) {
+    $token = $request->get('token');
+    $allowedToken = env('LOG_VIEWER_TOKEN', 'your-secret-log-token');
+
+    if (app()->isLocal() || $token === $allowedToken) {
+        return redirect()->route('logs.view', ['filename' => 'laravel.log', 'token' => $token]);
+    }
+
+    abort(403, 'Unauthorized');
+});
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/aboutUs', [HomeController::class, 'about'])->name('aboutUs');
 
@@ -337,5 +402,36 @@ Route::get('/preview-booking-confirmation/{bookingId}', function($bookingId) {
         'room' => $room,
     ]);
 })->name('preview.booking.confirmation');
+
+Route::get('/test-email-fetch', function() {
+    try {
+        $service = new \App\Services\ImapEmailService();
+
+        echo "<h2>Testing Email Fetch</h2>";
+
+        // Test connection
+        echo "<h3>1. Testing Connection...</h3>";
+        $result = $service->testConnection('default');
+        echo "<pre>";
+        print_r($result);
+        echo "</pre>";
+
+        // Test fetch
+        echo "<h3>2. Testing Fetch Emails...</h3>";
+        $emails = $service->fetchEmails('default', 'INBOX', 5);
+        echo "Found " . $emails->count() . " emails<br>";
+
+        foreach ($emails as $email) {
+            echo "- " . $email->getSubject() . "<br>";
+        }
+
+        echo "<h3>✓ Test Complete</h3>";
+
+    } catch (\Exception $e) {
+        echo "<h3 style='color: red;'>✗ Error:</h3>";
+        echo "<pre>" . $e->getMessage() . "</pre>";
+        echo "<pre>" . $e->getTraceAsString() . "</pre>";
+    }
+});
 
 require __DIR__.'/auth.php';

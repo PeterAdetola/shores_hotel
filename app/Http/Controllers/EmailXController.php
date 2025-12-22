@@ -8,9 +8,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\BookingEmail;
 use Carbon\Carbon;
 use App\Services\DirectAdminEmailService;
+use App\Services\ImapEmailService;
 use App\Models\EmailAccount;
-
-
 
 class EmailController extends Controller
 {
@@ -185,9 +184,6 @@ class EmailController extends Controller
     /**
      * Switch to email account and view inbox
      */
-    /**
-     * Switch to email account and view inbox
-     */
     public function switchAndView(Request $request, $email)
     {
         try {
@@ -283,17 +279,13 @@ class EmailController extends Controller
                         $dateString = $dateAttr->toString();
                     }
 
+                    // FIXED: Get email preview properly
                     $preview = 'No content';
                     try {
-//                        if ($message->hasTextBody()) {
-//                            $textBody = $message->getTextBody();
-//                            if ($textBody) {
-//                                $preview = $this->getEmailPreview($textBody);
-//                            }
-//                        }
                         $preview = $this->getEmailPreview($message, 100);
                     } catch (\Exception $e) {
-                        // Ignore
+                        \Log::warning("Preview error: " . $e->getMessage());
+                        // Try fallback to text body
                         try {
                             if ($message->hasTextBody()) {
                                 $textBody = $message->getTextBody();
@@ -358,6 +350,9 @@ class EmailController extends Controller
         }
     }
 
+    /**
+     * Get email preview text
+     */
     private function getEmailPreview($message, $length = 100)
     {
         try {
@@ -478,24 +473,64 @@ class EmailController extends Controller
             $dateAttr = $message->getDate();
             $dateString = $dateAttr ? $dateAttr->toString() : 'No date';
 
-            // Get message body - FIXED
+            // FIXED: Get message body with aggressive HTML handling
             $body = '';
             try {
+                // Try to get the raw body first
+                $rawBody = '';
+
                 if ($message->hasHTMLBody()) {
-                    $body = html_entity_decode($body, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-                    $body = html_entity_decode($body, ENT_QUOTES | ENT_HTML5, 'UTF-8'); // Second pass
-
-                    // Manual replacement as final fallback
-                    $body = str_replace(['&lt;', '&gt;', '&amp;', '&quot;', '&#039;'],
-                        ['<', '>', '&', '"', "'"], $body);
-
-                    $body = $this->sanitizeEmailBody($body);
-
+                    $rawBody = $message->getHTMLBody();
                 } elseif ($message->hasTextBody()) {
-                    // For plain text emails, escape HTML and convert line breaks
-                    $textBody = $message->getTextBody();
-                    $body = nl2br(htmlspecialchars($textBody));
+                    $rawBody = $message->getTextBody();
+                }
 
+                // DIAGNOSTIC: Log what we received
+                \Log::info("=== EMAIL BODY DIAGNOSTIC ===");
+                \Log::info("UID: {$uid}");
+                \Log::info("Has style attributes: " . (strpos($rawBody, 'style=') !== false ? 'YES' : 'NO'));
+                \Log::info("Body preview (first 1000 chars): " . substr($rawBody, 0, 1000));
+
+                if (!empty($rawBody)) {
+                    // Aggressive decoding - handle multiple levels of encoding
+                    $decoded = $rawBody;
+                    $iterations = 0;
+                    $maxIterations = 5;
+
+                    // Keep decoding until no more HTML entities found or max iterations reached
+                    while ($iterations < $maxIterations &&
+                        (strpos($decoded, '&lt;') !== false ||
+                            strpos($decoded, '&gt;') !== false ||
+                            strpos($decoded, '&quot;') !== false ||
+                            strpos($decoded, '&#') !== false)) {
+
+                        $before = $decoded;
+                        $decoded = html_entity_decode($decoded, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+                        // If nothing changed, break to prevent infinite loop
+                        if ($before === $decoded) {
+                            break;
+                        }
+
+                        $iterations++;
+                    }
+
+                    // DIAGNOSTIC: Log after decoding
+                    \Log::info("After decoding - Has style attributes: " . (strpos($decoded, 'style=') !== false ? 'YES' : 'NO'));
+
+                    // Now check if we have valid HTML
+                    if ($this->looksLikeHTML($decoded)) {
+                        $body = $this->sanitizeEmailBody($decoded);
+
+                        // DIAGNOSTIC: Log after sanitization
+                        \Log::info("After sanitization - Has style attributes: " . (strpos($body, 'style=') !== false ? 'YES' : 'NO'));
+                        \Log::info("Sanitized body preview (first 1000 chars): " . substr($body, 0, 1000));
+                    } else {
+                        // Still plain text, format it
+                        $body = '<pre style="white-space: pre-wrap; font-family: Arial, sans-serif; background: #f5f5f5; padding: 15px; border-radius: 5px;">'
+                            . htmlspecialchars($decoded)
+                            . '</pre>';
+                    }
                 } else {
                     $body = '<p class="grey-text center-align">No content available</p>';
                 }
@@ -528,6 +563,26 @@ class EmailController extends Controller
     }
 
     /**
+     * Check if a string looks like HTML content
+     */
+    private function looksLikeHTML($text)
+    {
+        // Check for common HTML patterns
+        $htmlPatterns = [
+            '/<(!DOCTYPE|html|head|body|div|p|span|table|tr|td|h[1-6]|style)/i',
+            '/&lt;(!DOCTYPE|html|head|body|div|p)/i'
+        ];
+
+        foreach ($htmlPatterns as $pattern) {
+            if (preg_match($pattern, $text)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Sanitize email body to prevent XSS attacks while keeping formatting
      */
     private function sanitizeEmailBody($html)
@@ -536,33 +591,55 @@ class EmailController extends Controller
             return $html;
         }
 
-        // Use a proper HTML sanitizer if available
-        if (class_exists('voku\helper\AntiXSS')) {
-            $antiXss = new \voku\helper\AntiXSS();
-            return $antiXss->xss_clean($html);
+        try {
+            // Use AntiXSS if available
+            if (class_exists('voku\helper\AntiXSS')) {
+                $antiXss = new \voku\helper\AntiXSS();
+                $cleanHtml = $antiXss->xss_clean($html);
+
+                // AntiXSS might be too aggressive, so if it returns empty, fallback
+                if (!empty(trim(strip_tags($cleanHtml)))) {
+                    return $cleanHtml;
+                }
+            }
+        } catch (\Exception $e) {
+            \Log::warning("AntiXSS failed: " . $e->getMessage());
         }
 
-        // Fallback to our basic sanitizer
+        // Fallback to improved basic sanitization
         return $this->basicSanitizeEmailBody($html);
     }
 
     private function basicSanitizeEmailBody($html)
     {
-        // Keep only safe tags for email display
-        $allowedTags = '<div><p><span><br><hr><h1><h2><h3><h4><h5><h6><strong><b><em><i><u>
-                   <a><img><table><tr><td><th><thead><tbody><tfoot><ul><ol><li>
-                   <blockquote><pre><code><sup><sub><small><big><font>';
+        // Allow safe HTML tags for email display including style tags and meta
+        $allowedTags = '<html><head><title><meta><style><body><div><p><span><br><hr><h1><h2><h3><h4><h5><h6><strong><b><em><i><u><a><img><table><tr><td><th><thead><tbody><tfoot><ul><ol><li><blockquote><pre><code><sup><sub><small><big><font><center>';
 
         $html = strip_tags($html, $allowedTags);
 
-        // Remove event handlers
-        $html = preg_replace('/on\w+\s*=\s*["\'][^"\']*["\']/i', '', $html);
+        // Remove dangerous scripts and iframes
+        $html = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $html);
+        $html = preg_replace('/<iframe\b[^>]*>(.*?)<\/iframe>/is', '', $html);
+        $html = preg_replace('/<object\b[^>]*>(.*?)<\/object>/is', '', $html);
+        $html = preg_replace('/<embed\b[^>]*>(.*?)<\/embed>/is', '', $html);
+        $html = preg_replace('/<form\b[^>]*>(.*?)<\/form>/is', '', $html);
 
-        // Remove javascript: links
-        $html = preg_replace('/href\s*=\s*["\']javascript:[^"\']*["\']/i', 'href="#"', $html);
+        // Remove event handlers (more comprehensive)
+        $html = preg_replace('/\s*on\w+\s*=\s*(["\'][^"\']*["\']|[^\s>]+)/i', '', $html);
+
+        // Remove dangerous protocols from links and src
+        $html = preg_replace('/\s+href\s*=\s*["\']?\s*(javascript|data|vbscript):/i', ' href="#"', $html);
+        $html = preg_replace('/\s+src\s*=\s*["\']?\s*(javascript|data|vbscript):/i', ' src="#"', $html);
+
+        // Remove meta refresh and other dangerous meta tags
+        $html = preg_replace('/<meta[^>]*http-equiv\s*=\s*["\']?refresh["\']?[^>]*>/i', '', $html);
+
+        // Remove style attributes that could be used for attacks (but keep style tags)
+        $html = preg_replace('/\s+style\s*=\s*["\'][^"\']*expression\([^"\']*\)[^"\']*["\']/i', '', $html);
 
         return $html;
     }
+
     /**
      * Compose new email
      */
@@ -1184,7 +1261,5 @@ class EmailController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
-
-
 
 }
