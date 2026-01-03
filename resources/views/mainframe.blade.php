@@ -277,9 +277,10 @@
                 <p>⏰ Limited time offer </p>
             </div>
 
-            <button class="mil-button mil-accent-1">
+
+            <a href="{{ route('getRooms') }}" class="mil-button">
                 <span>Enjoy Discount Now!</span>
-            </button>
+            </a>
         </div>
     </div>
     <!-- notice popup end -->
