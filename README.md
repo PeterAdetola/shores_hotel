@@ -15,7 +15,7 @@ It showcases the services of **Shores Hotel**, which include:
 
 - 🏨 **Hotel** – Room lodging and booking
 - 🏠 **Apartments** – Renting fully furnished apartments
-- 🍸 **Citibar** – The in-house bar for guests and visitors
+- 🍸 **CitiB Lounge** – The in-house bar for guests and visitors
 
 The website is designed to be user-friendly, dynamic, and easy to manage via the **admin dashboard**.
 
@@ -24,7 +24,7 @@ The website is designed to be user-friendly, dynamic, and easy to manage via the
 ## ✨ Features
 - **Public Website**
     - Room & apartment listings with filters
-    - CITIBAR information and events
+    - CitiB Lounge information and events
     - Contact page with form and dynamic info (address, phone, email, socials)
 - **Admin Dashboard**
     - Manage rooms, apartments, categories
@@ -119,7 +119,7 @@ The website is designed to be user-friendly, dynamic, and easy to manage via the
     
     📧 Email: hello@shoreshotelng.com
     
-    🍸 Bar: Citibar
+    🍸 Bar: CitiB Lounge
 
 ## 🌍 Socials:
 

@@ -258,6 +258,33 @@
     </footer>
     <!-- footer end -->
 
+    <!-- notice popup -->
+    <div class="mil-book-popup-frame" style="background-color: transparent">
+        <div class="mil-book-popup"  style="background-color: whitesmoke; border:solid orange 2px;">
+            <div class="mil-popup-head mil-mb-20">
+                <h3 class="mil-h3-lg" style="padding-left: 0.5em" >🎁 Festive Discount Now Live</h3>
+                <div class="mil-close-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </div>
+            </div>
+            <div style="margin: 0.5em; margin-bottom: 1em; padding: 2em; border:solid grey 1px; border-radius: 20px; background-color: white">
+                <p class="mil-modal">
+                    Enjoy special discounted rates on all Shores Hotel rooms this festive season
+                </p>
+                <p>⏰ Limited time offer </p>
+            </div>
+
+            <button class="mil-button mil-accent-1">
+                <span>Enjoy Discount Now!</span>
+            </button>
+        </div>
+    </div>
+    <!-- notice popup end -->
+
+
     <!-- book popup -->
     <div class="mil-book-popup-frame">
         <div class="mil-book-popup">
@@ -353,6 +380,8 @@
 <script src="{{ asset('js/plugins/datepicker.js') }}"></script>
 <!-- aquarelle js -->
 <script src="{{ asset('js/main.js') }}"></script>
+
+<script src="{{ asset('js/exit-intent_popup.js') }}"></script>
 @stack('scripts')
 
 @if (config('cookie-consent.enabled') && ! request()->hasCookie(config('cookie-consent.cookie_name')))

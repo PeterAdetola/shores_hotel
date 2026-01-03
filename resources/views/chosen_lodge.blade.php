@@ -43,6 +43,12 @@
                                     <div class="swiper-slide">
                                         <div class="mil-image-frame">
                                             <img src="{{ asset('uploads/' . $image->image_path) }}" alt="room" data-swiper-parallax="0" data-swiper-parallax-scale="1.2">
+                                            {{-- Discount Badge --}}
+                                            @if($room->hasActiveDiscount())
+                                                <div class="mil-discount-badge">
+                                                    -{{ number_format($room->discount_percentage, 0) }}%
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 @empty
@@ -190,10 +196,22 @@
                 <div class="col-xl-4 space" data-sticky-container>
                     <div class="mil-sticky mil-stycky-right mil-p-0-100" data-margin-top="140">
                         <div class="mil-price-frame mil-mb-20">
+                            @if($room->hasActiveDiscount())
                             <div class="mil-price">
                                 <span class="mil-symbol">NGN</span>
-                                <span class="mil-number">{{ number_format($room->price_per_night ?? 100000) }}</span>/per night
+                                <span class="mil-number">{{ number_format($room->discounted_price, 2, '.', ',') }}</span>/per night
                             </div>
+                                {{-- Display original price (slashed) --}}
+                                <div class="mil-original-price">
+                                    <span class="mil-symbol">NGN</span>
+                                    <span class="mil-number">{{ number_format($room->price_per_night, 2, '.', ',') }}</span>/per night
+                                </div>
+                            @else
+                                <div class="mil-price">
+                                    <span class="mil-symbol">NGN</span>
+                                    <span class="mil-number">{{ number_format($room->price_per_night, 2, '.', ',') }}</span>/per night
+                                </div>
+                            @endif
                         </div>
 
                         <ul class="mil-parameters mil-mb-20">
