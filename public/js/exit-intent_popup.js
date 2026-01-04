@@ -1,21 +1,29 @@
-// Exit-Intent Popup Controller
+// Exit-Intent & Scroll-Based Popup Controller
 (function() {
     // Configuration
     const config = {
+        // Desktop exit-intent settings
         sensitivity: 20, // How many pixels from top before triggering
         delay: 1000, // Minimum time on page before popup can show (in ms)
+
+        // Mobile scroll-based settings
+        scrollPercentage: 50, // Show popup after user scrolls this % down the page
+
+        // General settings
         cookieName: 'exitIntentShown',
         cookieExpiry: 1, // Days before popup can show again
-        showOnMobile: false // Set to true if you want exit-intent on mobile too
+        testMode: false // Set to true for testing (disables cookie check)
     };
 
     let popupShown = false;
     let timeOnPage = 0;
     let exitIntentEnabled = false;
+    let scrollCheckEnabled = false;
 
-    // Check if popup was already shown (using cookie or sessionStorage)
+    // Check if popup was already shown (using cookie)
     function wasPopupShown() {
-        // Check cookie
+        if (config.testMode) return false; // Skip check in test mode
+
         const cookies = document.cookie.split(';');
         for (let cookie of cookies) {
             const [name, value] = cookie.trim().split('=');
@@ -38,6 +46,18 @@
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
 
+    // Calculate scroll percentage
+    function getScrollPercentage() {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollableHeight = documentHeight - windowHeight;
+
+        if (scrollableHeight <= 0) return 0;
+
+        return (scrollTop / scrollableHeight) * 100;
+    }
+
     // Show the popup
     function showPopup() {
         if (popupShown) return;
@@ -48,8 +68,9 @@
             popupShown = true;
             setPopupCookie();
 
-            // Disable further exit intent detection
+            // Disable further detection
             exitIntentEnabled = false;
+            scrollCheckEnabled = false;
         }
     }
 
@@ -61,7 +82,7 @@
         }
     }
 
-    // Exit intent detection
+    // Desktop: Exit intent detection
     function handleMouseLeave(e) {
         // Check if mouse is leaving from the top of the page
         if (e.clientY <= config.sensitivity && exitIntentEnabled && !popupShown) {
@@ -69,39 +90,44 @@
         }
     }
 
-    // Mobile exit intent (scroll to top rapidly)
-    let lastScrollTop = 0;
-    function handleMobileExit() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    // Mobile: Scroll-based detection
+    function handleScroll() {
+        if (!scrollCheckEnabled || popupShown) return;
 
-        // If user scrolls up rapidly when near top
-        if (scrollTop < 100 && lastScrollTop - scrollTop > 50 && exitIntentEnabled && !popupShown) {
+        const scrollPercent = getScrollPercentage();
+
+        if (scrollPercent >= config.scrollPercentage) {
             showPopup();
         }
-
-        lastScrollTop = scrollTop;
     }
 
     // Initialize
     function init() {
-        // Don't show if already shown
+        // Don't show if already shown (unless in test mode)
         // if (wasPopupShown()) {
+        //     console.log('Exit-intent popup: Already shown to this user');
         //     return;
         // }
 
-        // Wait for minimum time on page before enabling exit intent
+        // Wait for minimum time on page before enabling popup
         setTimeout(() => {
-            exitIntentEnabled = true;
+            if (isMobile()) {
+                scrollCheckEnabled = true;
+                console.log('Mobile detected: Scroll-based popup enabled at ' + config.scrollPercentage + '%');
+            } else {
+                exitIntentEnabled = true;
+                console.log('Desktop detected: Exit-intent popup enabled');
+            }
         }, config.delay);
 
-        // Desktop exit intent
-        if (!isMobile() || config.showOnMobile) {
+        // Desktop: Exit intent
+        if (!isMobile()) {
             document.addEventListener('mouseleave', handleMouseLeave);
         }
 
-        // Mobile exit intent (optional)
-        if (isMobile() && config.showOnMobile) {
-            window.addEventListener('scroll', handleMobileExit);
+        // Mobile: Scroll-based
+        if (isMobile()) {
+            window.addEventListener('scroll', handleScroll);
         }
 
         // Close button handler
@@ -120,7 +146,7 @@
             });
         }
 
-        // Optional: Close on ESC key
+        // Close on ESC key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 hidePopup();
@@ -144,6 +170,11 @@
             document.cookie = `${config.cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
             popupShown = false;
             exitIntentEnabled = true;
+            scrollCheckEnabled = true;
+            console.log('Popup reset - will show again');
+        },
+        getScrollPercentage: function() {
+            return Math.round(getScrollPercentage()) + '%';
         }
     };
 })();
