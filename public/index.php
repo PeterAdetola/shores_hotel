@@ -1,20 +1,52 @@
 <?php
 
-use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
-// Determine if the application is in maintenance mode...
-if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
+/*
+|--------------------------------------------------------------------------
+| Flexible Path Detection
+|--------------------------------------------------------------------------
+| This checks if the project is in a custom folder (like on DirectAdmin)
+| or in the standard root folder (like on your local PC).
+*/
+
+if (is_dir(__DIR__.'/../shores_website')) {
+    $laravelRoot = __DIR__.'/../shores_website';
+} else {
+    // Default for local development (e.g., /public/../)
+    $laravelRoot = __DIR__.'/..';
+}
+
+/*
+|--------------------------------------------------------------------------
+| Maintenance Mode
+|--------------------------------------------------------------------------
+*/
+
+if (file_exists($maintenance = $laravelRoot.'/storage/framework/maintenance.php')) {
     require $maintenance;
 }
 
-// Register the Composer autoloader...
-require __DIR__.'/../vendor/autoload.php';
+/*
+|--------------------------------------------------------------------------
+| Register Autoloader & Boot App
+|--------------------------------------------------------------------------
+*/
 
-// Bootstrap Laravel and handle the request...
-/** @var Application $app */
-$app = require_once __DIR__.'/../bootstrap/app.php';
+require $laravelRoot.'/vendor/autoload.php';
 
+$app = require_once $laravelRoot.'/bootstrap/app.php';
+
+/*
+|--------------------------------------------------------------------------
+| Environment Fix & Request Handling (Laravel 11 Style)
+|--------------------------------------------------------------------------
+*/
+
+// Keep your critical fix for forced environment detection
+$app->instance('env', getenv('APP_ENV') ?: $_ENV['APP_ENV'] ?? 'production');
+
+// Handle the request using Laravel 11 handleRequest method
 $app->handleRequest(Request::capture());

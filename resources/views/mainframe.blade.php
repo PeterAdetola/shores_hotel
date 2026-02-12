@@ -260,9 +260,9 @@
 
     <!-- notice popup -->
     <div class="mil-book-popup-frame" style="background-color: transparent">
-        <div class="mil-book-popup"  style="background-color: whitesmoke; border:solid orange 2px;">
+        <div class="mil-book-popup" style="background-color: whitesmoke; border:solid #ff1493 2px;">
             <div class="mil-popup-head mil-mb-20">
-                <h3 class="mil-h3-lg" style="padding-left: 0.5em" >🎁 Festive Discount Now Live</h3>
+                <h3 class="mil-h3-lg" style="padding-left: 0.5em">💖 Valentine Season Special</h3>
                 <div class="mil-close-button">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -270,16 +270,17 @@
                     </svg>
                 </div>
             </div>
-            <div style="margin: 0.5em; margin-bottom: 1em; padding: 2em; border:solid grey 1px; border-radius: 20px; background-color: white">
+            <div style="margin: 0.5em; margin-bottom: 1em; padding: 2em; border:solid #ff69b4 1px; border-radius: 20px; background-color: white">
                 <p class="mil-modal">
-                    Enjoy special discounted rates on all Shores Hotel rooms this festive season
+                    Love is in the air! Enjoy exclusive Valentine discounts at Shores Hotel & Shores Apartment
                 </p>
-                <p>⏰ Limited time offer </p>
+                <p style="margin-top: 1em"><strong>✨ 10% OFF Weekday bookings</strong></p>
+                <p><strong>✨ 5% OFF Weekend bookings</strong></p>
+                <p style="margin-top: 1em">💌 Celebrate love with comfort, luxury, and relaxation</p>
+                <p>⏰ Limited time offer</p>
             </div>
-
-
             <a href="{{ route('getRooms') }}" class="mil-button">
-                <span>Enjoy Discount Now!</span>
+                <span>Book Your Romantic Stay Now!</span>
             </a>
         </div>
     </div>
