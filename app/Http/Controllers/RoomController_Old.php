@@ -10,90 +10,29 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
-use Illuminate\Support\Facades\File;
+
+// or use Intervention\Image\Drivers\Imagick\Driver;
 
 class RoomController extends Controller
 {
     /**
-     * Get the correct upload path based on environment
-     *
-     * Local:  project_root/public/uploads/
-     * Online: server_root/public_html/uploads/ (sibling to shores_website)
-     */
-    private function getUploadPath($subfolder = '')
-    {
-        // base_path() returns:
-        //   Local:  /path/to/project_root
-        //   Online: /path/to/shores_website
-
-        // dirname(base_path()) returns:
-        //   Local:  /path/to (parent of project)
-        //   Online: /path/to (parent of shores_website, contains public_html)
-
-        $parentDir = dirname(base_path());
-        $publicHtmlPath = $parentDir . '/public_html/uploads';
-
-        // Check if public_html exists as a sibling
-        if (File::exists($parentDir . '/public_html')) {
-            // Production: use public_html/uploads (sibling to shores_website)
-            $basePath = $publicHtmlPath;
-            \Log::info('Using production path', ['base' => $basePath]);
-        } else {
-            // Local: use public/uploads (inside project)
-            $basePath = public_path('uploads');
-            \Log::info('Using local path', ['base' => $basePath]);
-        }
-
-        return $subfolder ? $basePath . '/' . $subfolder : $basePath;
-    }
-
-    /**
-     * Resize and store an uploaded image
-     * Works both offline (public/uploads) and online (public_html/uploads)
+     * Resize and store an uploaded image.
      */
     private function processImage($file, $folder = 'rooms', $width = 1500, $height = 844)
     {
         $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-        $relativePath = "{$folder}/{$filename}";
-
-        // Get correct upload path based on environment
-        $uploadPath = $this->getUploadPath($folder);
-
-        // Create directory if it doesn't exist
-        if (!File::exists($uploadPath)) {
-            File::makeDirectory($uploadPath, 0755, true);
-        }
-
-        // Full file path
-        $fullPath = $uploadPath . '/' . $filename;
+        $path = "{$folder}/{$filename}";
 
         // Create ImageManager instance with GD driver
         $manager = new ImageManager(new Driver());
 
         $image = $manager->read($file->getRealPath())
-            ->cover($width, $height)
+            ->cover($width, $height) // cover replaces fit in v3
             ->encode();
 
-        // Save image
-        File::put($fullPath, (string)$image);
+        Storage::disk('public_uploads')->put($path, (string)$image);
 
-        // Log for debugging
-        \Log::info('Image saved', [
-            'relative_path' => $relativePath,
-            'full_path' => $fullPath,
-            'exists' => File::exists($fullPath),
-            'environment' => File::exists(dirname(base_path()) . '/public_html') ? 'production' : 'local'
-        ]);
-
-        return $relativePath; // Returns "rooms/filename.jpg"
-    }
-
-    /**
-     * Get full path to an image file (works for both environments)
-     */
-    private function getImageFullPath($relativePath)
-    {
-        return $this->getUploadPath() . '/' . $relativePath;
+        return $path;
     }
 
     /**
@@ -105,8 +44,52 @@ class RoomController extends Controller
             $query->where('is_featured', true)->limit(1);
         }, 'facilities'])->orderBy('position', 'asc')->get();
 
+
         return view('admin.room.room_management', compact('rooms'));
+//        dd($rooms->toArray());
     }
+
+
+//    public function toggleFeatured(Room $room, RoomImage $roomImage)
+//    {
+//        // Verify authorization
+//        if ($roomImage->room_id != $room->id) {
+//            return response()->json([
+//                'success' => false,
+//                'message' => 'Unauthorized'
+//            ], 403);
+//        }
+//
+//        try {
+//            // If setting this as featured, unfeatured all others in this room first
+//            if (!$roomImage->is_featured) {
+//                RoomImage::where('room_id', $room->id)
+//                    ->where('id', '!=', $roomImage->id)
+//                    ->update(['is_featured' => false]);
+//
+//                $roomImage->update(['is_featured' => true]);
+//                $featured = true;
+//            } else {
+//                $roomImage->update(['is_featured' => false]);
+//                $featured = false;
+//            }
+//
+//            return response()->json([
+//                'success' => true,
+//                'featured' => $featured,
+//                'message' => $featured ? 'Image Featured!' : 'Image unfeatured'
+//            ]);
+//
+//        } catch (\Exception $e) {
+//            \Log::error('Toggle featured error: ' . $e->getMessage());
+//
+//            return response()->json([
+//                'success' => false,
+//                'message' => 'Error updating featured image'
+//            ], 500);
+//        }
+//    }
+
 
     /**
      * Room reorder (AJAX).
@@ -114,20 +97,23 @@ class RoomController extends Controller
     public function reorder(Request $request)
     {
         try {
+            // Validate the incoming request
             $request->validate([
                 'order' => 'required|array',
                 'order.*.id' => 'required|exists:rooms,id',
                 'order.*.position' => 'required|integer|min:1'
             ]);
 
-            DB::beginTransaction();
+            // Start transaction for atomic updates
+            \DB::beginTransaction();
 
             foreach ($request->order as $item) {
-                Room::where('id', $item['id'])
+                \App\Models\Room::where('id', $item['id'])
                     ->update(['position' => $item['position']]);
             }
 
-            DB::commit();
+            // Commit the transaction
+            \DB::commit();
 
             return response()->json([
                 'message' => 'Rooms reordered',
@@ -145,7 +131,8 @@ class RoomController extends Controller
             ], 422);
 
         } catch (\Exception $e) {
-            DB::rollBack();
+            // Rollback transaction on error
+            \DB::rollBack();
 
             return response()->json([
                 'message' => 'Failed to reorder rooms: ' . $e->getMessage(),
@@ -175,6 +162,7 @@ class RoomController extends Controller
         ]);
     }
 
+
     /**
      * Update price per night (AJAX).
      */
@@ -191,7 +179,7 @@ class RoomController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Price updated.',
-            'new_price' => $room->price_per_night
+            'new_price' => $room->price_per_night // Optional: Return updated price
         ]);
     }
 
@@ -250,6 +238,7 @@ class RoomController extends Controller
             DB::commit();
             return notification('Room created', 'success', false);
         } catch (\Exception $e) {
+
             DB::rollBack();
 
             \Log::error('Room creation failed: ' . $e->getMessage());
@@ -262,17 +251,30 @@ class RoomController extends Controller
     /**
      * Edit a specified room in storage.
      */
+//    public function edit($id)
+//    {
+//        $room = Room::findOrFail($id);
+//        return view('admin.room.edit_room', compact('room'));
+//    }
     public function edit($id)
     {
         $room = Room::with(['galleryImages', 'featuredImage'])->findOrFail($id);
         return view('admin.room.edit_room', compact('room'));
     }
 
+
     /**
-     * Reorder images
+     * Gallery management - list images
      */
+//    public function galleryIndex($roomId)
+//    {
+//        $room = Room::with('images')->findOrFail($roomId);
+//        return view('admin.room.gallery_management', compact('room'));
+//    }
     public function reorderImages(Request $request, Room $room)
     {
+        // optional: $this->authorize('update', $room);
+
         $data = $request->validate([
             'order' => 'required|array',
             'order.*' => 'integer|exists:room_images,id',
@@ -282,6 +284,7 @@ class RoomController extends Controller
 
         DB::transaction(function () use ($ids, $room) {
             foreach ($ids as $index => $id) {
+                // ensure image belongs to this room
                 DB::table('room_images')
                     ->where('id', $id)
                     ->where('room_id', $room->id)
@@ -290,11 +293,76 @@ class RoomController extends Controller
         });
 
         return response()->json(['status' => 'ok']);
+//        return notification('Room Images Reordered', 'success');
     }
 
     /**
-     * Update room info
+     * Add images to gallery
      */
+//    public function galleryStore(Request $request, $roomId)
+//    {
+//        $request->validate([
+//            'images.*' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+//        ]);
+//
+//        $room = Room::findOrFail($roomId);
+//
+//        foreach ($request->file('images') as $img) {
+//            $path = $this->processImage($img);
+//            $room->images()->create([
+//                'image_path' => $path,
+//                'is_featured' => false
+//            ]);
+//        }
+//
+//        return notification('Images added to gallery.', 'success');
+//    }
+
+    /**
+     * Replace a single gallery image
+     */
+//    public function galleryUpdate(Request $request, $imageId)
+//    {
+//        $request->validate([
+//            'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+//        ]);
+//
+//        $image = RoomImage::findOrFail($imageId);
+//        Storage::disk('public')->delete($image->image_path);
+//
+//        $newPath = $this->processImage($request->file('image'));
+//        $image->update(['image_path' => $newPath]);
+//
+//        return notification('Gallery image updated.', 'success');
+//    }
+
+    /**
+     * Delete a single gallery image
+     */
+//    public function galleryDestroy($imageId)
+//    {
+//        $image = RoomImage::findOrFail($imageId);
+//        Storage::disk('public')->delete($image->image_path);
+//        $image->delete();
+//
+//        return notification('Gallery image deleted.', 'success');
+//    }
+
+    /**
+     * Clear all gallery images for a room
+     */
+//    public function galleryClear($roomId)
+//    {
+//        $room = Room::with('images')->findOrFail($roomId);
+//
+//        foreach ($room->images as $img) {
+//            Storage::disk('public')->delete($img->image_path);
+//        }
+//        $room->images()->delete();
+//
+//        return notification('All gallery images cleared.', 'success');
+//    }
+
     public function updateInfo(Request $request, Room $room)
     {
         $data = $request->validate([
@@ -307,25 +375,25 @@ class RoomController extends Controller
             'availability' => 'sometimes|boolean',
         ]);
 
+//        dd($request->all());
+
         $room->update(array_merge($data, [
             'availability' => $request->boolean('availability'),
         ]));
 
+//        return back()->with('success', 'Room information updated');
         return notification('Room information updated', 'success');
     }
 
-    /**
-     * Manage gallery
-     */
+
     public function manageGallery(Room $room)
     {
+        // Eager load gallery images with the room
         $room->load('galleryImages');
+
         return view('admin.room.manage_gallery', compact('room'));
     }
 
-    /**
-     * Update facilities
-     */
     public function updateFacilities(Request $request, Room $room)
     {
         $room->facilities()->sync($request->facilities ?? []);
@@ -333,8 +401,10 @@ class RoomController extends Controller
             'description' => $request->description,
         ]);
 
+//        return back()->with('success', 'Amenities updated');
         return notification('Amenities updated', 'success');
     }
+
 
     /**
      * Remove the specified room from storage.
@@ -346,30 +416,27 @@ class RoomController extends Controller
         try {
             // Delete all gallery images from storage
             foreach ($room->galleryImages as $image) {
-                $fullPath = $this->getImageFullPath($image->image_path);
-                if (File::exists($fullPath)) {
-                    File::delete($fullPath);
+                if (Storage::disk('public_uploads')->exists($image->image_path)) {
+                    Storage::disk('public_uploads')->delete($image->image_path);
                 }
             }
 
             // Delete featured image if exists
-            if ($room->featuredImage) {
-                $fullPath = $this->getImageFullPath($room->featuredImage->image_path);
-                if (File::exists($fullPath)) {
-                    File::delete($fullPath);
-                }
+            if ($room->featuredImage && Storage::disk('public_uploads')->exists($room->featuredImage->image_path)) {
+                Storage::disk('public_uploads')->delete($room->featuredImage->image_path);
             }
 
             $room->delete();
 
             DB::commit();
 
+
             return notification(
                 'Room deleted!',
                 'success',
                 false,
                 [],
-                'room_management'
+                'room_management' // or 'admin.rooms.index'
             );
 
         } catch (\Exception $e) {
@@ -381,23 +448,42 @@ class RoomController extends Controller
                 'trace' => $e->getTraceAsString(),
             ]);
 
+            // Redirect back with error message
             return notification('Error deleting room', 'error', false, [
                 'error_message' => $e->getMessage(),
             ]);
         }
     }
 
-    /**
-     * Add image to gallery
-     */
+//    public function addImages(Request $request, Room $room)
+//    {
+//        $request->validate([
+//            'images.*' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+//        ]);
+//
+//        foreach ($request->file('images') as $file) {
+//            $path = $file->store('rooms', 'public');
+//
+//            $position = ($room->images()->max('position') ?? 0) + 1;
+//
+//            $room->images()->create([
+//                'image_path' => $path,
+//                'is_featured' => false,
+//                'position' => $position,
+//            ]);
+//        }
+//
+////        return response()->json(['status' => 'ok', 'message' => 'Images added']);
+//        return notification('Images Added', 'success');
+//    }
+
     public function addImage(Request $request, Room $room)
     {
         $request->validate([
             'image' => 'required|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
-        // Use processImage to resize and save
-        $path = $this->processImage($request->file('image'));
+        $path = $request->file('image')->store('rooms', 'public_uploads');
 
         $maxPosition = $room->galleryImages()->max('position') ?? 0;
 
@@ -407,14 +493,37 @@ class RoomController extends Controller
             'position' => $maxPosition + 1
         ]);
 
+//        return redirect()
+//            ->route('rooms.manage_gallery', $room->id)
+//            ->with('success', 'Image added successfully');
         return notification('Image added', 'success');
     }
 
-    /**
-     * Update gallery image
-     */
+
+//    public function updateGalleryImage(Request $request, Room $room, RoomImage $image)
+//    {
+//        $request->validate([
+//            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+//        ]);
+//
+//        if ($image->room_id !== $room->id) {
+//            abort(403, 'Unauthorized');
+//        }
+//
+//        // Delete old file
+//        Storage::disk('public')->delete($image->image_path);
+//
+//        // Store new one
+//        $path = $request->file('image')->store('rooms', 'public');
+//
+//        $image->update(['image_path' => $path]);
+//
+//        return notification('Image updated', 'success');
+//    }
+
     public function updateGalleryImage(Request $request, Room $room, RoomImage $roomImage)
     {
+        // Debug - remove after fixing
         \Log::info('Update attempt', [
             'room_id_from_url' => $room->id,
             'image_room_id' => $roomImage->room_id,
@@ -427,7 +536,7 @@ class RoomController extends Controller
         ]);
 
         // Verify authorization
-        if ($roomImage->room_id != $room->id) {
+        if ($roomImage->room_id != $room->id) {  // Changed from !== to !=
             \Log::error('Authorization failed', [
                 'expected_room' => $room->id,
                 'actual_room' => $roomImage->room_id,
@@ -437,19 +546,19 @@ class RoomController extends Controller
 
         try {
             // Delete old file if exists
-            $oldPath = $this->getImageFullPath($roomImage->image_path);
-            if (File::exists($oldPath)) {
-                File::delete($oldPath);
+            if ($roomImage->image_path && Storage::disk('public_uploads')->exists($roomImage->image_path)) {
+                Storage::disk('public_uploads')->delete($roomImage->image_path);
             }
 
-            // Process and save new image
+            // USE processImage() like store() does - THIS IS THE FIX
             $path = $this->processImage($request->file('image'));
 
+            // Log for debugging
             \Log::info('Image update', [
                 'old_path' => $roomImage->image_path,
                 'new_path' => $path,
-                'full_path' => $this->getImageFullPath($path),
-                'exists' => File::exists($this->getImageFullPath($path)),
+                'full_path' => Storage::disk('public_uploads')->path($path),
+                'exists' => Storage::disk('public_uploads')->exists($path),
             ]);
 
             $roomImage->update(['image_path' => $path]);
@@ -462,42 +571,29 @@ class RoomController extends Controller
         }
     }
 
-    /**
-     * Delete gallery image
-     */
-    public function deleteImage(Room $room, $image)
+    public function deleteImage(Room $room, RoomImage $image)
     {
-        // Find the image
-        $roomImage = RoomImage::where('id', $image)
-            ->where('room_id', $room->id)
-            ->firstOrFail();
-
-        try {
-            // Delete the image file from storage
-            $fullPath = $this->getImageFullPath($roomImage->image_path);
-            if (File::exists($fullPath)) {
-                File::delete($fullPath);
-                \Log::info('Image file deleted', ['path' => $fullPath]);
-            }
-
-            $wasFeatured = $roomImage->is_featured;
-
-            // Delete the record
-            $roomImage->delete();
-
-            // If it was featured, assign a new featured image
-            if ($wasFeatured) {
-                $nextImage = $room->galleryImages()->orderBy('position')->first();
-                if ($nextImage) {
-                    $nextImage->update(['is_featured' => true]);
-                }
-            }
-
-            return notification('Image deleted successfully', 'success');
-
-        } catch (\Exception $e) {
-            Log::error('Image deletion failed: ' . $e->getMessage());
-            return notification('Failed to delete image', 'error');
+        // Delete the image file from storage if necessary
+        if ($image->image_path && \Storage::disk('public_uploads')->exists($image->image_path)) {
+            \Storage::disk('public_uploads')->delete($image->image_path);
         }
+
+        $wasFeatured = $image->is_featured;
+
+        // Delete the record
+        $image->delete();
+
+        // If it was featured, assign a new one
+        if ($wasFeatured) {
+            $nextImage = $room->galleryImages()->first(); // pick the first available one
+            if ($nextImage) {
+                $nextImage->is_featured = true;
+                $nextImage->save();
+            }
+        }
+
+        return redirect()->back()->with('success', 'Image deleted successfully.');
     }
+
+
 }
