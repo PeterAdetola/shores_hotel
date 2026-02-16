@@ -81,7 +81,7 @@
                                                             </button>
                                                         </form>
 
-                                                        <a href="{{ route('admin.discount.remove-all') }}"
+                                                        <a href="javascript:void(0)"
                                                            id="remove-all-btn"
                                                            class="btn red waves-effect waves-light">
                                                             Remove all discounts
@@ -159,7 +159,7 @@
                                                 </form>
 
                                                 @if($roomsDiscount && $roomsDiscount->has_discount)
-                                                    <a href="{{ route('admin.discount.remove-rooms') }}"
+                                                    <a href="javascript:void(0)"
                                                        id="remove-rooms-btn"
                                                        class="btn red waves-effect waves-light">
                                                         Remove discount
@@ -172,8 +172,8 @@
 
 
                                     </div>
-                                    </div>
                                 </div>
+                            </div>
 
 
                             <!-- Apartments Section -->
@@ -235,7 +235,7 @@
                                                 </form>
 
                                                 @if($apartmentsDiscount && $apartmentsDiscount->has_discount)
-                                                    <a href="{{ route('admin.discount.remove-apartments') }}"
+                                                    <a href="javascript:void(0)"
                                                        id="remove-apartments-btn"
                                                        class="btn red waves-effect waves-light">
                                                         Remove discount
@@ -258,7 +258,71 @@
     </div>
     <!-- END: Page Main-->
 
+    <!-- Modals -->
+    <!-- Remove All Modal -->
+    <div id="remove-all-modal" class="modal" style="padding:1em;">
+        <div class="modal-content">
+            <h6 class="card-title ml-2" style="display:inline-block;">Remove All Discounts</h6>
+
+            <div class="row">
+                <div class="col s12">
+                    <p>Are you sure you want to remove discounts from ALL rooms and apartments?</p>
+                    <div class="col s12 mt-7">
+                        <a href="{{ route('admin.discount.remove-all') }}" id="confirm-remove-all-btn" class="modal-action waves-effect waves-green red btn-large">
+                            Yes, Remove All
+                        </a>
+                        <a href="javascript:void(0)" class="btn-large btn-flat modal-close">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remove Rooms Modal -->
+    <div id="remove-rooms-modal" class="modal" style="padding:1em;">
+        <div class="modal-content">
+            <h6 class="card-title ml-2" style="display:inline-block;">Remove Rooms Discount</h6>
+
+            <div class="row">
+                <div class="col s12">
+                    <p>Remove discount from all rooms?</p>
+                    <div class="col s12 mt-7">
+                        <a href="{{ route('admin.discount.remove-rooms') }}" id="confirm-remove-rooms-btn" class="modal-action waves-effect waves-green red btn-large">
+                            Yes, Remove Discount
+                        </a>
+                        <a href="javascript:void(0)" class="btn-large btn-flat modal-close">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remove Apartments Modal -->
+    <div id="remove-apartments-modal" class="modal" style="padding:1em;">
+        <div class="modal-content">
+            <h6 class="card-title ml-2" style="display:inline-block;">Remove Apartments Discount</h6>
+
+            <div class="row">
+                <div class="col s12">
+                    <p>Remove discount from all apartments?</p>
+                    <div class="col s12 mt-7">
+                        <a href="{{ route('admin.discount.remove-apartments') }}" id="confirm-remove-apartments-btn" class="modal-action waves-effect waves-green red btn-large">
+                            Yes, Remove Discount
+                        </a>
+                        <a href="javascript:void(0)" class="btn-large btn-flat modal-close">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Initialize modals
+        document.addEventListener('DOMContentLoaded', function() {
+            var modals = document.querySelectorAll('.modal');
+            M.Modal.init(modals);
+        });
+
         // Apply All Form
         document.getElementById("apply-all-form").addEventListener("submit", function() {
             document.getElementById("all-preloader").style.display = "block";
@@ -269,10 +333,19 @@
         const removeAllBtn = document.getElementById("remove-all-btn");
         if (removeAllBtn) {
             removeAllBtn.addEventListener("click", function(e) {
-                if (confirm('Are you sure you want to remove discounts from ALL rooms and apartments?')) {
-                    document.getElementById("all-preloader").style.display = "block";
-                    removeAllBtn.classList.add('disabled');
-                }
+                e.preventDefault();
+                var modal = M.Modal.getInstance(document.getElementById('remove-all-modal'));
+                modal.open();
+            });
+        }
+
+        // Confirm Remove All
+        const confirmRemoveAllBtn = document.getElementById("confirm-remove-all-btn");
+        if (confirmRemoveAllBtn) {
+            confirmRemoveAllBtn.addEventListener("click", function() {
+                document.getElementById("all-preloader").style.display = "block";
+                var removeBtn = document.getElementById("remove-all-btn");
+                if (removeBtn) removeBtn.classList.add('disabled');
             });
         }
 
@@ -286,10 +359,19 @@
         const removeRoomsBtn = document.getElementById("remove-rooms-btn");
         if (removeRoomsBtn) {
             removeRoomsBtn.addEventListener("click", function(e) {
-                if (confirm('Remove discount from all rooms?')) {
-                    document.getElementById("rooms-preloader").style.display = "block";
-                    removeRoomsBtn.classList.add('disabled');
-                }
+                e.preventDefault();
+                var modal = M.Modal.getInstance(document.getElementById('remove-rooms-modal'));
+                modal.open();
+            });
+        }
+
+        // Confirm Remove Rooms
+        const confirmRemoveRoomsBtn = document.getElementById("confirm-remove-rooms-btn");
+        if (confirmRemoveRoomsBtn) {
+            confirmRemoveRoomsBtn.addEventListener("click", function() {
+                document.getElementById("rooms-preloader").style.display = "block";
+                var removeBtn = document.getElementById("remove-rooms-btn");
+                if (removeBtn) removeBtn.classList.add('disabled');
             });
         }
 
@@ -303,10 +385,19 @@
         const removeApartmentsBtn = document.getElementById("remove-apartments-btn");
         if (removeApartmentsBtn) {
             removeApartmentsBtn.addEventListener("click", function(e) {
-                if (confirm('Remove discount from all apartments?')) {
-                    document.getElementById("apartments-preloader").style.display = "block";
-                    removeApartmentsBtn.classList.add('disabled');
-                }
+                e.preventDefault();
+                var modal = M.Modal.getInstance(document.getElementById('remove-apartments-modal'));
+                modal.open();
+            });
+        }
+
+        // Confirm Remove Apartments
+        const confirmRemoveApartmentsBtn = document.getElementById("confirm-remove-apartments-btn");
+        if (confirmRemoveApartmentsBtn) {
+            confirmRemoveApartmentsBtn.addEventListener("click", function() {
+                document.getElementById("apartments-preloader").style.display = "block";
+                var removeBtn = document.getElementById("remove-apartments-btn");
+                if (removeBtn) removeBtn.classList.add('disabled');
             });
         }
     </script>

@@ -298,3 +298,10 @@ if (!function_exists('apartmentContact')) {
         return _getContactSection('apartment_info');
     }
 }
+
+if (!function_exists('getPublishedAnnouncement')) {
+    function getPublishedAnnouncement()
+    {
+        return \App\Models\Announcement::where('is_published', 1)->first();
+    }
+}

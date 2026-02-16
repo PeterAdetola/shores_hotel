@@ -103,9 +103,9 @@ Route::get('/chosen_lodge/{categorySlug}/{roomId}', [GetLodgedController::class,
 
 //
 
-//Route::get('/getlodged', function () {
-//    return view('getlodged');
-//})->name('getlodged');
+Route::get('/getLodged', function () {
+    return view('getLodged');
+})->name('getLodged');
 
 Route::get('/getRooms', function () {
     return view('getRooms');
@@ -181,6 +181,9 @@ Route::post('/rooms', [RoomController::class, 'store'])->name('rooms.store');
 //Route::get('/room_management', function () {
 //    return view('/admin/room/room_management');
 //})->name('room_management');
+Route::get('/test-page', function () {
+    return view('/admin/test-page');
+})->name('test-page');
 Route::get('/add_room', function () {
     return view('/admin/room/add_room');
 })->name('add_room');
@@ -366,15 +369,16 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 // Admin routes (protected by auth middleware)
 Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements');
-    Route::get('/announcements/create', [AnnouncementController::class, 'create'])->name('announcements.create');
-    Route::post('/announcements/store', [AnnouncementController::class, 'store'])->name('announcements.store');
-    Route::get('/announcements/{id}/edit', [AnnouncementController::class, 'edit'])->name('edit.announcement');
-    Route::post('/announcements/update', [AnnouncementController::class, 'update'])->name('update.announcement');
-    Route::post('/announcements/{id}/toggle-publish', [AnnouncementController::class, 'togglePublish'])->name('announcements.togglePublish');
-    Route::post('/announcements/unpublish-all', [AnnouncementController::class, 'unpublishAll'])->name('announcements.unpublishAll');
+    Route::get('/announcements/create', [AnnouncementController::class, 'create'])->name('announcement.create');
+    Route::post('/announcements/store', [AnnouncementController::class, 'store'])->name('announcement.store');
+    Route::get('/announcements/{id}/edit', [AnnouncementController::class, 'edit'])->name('announcement.edit');
+    Route::put('/announcements/{id}/update', [AnnouncementController::class, 'update'])->name('announcement.update');
+    Route::post('announcements/{id}/toggle-publish', [AnnouncementController::class, 'togglePublish'])->name('announcements.toggle-publish');
+    Route::post('announcements/unpublish-all', [AnnouncementController::class, 'unpublishAll'])->name('announcements.unpublishAll');
     Route::post('/announcements/update-order', [AnnouncementController::class, 'updateOrder'])->name('announcements.updateOrder');
-    Route::delete('/announcements/{id}', [AnnouncementController::class, 'destroy'])->name('announcements.destroy');
+    Route::delete('/announcements/{id}/delete', [AnnouncementController::class, 'destroy'])->name('announcement.destroy');
 });
+
 
 
 Route::get('/db-test', function () {

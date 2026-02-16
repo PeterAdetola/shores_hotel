@@ -133,6 +133,11 @@
                  </ul>
              </div>
          </li>
+         <li class="active bold"><a class="{{ ($route == 'announcements')? 'active' : '' }} waves-effect waves-cyan "
+                                          href="{{ route('announcements') }}"><i class="material-icons"><span
+                         class="material-symbols-outlined">notifications</span></i><span class="menu-title"
+                                                                                            data-i18n="Dashboard">Announcements</span></a>
+         </li>
 
 
 {{--         <li class="active bold"><a class="{{ ($route == 'admin.discount')? 'active' : '' }} waves-effect waves-cyan "--}}
@@ -140,11 +145,12 @@
 {{--                         class="material-symbols-outlined">percent_discount</span></i><span class="menu-title"--}}
 {{--                                                                                     data-i18n="Dashboard">Discounts</span></a>--}}
 {{--         </li>--}}
-          <li class="active bold"><a class="{{ ($route == 'announcements')? 'active' : '' }} waves-effect waves-cyan "
-                                     href="{{ route('announcements') }}"><i class="material-icons"><span
-                          class="material-symbols-outlined">percent_discount</span></i><span class="menu-title"
-                                                                                      data-i18n="Dashboard">Announcement</span></a>
-          </li>
+{{--          <li class="active bold"><a class="{{ ($route == 'test-page')? 'active' : '' }} waves-effect waves-cyan "--}}
+{{--                                     href="{{ route('test-page') }}"><i class="material-icons"><span class="material-symbols-outlined">--}}
+{{--labs--}}
+{{--</span></i><span class="menu-title"--}}
+{{--                                                                                      data-i18n="Dashboard">Test Page</span></a>--}}
+{{--          </li>--}}
       </ul>
       <!-- <div class="navigation-background"></div> -->
       <a class="sidenav-trigger btn-sidenav-toggle btn-floating btn-medium waves-effect waves-light hide-on-large-only" href="#" data-target="slide-out"><i class="material-icons">menu</i></a>

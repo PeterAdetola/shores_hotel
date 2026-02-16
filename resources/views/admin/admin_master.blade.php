@@ -18,9 +18,7 @@
     <meta name="description" content="Pacmedia - Your Tactical Digital Solutions. Brand Strategy, Development & Intelligent Automation.">
     <meta name="keywords" content="brand strategy, digital experience design, web development, AI automation systems, brand identity systems, conversion-focused design, custom development, intelligent customer operations, digital presence strategy, tactical digital solutions">
     <meta name="author" content="Pacmedia Creatives">
-{{--    @if(request()->is('admin/control-panel*'))--}}
-{{--        <meta name="csrf-token" content="{{ csrf_token() }}">--}}
-{{--    @endif--}}
+
     <title>Web Editor</title>
     <link rel="apple-touch-icon" href="{{ asset('admin/assets/images/favicon/pacmediac_logo.png') }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('admin/assets/images/favicon/favicon-32x32.png') }}">
@@ -34,12 +32,7 @@
     <!-- BEGIN: Page Level CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/themes/vertical-modern-menu-template/materialize.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/themes/vertical-modern-menu-template/style.css') }}">
-{{--    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/dashboard-modern.css') }}">--}}
     @yield('styles')
-{{--    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/app-invoice.css') }}">--}}
-{{--    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/page-users.css') }}">--}}
-{{--    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/page-account-settings.css') }}">--}}
-{{--    <link rel="stylesheet" type="text/css" href="{{ asset('admin/assets/css/pages/advance-ui-media.css') }}">--}}
 
     @yield('headScript')
     <!-- END: Page Level CSS-->
@@ -78,7 +71,6 @@
 @include('admin.component.footer')
 
 <!-- END: Footer-->
-{{--<script src="{{ asset('admin/assets/js/jquery.min.js') }}"></script>--}}
 
 <!-- BEGIN VENDOR JS-->
 <script src="{{ asset('admin/assets/js/vendors.min.js') }}"></script>
@@ -164,35 +156,13 @@
 </script>
 <!-- BEGIN THEME  JS-->
 <script src="{{ asset('admin/assets/js/plugins.js') }}"></script>
-{{--<script src="{{ asset('admin/assets/js/search.js') }}"></script>--}}
-{{--<script src="{{ asset('admin/assets/js/custom/custom-script.js') }}"></script>--}}
-{{--<script src="{{ asset('admin/assets/js/custom/sweetalert.min.js') }}"></script>--}}
-{{--<script src="{{ asset('admin/assets/js/custom/sweetalert_init.js') }}"></script>--}}
 <!-- END THEME  JS-->
 <!-- BEGIN PAGE LEVEL JS-->
-{{--<script src="{{ asset('admin/assets/js/scripts/dashboard-modern.js') }}"></script>--}}
 <script src="{{ asset('admin/assets/js/scripts/advance-ui-modals.js') }}"></script>
 <script src="{{ asset('admin/assets/js/scripts/ui-alerts.js') }}"></script>
-{{--<script src="{{ asset('admin/assets/js/scripts/ui-alerts.js') }}"></script>--}}
-{{--<script src="{{ asset('admin/assets/js/scripts/app-invoice.js') }}"></script>--}}
-{{--<script src="{{ asset('admin/assets/js/scripts/intro.js') }}"></script>--}}
 @yield('scripts')
 
 <!-- END PAGE LEVEL JS-->
-
-
-
-
-
-
-{{--    @if(Session::has('message'))--}}
-{{--        <script>--}}
-{{--    setTimeout(function () {--}}
-{{--        var toastHTML = "{{ Session::get('message') }}";--}}
-{{--        M.toast({html: toastHTML})--}}
-{{--    }, 2000);--}}
-{{--        </script>--}}
-{{--    @endif--}}
 
 </body>
 </html>

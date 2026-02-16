@@ -13,53 +13,17 @@ class Announcement extends Model
         'title',
         'subtitle',
         'content',
-        'discount_weekday',
-        'discount_weekend',
-        'features',
         'cta_text',
         'cta_link',
         'border_color',
-        'primary_emoji',
         'is_published',
-        'start_date',
-        'end_date',
-        'order'
     ];
 
     protected $casts = [
         'is_published' => 'boolean',
-        'start_date' => 'datetime',
-        'end_date' => 'datetime',
-        'features' => 'array'
     ];
 
-    /**
-     * Scope to get only published announcements
-     */
-    public function scopePublished($query)
-    {
-        return $query->where('is_published', true);
-    }
-
-    /**
-     * Scope to get active announcements (within date range if set)
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('is_published', true)
-            ->where(function ($q) {
-                $q->whereNull('start_date')
-                    ->orWhere('start_date', '<=', now());
-            })
-            ->where(function ($q) {
-                $q->whereNull('end_date')
-                    ->orWhere('end_date', '>=', now());
-            });
-    }
-
-    /**
-     * Boot method to ensure only one published announcement
-     */
+    // Automatically unpublish other announcements when publishing this one
     protected static function boot()
     {
         parent::boot();
@@ -68,8 +32,15 @@ class Announcement extends Model
             if ($announcement->is_published) {
                 // Unpublish all other announcements
                 static::where('id', '!=', $announcement->id)
+                    ->where('is_published', true)
                     ->update(['is_published' => false]);
             }
         });
+    }
+
+    // Scope for published announcements
+    public function scopePublished($query)
+    {
+        return $query->where('is_published', true);
     }
 }

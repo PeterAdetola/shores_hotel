@@ -90,6 +90,35 @@
                 opacity: 1;
                 transition: opacity 0.3s ease;
             }
+
+            /* Discount badge styling */
+            .mil-discount-badge {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                background: #ff4444;
+                color: white;
+                padding: 8px 15px;
+                border-radius: 25px;
+                font-weight: bold;
+                font-size: 14px;
+                z-index: 10;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            }
+
+            /* Original price styling */
+            .mil-original-price {
+                text-decoration: line-through;
+                color: #999;
+                font-size: 0.85em;
+                margin-top: 5px;
+            }
+
+            .mil-price-wrapper {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
         </style>
     @endpush
 
@@ -143,7 +172,7 @@
             <div class="row allign-items-center mil-mb-100">
                 <div class="col-xl-4">
 
-{{--                    <h2 class="mil-row-title mil-fade-up">Filter by <span class="mil-badge">24</span></h2>--}}
+                    {{--                    <h2 class="mil-row-title mil-fade-up">Filter by <span class="mil-badge">24</span></h2>--}}
                     <h2 class="mil-row-title mil-fade-up">Filter by</h2>
 
                 </div>
@@ -151,91 +180,103 @@
 
                     <div class="mil-desctop-right mil-fade-up">
                         <div class="mil-filter">
-                            <a href="#." class="mil-active">All</a>
-                            <a href="#.">Rooms</a>
-                            <a href="#.">Apartments</a>
+                            <a href="#." class="mil-active" data-filter="all">All</a>
+                            <a href="#." data-filter="room">Rooms</a>
+                            <a href="#." data-filter="apartment">Apartments</a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="row mil-mb-40">
+            <div class="row mil-mb-40" id="accommodation-container">
                 @forelse (getAllAccommodation() as $category)
                     @foreach ($category->rooms as $room)
-                    <div class="col-md-6 col-xl-4">
-                        <div class="mil-card mil-mb-40-adapt mil-fade-up">
-                            <div class="swiper-container mil-card-slider">
-                                <div class="swiper-wrapper">
-                                    @foreach ($room->galleryImages as $img)
-                                        <div class="swiper-slide">
-                                            <div class="mil-card-cover">
-                                                <img src="{{ Storage::url($img->image_path) }}" alt="cover"
-                                                     data-swiper-parallax="-100" data-swiper-parallax-scale="1.1">
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                                <div class="mil-card-nav">
-                                    <div class="mil-slider-btn mil-card-prev">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                             stroke-linejoin="round" class="feather feather-arrow-right">
-                                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                                            <polyline points="12 5 19 12 12 19"></polyline>
-                                        </svg>
-                                    </div>
-                                    <div class="mil-slider-btn mil-card-next">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                             stroke-linejoin="round" class="feather feather-arrow-right">
-                                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                                            <polyline points="12 5 19 12 12 19"></polyline>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div class="mil-card-pagination"></div>
-                            </div>
-                            <ul class="mil-parameters">
-                                <li>
-                                    <div class="mil-icon">
-                                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none"
-                                             xmlns="http://www.w3.org/2000/svg">
-                                            <g>
-                                                <path
-                                                    d="M12.7432 5.75582C12.6516 7.02721 11.7084 8.00663 10.6799 8.00663C9.65144 8.00663 8.70673 7.02752 8.6167 5.75582C8.52291 4.43315 9.44106 3.505 10.6799 3.505C11.9188 3.505 12.837 4.45722 12.7432 5.75582Z"
-                                                    stroke="black" stroke-width="1.00189" stroke-linecap="round"
-                                                    stroke-linejoin="round"/>
-                                                <path
-                                                    d="M10.6793 10.0067C8.64232 10.0067 6.68345 11.0185 6.19272 12.9889C6.12771 13.2496 6.29118 13.5075 6.55905 13.5075H14.7999C15.0678 13.5075 15.2303 13.2496 15.1662 12.9889C14.6755 10.9869 12.7166 10.0067 10.6793 10.0067Z"
-                                                    stroke="black" stroke-width="1.00189" stroke-miterlimit="10"/>
-                                                <path
-                                                    d="M6.42937 6.31713C6.3562 7.33276 5.59385 8.13264 4.77209 8.13264C3.95033 8.13264 3.18672 7.33308 3.1148 6.31713C3.04007 5.26053 3.7821 4.50537 4.77209 4.50537C5.76208 4.50537 6.50411 5.27992 6.42937 6.31713Z"
-                                                    stroke="black" stroke-width="1.00189" stroke-linecap="round"
-                                                    stroke-linejoin="round"/>
-                                                <path
-                                                    d="M6.61604 10.0688C6.05177 9.81023 5.4303 9.71082 4.77162 9.71082C3.14604 9.71082 1.57985 10.5189 1.18752 12.0929C1.13594 12.3011 1.26661 12.5071 1.48043 12.5071H4.99045"
-                                                    stroke="black" stroke-width="1.00189" stroke-miterlimit="10"
-                                                    stroke-linecap="round"/>
-                                            </g>
-                                            <defs>
-                                                <clipPath>
-                                                    <rect width="16.0035" height="16.0035" fill="white"
-                                                          transform="translate(0.176514 0.504028)"/>
-                                                </clipPath>
-                                            </defs>
-                                        </svg>
-                                    </div>
-                                    <div>Adults: {{ $room->adult_max }}</div>
-                                </li>
-                                <li>
-                                    <div class="mil-icon">
-                                        <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
-                                             width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
-                                             preserveAspectRatio="xMidYMid meet">
+                        <div class="col-md-6 col-xl-4 accommodation-item"
+                             data-type="{{ strtolower($category->type) }}"
+                             data-category="{{ $category->slug }}">
+                            <div class="mil-card mil-mb-40-adapt mil-fade-up">
+                                <div class="swiper-container mil-card-slider">
+                                    <div class="swiper-wrapper">
+                                        @foreach ($room->galleryImages as $img)
+                                            <div class="swiper-slide">
+                                                <div class="mil-card-cover">
+                                                    <img src="{{ asset('uploads/' . $img->image_path) }}"
+                                                         alt="cover"
+                                                         data-swiper-parallax="-100"
+                                                         data-swiper-parallax-scale="1.1"
+                                                         onerror="this.onerror=null; this.src='{{ asset('img/rooms/1.1.jpg') }}';">
 
-                                            <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
-                                               fill="#000000" stroke="none">
-                                                <path d="M1030 4891 c0 -5 5 -44 11 -87 22 -159 101 -316 215 -428 63 -61 174
+                                                    {{-- Discount Badge --}}
+                                                    @if($room->hasActiveDiscount())
+                                                        <div class="mil-discount-badge">
+                                                            -{{ number_format($room->discount_percentage, 0) }}%
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <div class="mil-card-nav">
+                                        <div class="mil-slider-btn mil-card-prev">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                 stroke-linejoin="round" class="feather feather-arrow-right">
+                                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                <polyline points="12 5 19 12 12 19"></polyline>
+                                            </svg>
+                                        </div>
+                                        <div class="mil-slider-btn mil-card-next">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                 stroke-linejoin="round" class="feather feather-arrow-right">
+                                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                <polyline points="12 5 19 12 12 19"></polyline>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="mil-card-pagination"></div>
+                                </div>
+                                <ul class="mil-parameters">
+                                    <li>
+                                        <div class="mil-icon">
+                                            <svg width="17" height="17" viewBox="0 0 17 17" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <g>
+                                                    <path
+                                                        d="M12.7432 5.75582C12.6516 7.02721 11.7084 8.00663 10.6799 8.00663C9.65144 8.00663 8.70673 7.02752 8.6167 5.75582C8.52291 4.43315 9.44106 3.505 10.6799 3.505C11.9188 3.505 12.837 4.45722 12.7432 5.75582Z"
+                                                        stroke="black" stroke-width="1.00189" stroke-linecap="round"
+                                                        stroke-linejoin="round"/>
+                                                    <path
+                                                        d="M10.6793 10.0067C8.64232 10.0067 6.68345 11.0185 6.19272 12.9889C6.12771 13.2496 6.29118 13.5075 6.55905 13.5075H14.7999C15.0678 13.5075 15.2303 13.2496 15.1662 12.9889C14.6755 10.9869 12.7166 10.0067 10.6793 10.0067Z"
+                                                        stroke="black" stroke-width="1.00189" stroke-miterlimit="10"/>
+                                                    <path
+                                                        d="M6.42937 6.31713C6.3562 7.33276 5.59385 8.13264 4.77209 8.13264C3.95033 8.13264 3.18672 7.33308 3.1148 6.31713C3.04007 5.26053 3.7821 4.50537 4.77209 4.50537C5.76208 4.50537 6.50411 5.27992 6.42937 6.31713Z"
+                                                        stroke="black" stroke-width="1.00189" stroke-linecap="round"
+                                                        stroke-linejoin="round"/>
+                                                    <path
+                                                        d="M6.61604 10.0688C6.05177 9.81023 5.4303 9.71082 4.77162 9.71082C3.14604 9.71082 1.57985 10.5189 1.18752 12.0929C1.13594 12.3011 1.26661 12.5071 1.48043 12.5071H4.99045"
+                                                        stroke="black" stroke-width="1.00189" stroke-miterlimit="10"
+                                                        stroke-linecap="round"/>
+                                                </g>
+                                                <defs>
+                                                    <clipPath>
+                                                        <rect width="16.0035" height="16.0035" fill="white"
+                                                              transform="translate(0.176514 0.504028)"/>
+                                                    </clipPath>
+                                                </defs>
+                                            </svg>
+                                        </div>
+                                        <div>Adults: {{ $room->adult_max }}</div>
+                                    </li>
+                                    <li>
+                                        <div class="mil-icon">
+                                            <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+                                                 width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
+                                                 preserveAspectRatio="xMidYMid meet">
+
+                                                <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+                                                   fill="#000000" stroke="none">
+                                                    <path d="M1030 4891 c0 -5 5 -44 11 -87 22 -159 101 -316 215 -428 63 -61 174
 -135 237 -157 20 -7 37 -16 37 -19 0 -4 -19 -17 -42 -30 -136 -75 -298 -201
 -434 -337 -206 -207 -370 -459 -476 -735 -32 -86 -45 -108 -60 -108 -34 0
 -151 -51 -220 -97 -295 -194 -384 -592 -201 -898 79 -130 229 -246 378 -291
@@ -260,46 +301,61 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
 103 -85 78 -116 151 -116 269 1 77 5 98 28 145 41 86 89 135 170 175 62 31 86
 37 171 43 l99 7 28 100 c48 172 102 301 184 440 324 551 913 898 1531 904 96
 1 136 -3 186 -19z"/>
-                                                <path d="M1640 2769 c-109 -12 -196 -53 -282 -135 -86 -82 -148 -211 -148
+                                                    <path d="M1640 2769 c-109 -12 -196 -53 -282 -135 -86 -82 -148 -211 -148
 -310 l0 -45 147 3 147 3 9 44 c12 60 78 126 138 138 58 12 124 -1 166 -33 38
 -29 73 -91 73 -129 l0 -25 150 0 150 0 0 38 c0 89 -56 217 -128 295 -114 121
 -257 174 -422 156z"/>
-                                                <path d="M3360 2769 c-116 -12 -214 -63 -302 -156 -74 -80 -128 -204 -128
+                                                    <path d="M3360 2769 c-116 -12 -214 -63 -302 -156 -74 -80 -128 -204 -128
 -295 l0 -38 150 0 150 0 0 25 c0 38 35 100 73 129 42 32 108 45 166 33 60 -12
 126 -78 138 -138 l9 -44 147 -3 147 -3 0 44 c0 167 -148 361 -323 423 -59 21
 -151 30 -227 23z"/>
-                                                <path d="M1973 1596 c-67 -39 -125 -75 -129 -79 -13 -12 106 -156 179 -217 86
+                                                    <path d="M1973 1596 c-67 -39 -125 -75 -129 -79 -13 -12 106 -156 179 -217 86
 -72 222 -142 332 -171 112 -30 298 -30 409 0 178 47 340 153 452 295 35 44 63
 84 61 89 -1 4 -58 41 -126 82 l-124 74 -20 -27 c-216 -288 -599 -318 -838 -66
 -25 27 -52 59 -60 71 -14 21 -15 21 -136 -51z"/>
-                                            </g>
-                                        </svg>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                        <div>Children: {{ $room->children_max }}</div>
+                                    </li>
+                                </ul>
+                                <div class="mil-descr">
+                                    <h3 class="mil-mb-20">{{ $room->category->name ?? '—' }}</h3>
+                                    <div class="mil-divider"></div>
+                                    <div class="mil-card-bottom">
+                                        <div class="mil-price-wrapper">
+                                            @if($room->hasActiveDiscount())
+                                                {{-- Display discounted price --}}
+                                                <div class="mil-price">
+                                                    <span class="mil-symbol">₦</span>
+                                                    <span class="mil-number" style="font-size: 1.2em">{{ number_format($room->discounted_price, 2, '.', ',') }}</span>
+                                                    <span>/per night</span>
+                                                </div>
+                                                {{-- Display original price (slashed) --}}
+                                                <div class="mil-original-price">
+                                                    <span class="mil-symbol">₦</span>
+                                                    <span class="mil-number">{{ number_format($room->price_per_night, 2, '.', ',') }}</span>
+                                                </div>
+                                            @else
+                                                {{-- Display regular price --}}
+                                                <div class="mil-price">
+                                                    <span class="mil-symbol">₦</span>
+                                                    <span class="mil-number" style="font-size: 1.2em">{{ number_format($room->price_per_night, 2, '.', ',') }}</span>
+                                                    <span>/per night</span>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <a href="{{ route('chosen_lodge', ['categorySlug' => $room->category->slug, 'roomId' => $room->id]) }}" class="mil-button mil-icon-button mil-accent-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                 stroke-linejoin="round" class="feather feather-bookmark">
+                                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                                            </svg>
+                                        </a>
                                     </div>
-                                    <div>Children: {{ $room->children_max }}</div>
-                                </li>
-                            </ul>
-                            <div class="mil-descr">
-                                <h3 class="mil-mb-20">{{ $room->category->name ?? '—' }}</h3>
-                                {{--<p class="mil-mb-40">Accusantium doloremque laudantium, totam rem aperiam beatae vitae dicta sunt, explicabo</p>--}}
-                                <div class="mil-divider"></div>
-                                <div class="mil-card-bottom">
-                                        <?php
-                                        $price = $room->price_per_night;
-                                        $formatted_price = number_format($price, 2, '.', ',');
-                                        ?>
-                                    <div class="mil-price"><span class="mil-symbol">₦</span><span class="mil-number" style="font-size: 1.2em">{{ $formatted_price }}</span>/per night
-                                    </div>
-                                    <a href="{{ route('chosen_lodge', ['categorySlug' => $room->category->slug, 'roomId' => $room->id]) }}" class="mil-button mil-icon-button mil-accent-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                             stroke-linejoin="round" class="feather feather-bookmark">
-                                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                                        </svg>
-                                    </a>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     @endforeach
                 @empty
                     <div class="col-md-6 col-xl-4">
@@ -412,7 +468,7 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
                                     <div class="mil-price"><span class="mil-symbol">$</span><span
                                             class="mil-number">49</span>/per night
                                     </div>
-                                    <a href="{{ route('chosen_lodge', $room->category->slug) }}" class="mil-button mil-icon-button mil-accent-1">
+                                    <a href="" class="mil-button mil-icon-button mil-accent-1">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                              stroke-linejoin="round" class="feather feather-bookmark">
@@ -437,5 +493,51 @@ c-43 -147 -62 -195 -129 -329 -302 -602 -942 -992 -1624 -991 -679 1 -1317
             chosen_lodge: "{{ route('chosen_lodge', ['categorySlug' => 'CATEGORY_SLUG', 'roomId' => 'ROOM_ID']) }}"
         };
     </script>
-    <script src="js/filter.js"></script>
+    <script>
+        // Simple CSS-based filter implementation to preserve images
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterLinks = document.querySelectorAll('.mil-filter a');
+            const accommodationItems = document.querySelectorAll('.accommodation-item');
+
+            // Debug: Log all data-type values on page load
+            console.log('Available accommodation types:');
+            accommodationItems.forEach(item => {
+                console.log('- ' + item.getAttribute('data-type'));
+            });
+
+            filterLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Remove active class from all links
+                    filterLinks.forEach(l => l.classList.remove('mil-active'));
+
+                    // Add active class to clicked link
+                    this.classList.add('mil-active');
+
+                    // Get filter type
+                    const filterType = this.getAttribute('data-filter');
+                    console.log('Filter clicked:', filterType);
+
+                    // Show/hide items based on filter
+                    let visibleCount = 0;
+                    accommodationItems.forEach(item => {
+                        const itemType = item.getAttribute('data-type');
+
+                        if (filterType === 'all') {
+                            item.style.display = 'block';
+                            visibleCount++;
+                        } else if (itemType === filterType) {
+                            item.style.display = 'block';
+                            visibleCount++;
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+
+                    console.log('Visible items:', visibleCount);
+                });
+            });
+        });
+    </script>
 @endpush
