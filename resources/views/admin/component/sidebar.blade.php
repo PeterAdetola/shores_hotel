@@ -133,10 +133,11 @@
                  </ul>
              </div>
          </li>
-         <li class="active bold"><a class="{{ ($route == 'announcements')? 'active' : '' }} waves-effect waves-cyan "
-                                          href="{{ route('announcements') }}"><i class="material-icons"><span
-                         class="material-symbols-outlined">notifications</span></i><span class="menu-title"
-                                                                                            data-i18n="Dashboard">Announcements</span></a>
+         <li class="active bold">
+             <a class="{{ ($route == 'announcements')? 'active' : '' }} waves-effect waves-cyan" href="{{ route('announcements') }}">
+                 <i class="material-icons"><span class="material-symbols-outlined">notifications</span></i>
+                 <span class="menu-title" data-i18n="Dashboard">Announcements</span>
+             </a>
          </li>
 
 

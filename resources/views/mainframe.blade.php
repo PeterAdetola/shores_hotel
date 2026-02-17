@@ -259,7 +259,6 @@
     <!-- footer end -->
 
     <!-- notice popup -->
-
     @include('index.partials.popup')
     <!-- notice popup end -->
 
