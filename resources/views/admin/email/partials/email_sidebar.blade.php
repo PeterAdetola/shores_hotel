@@ -1,4 +1,13 @@
 {{-- resources/views/admin/partials/email-sidebar.blade.php --}}
+@php
+    $displayName = match($activeEmail) {
+        'book_hotel@shoreshotelng.com' => 'Shores Hotel',
+        'book_apartment@shoreshotelng.com' => 'Shores Apartment',
+        'hello@shoreshotelng.com' => 'Shores Hotel',
+        default => 'Shores Hotel'
+    };
+@endphp
+
 <div class="sidebar-left sidebar-fixed">
     <div class="sidebar">
         <div class="sidebar-content">
@@ -9,12 +18,12 @@
                     </h5>
                     <div class="row valign-wrapper mt-10 pt-2 animate fadeLeft">
                         <div class="col s3 media-image">
-                            <img src="{{ asset('admin/assets/images/user/2.jpg') }}" alt=""
+                            <img src="{{ asset('admin/assets/images/user/shoresdp.jpg') }}" alt=""
                                  class="circle z-depth-2 responsive-img">
                         </div>
                         <div class="col s9">
                             <p class="m-0 subtitle font-weight-700">{{ auth()->user()->name ?? 'User' }}</p>
-                            <p class="m-0 text-muted">{{ $activeEmail ?? 'No account selected' }}</p>
+                            <p class="m-0 text-muted">{{ $displayName ?? 'No account selected' }}</p>
                         </div>
                     </div>
                 </div>
