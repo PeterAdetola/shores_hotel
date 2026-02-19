@@ -17,6 +17,8 @@ use App\Http\Controllers\RoomCategoryController;
 use App\Http\Controllers\RoomController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Redirect;
 
 
 // ============================================================
@@ -102,9 +104,18 @@ Route::get('/laravel-log', function (Request $request) {
 // CACHE CLEAR ROUTES
 // ============================================================
 
-Route::get('/clear-cache', [CacheClearController::class, 'clearAll'])->middleware('throttle:3,1');
-Route::get('/admin/clear-cache/{token}', [CacheClearController::class, 'clearAll']);
+Route::get('/admin/refresh-system', function() {
+    // 1. Clear the various caches
+    Artisan::call('cache:clear');
+    Artisan::call('view:clear');
+    Artisan::call('route:clear');
 
+    // 2. Use your existing helper for the response
+    // This will handle the redirect and flash the 'message' and 'type'
+    // keys into the session automatically.
+    return notification('Cache Cleared!', 'success');
+
+})->middleware(['auth'])->name('admin.clear.cache');
 
 // ============================================================
 // AUTH PROFILE ROUTES

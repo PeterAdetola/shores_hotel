@@ -6,13 +6,14 @@ use App\Models\Facility;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Yaml\Yaml;
 use App\Models\Booking;
-use Illuminate\Support\Facades\Cache;
+
 
 // Get user's id
 if (!function_exists('getCurrentUser')) {
     function getCurrentUser()
     {
-        return Auth::id();
+        $userId = Auth::id();
+        return $userId;
     }
 }
 
@@ -23,12 +24,18 @@ if (!function_exists('getUserInitial')) {
         $user = auth()->user();
         if ($user) {
             $name = $user->name;
+            $initials = [];
+
             $nameParts = explode(' ', trim($name));
             $firstName = array_shift($nameParts);
             $lastName = array_pop($nameParts);
-            return mb_substr($firstName, 0, 1) . mb_substr($lastName, 0, 1);
+            $initials[$name] = mb_substr($firstName, 0, 1) . mb_substr($lastName, 0, 1);
+
+            $initials = implode('', $initials);
+            return $initials;
+        } else {
+            return redirect('login');
         }
-        return null;
     }
 }
 
@@ -36,16 +43,20 @@ if (!function_exists('getUserInitial')) {
 if (!function_exists('getUserName')) {
     function getUserName()
     {
-        return auth()->user() ? auth()->user()->name : null;
+        $user = auth()->user();
+        if ($user) {
+            $name = $user->name;
+            return $name;
+        } else {
+            return redirect('login');
+        }
     }
 }
 
-// Get room categories - CACHED
+// Get room categories
 if (!function_exists('getRoomCategories')) {
     function getRoomCategories() {
-        return Cache::remember('room_categories_all', 3600, function() {
-            return RoomCategory::all();
-        });
+        return RoomCategory::all();
     }
 }
 
@@ -56,13 +67,10 @@ if (!function_exists('getRoom')) {
     }
 }
 
-// Get Facilities - CACHED
 if (!function_exists('getFacilities')) {
     function getFacilities()
     {
-        return Cache::remember('facilities_list', 3600, function() {
-            return Facility::orderBy('position')->get();
-        });
+        return Facility::orderBy('position')->get();
     }
 }
 
@@ -84,6 +92,7 @@ if (!function_exists('notification')) {
             return response()->json($response);
         }
 
+        // Redirect to specific route if provided, otherwise back
         if ($redirectRoute) {
             return redirect()->route($redirectRoute)->with($response);
         }
@@ -97,12 +106,19 @@ if (!function_exists('loadFrontMatter')) {
     function loadFrontMatter(string $relativePath): array
     {
         $path = storage_path('app/' . ltrim($relativePath, '/'));
-        if (!File::exists($path)) return [];
+
+        if (!File::exists($path)) {
+            return [];
+        }
 
         $raw = File::get($path) ?? '';
+
+        // Extract YAML front matter between ---
         if (preg_match('/^---\s*\R(.*?)\R---\s*\R?/s', $raw, $m)) {
             return Yaml::parse($m[1]) ?? [];
         }
+
+        // Or treat whole file as YAML if no delimiters
         return Yaml::parse($raw) ?? [];
     }
 }
@@ -114,110 +130,104 @@ if (!function_exists('getContactContent')) {
     }
 }
 
-// Available Accommodation - CACHED
 if (!function_exists('getAvailbleAccommodation')) {
     function getAvailbleAccommodation()
     {
-        return Cache::remember('accommodation_available', 3600, function() {
-            try {
-                return RoomCategory::with([
-                    'rooms' => function($query) {
-                        $query->where('availability', true)->orderBy('position');
-                    },
-                    'rooms.galleryImages',
-                    'rooms.featuredImage',
-                    'rooms.category'
-                ])
-                    ->whereHas('rooms', function($query) {
-                        $query->where('availability', true);
-                    })
-                    ->get();
-            } catch (\Exception $e) {
-                \Log::error('Error in getAvailbleAccommodation: ' . $e->getMessage());
-                return collect();
-            }
-        });
+        try {
+            return App\Models\RoomCategory::with([
+                'rooms' => function($query) {
+                    $query->where('availability', true)->orderBy('position');
+                },
+                'rooms.galleryImages',
+                'rooms.featuredImage',
+                'rooms.category'
+            ])
+                ->whereHas('rooms', function($query) {
+                    $query->where('availability', true);
+                })
+                ->get();
+        } catch (\Exception $e) {
+            \Log::error('Error in getAvailbleAccommodation: ' . $e->getMessage());
+            return collect();
+        }
     }
 }
 
-// All Accommodation - CACHED
 if (!function_exists('getAllAccommodation')) {
     function getAllAccommodation()
     {
-        return Cache::remember('accommodation_all', 3600, function() {
-            try {
-                return RoomCategory::with([
-                    'rooms' => function($query) {
-                        $query->orderBy('position');
-                    },
-                    'rooms.galleryImages',
-                    'rooms.featuredImage',
-                    'rooms.category'
-                ])
-                    ->get();
-            } catch (\Exception $e) {
-                \Log::error('Error in getAllAccommodation: ' . $e->getMessage());
-                return collect();
-            }
-        });
+        try {
+            return App\Models\RoomCategory::with([
+                'rooms' => function($query) {
+                    $query->orderBy('position');
+                },
+                'rooms.galleryImages',
+                'rooms.featuredImage',
+                'rooms.category'
+            ])
+                ->get();
+        } catch (\Exception $e) {
+            \Log::error('Error in getAllAccommodation: ' . $e->getMessage());
+            return collect();
+        }
     }
 }
 
-// Rooms by type - CACHED
 if (!function_exists('getRooms')) {
     function getRooms()
     {
-        return Cache::remember('rooms_type_0', 3600, function() {
-            try {
-                return RoomCategory::with([
-                    'rooms' => function($query) {
-                        $query->where('room_type', 0)->orderBy('position');
-                    },
-                    'rooms.galleryImages',
-                    'rooms.featuredImage',
-                    'rooms.category'
-                ])
-                    ->whereHas('rooms', function($query) {
-                        $query->where('room_type', 0);
-                    })
-                    ->get();
-            } catch (\Exception $e) {
-                \Log::error('Error in getRooms: ' . $e->getMessage());
-                return collect();
-            }
-        });
+        try {
+            return App\Models\RoomCategory::with([
+                'rooms' => function($query) {
+                    $query->where('room_type', 0)->orderBy('position');
+                },
+                'rooms.galleryImages',
+                'rooms.featuredImage',
+                'rooms.category'
+            ])
+                ->whereHas('rooms', function($query) {
+                    $query->where('room_type', 0);
+                })
+                ->get();
+        } catch (\Exception $e) {
+            \Log::error('Error in getRooms: ' . $e->getMessage());
+            return collect();
+        }
     }
 }
 
-// Apartments by type - CACHED
 if (!function_exists('getApartments')) {
     function getApartments()
     {
-        return Cache::remember('rooms_type_1', 3600, function() {
-            try {
-                return RoomCategory::with([
-                    'rooms' => function($query) {
-                        $query->where('room_type', 1)->orderBy('position');
-                    },
-                    'rooms.galleryImages',
-                    'rooms.featuredImage',
-                    'rooms.category'
-                ])
-                    ->whereHas('rooms', function($query) {
-                        $query->where('room_type', 1);
-                    })
-                    ->get();
-            } catch (\Exception $e) {
-                \Log::error('Error in getApartments: ' . $e->getMessage());
-                return collect();
-            }
-        });
+        try {
+            return App\Models\RoomCategory::with([
+                'rooms' => function($query) {
+                    $query->where('room_type', 1)->orderBy('position');
+                },
+                'rooms.galleryImages',
+                'rooms.featuredImage',
+                'rooms.category'
+            ])
+                ->whereHas('rooms', function($query) {
+                    $query->where('room_type', 1);
+                })
+                ->get();
+        } catch (\Exception $e) {
+            \Log::error('Error in getApartments: ' . $e->getMessage());
+            return collect();
+        }
     }
 }
 
+//if (!function_exists('getAllRooms')) {
+//    function getAllRooms() {
+//        return \App\Models\Room::with('category')->get();
+//    }
+//}
+
 if (!function_exists('getAllRooms')) {
     function getAllRooms() {
-        return Cache::remember('rooms_list_basic', 3600, function() {
+        return \Illuminate\Support\Facades\Cache::remember('all_rooms_list', 3600, function () {
             return \App\Models\Room::with('category')->get();
         });
     }
@@ -228,17 +238,25 @@ if (!function_exists('signature')) {
     {
         $finalColor = $textColor ?: 'black';
         $finalWeight = $fontWeight ?: 'bolder';
+
         $styleString = "text-decoration: none; color: {$finalColor}; font-weight: {$finalWeight};";
+
         $url = "https://www.thepacmedia.com";
         $companyName = "Pacmedia Creatives";
-        return "<span><a href=\"{$url}\" style=\"{$styleString}\">{$companyName}</a></span>";
+
+        $linkHtml = "<a href=\"{$url}\" style=\"{$styleString}\">{$companyName}</a>";
+
+        return "<span>{$linkHtml}</span>";
     }
 }
 
 if (!function_exists('getAllBookings')) {
     function getAllBookings($limit = 10)
     {
-        return Booking::with('room.category')->latest()->take($limit)->get();
+        return Booking::with('room.category')
+            ->latest()
+            ->take($limit)
+            ->get();
     }
 }
 
@@ -247,7 +265,9 @@ if (!function_exists('getProcessedBookings')) {
     {
         return Booking::with('room.category')
             ->whereIn('status', ['confirmed', 'paid', 'cancelled', 'completed'])
-            ->latest()->take($limit)->get();
+            ->latest()
+            ->take($limit)
+            ->get();
     }
 }
 
@@ -256,10 +276,13 @@ if (!function_exists('getUnprocessedBookings')) {
     {
         return Booking::with('room.category')
             ->whereIn('status', ['pending'])
-            ->latest()->take($limit)->get();
+            ->latest()
+            ->take($limit)
+            ->get();
     }
 }
 
+// Private-like helper for extracting contact sections
 if (!function_exists('_getContactSection')) {
     function _getContactSection(string $sectionKey): array
     {
@@ -268,6 +291,7 @@ if (!function_exists('_getContactSection')) {
     }
 }
 
+// Hotel Contact Helper
 if (!function_exists('hotelContact')) {
     function hotelContact(): array
     {
@@ -275,6 +299,7 @@ if (!function_exists('hotelContact')) {
     }
 }
 
+// Apartment Contact Helper
 if (!function_exists('apartmentContact')) {
     function apartmentContact(): array
     {
@@ -285,8 +310,6 @@ if (!function_exists('apartmentContact')) {
 if (!function_exists('getPublishedAnnouncement')) {
     function getPublishedAnnouncement()
     {
-        return Cache::remember('published_announcement', 3600, function() {
-            return \App\Models\Announcement::where('is_published', 1)->first();
-        });
+        return \App\Models\Announcement::where('is_published', 1)->first();
     }
 }

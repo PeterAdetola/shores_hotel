@@ -4,23 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\RoomCategory;
-use Illuminate\Support\Facades\Cache; // Import Cache
 
 class RoomCategoryController extends Controller
 {
-    /**
-     * Helper to clear all accommodation-related cache
-     * Ensures the frontend sees category changes immediately
-     */
-    private function clearRoomCache()
-    {
-        Cache::forget('accommodation_all');
-        Cache::forget('accommodation_available');
-        Cache::forget('rooms_list_basic');
-        Cache::forget('rooms_type_0');
-        Cache::forget('rooms_type_1');
-        Cache::forget('admin_rooms_index'); // Clears the admin side list too
-    }
+//    public function index()
+//    {
+//        $categories = RoomCategory::all();
+//        return view('admin.room.manage_rooms', compact('categories'));
+//    }
+
+//    public function create()
+//    {
+//        return view('room-categories.create');
+//    }
 
     public function store(Request $request)
     {
@@ -32,10 +28,14 @@ class RoomCategoryController extends Controller
             'name' => $request->name,
         ]);
 
-        $this->clearRoomCache(); // Clear Cache
-
         return notification('Room category added.', 'success');
     }
+//
+//    public function edit($id)
+//    {
+//        $category = RoomCategory::findOrFail($id);
+//        return view('admin.room.edit_category', compact('category'));
+//    }
 
     public function update(Request $request, $id)
     {
@@ -47,8 +47,6 @@ class RoomCategoryController extends Controller
         $category->name = $request->name;
         $category->save();
 
-        $this->clearRoomCache(); // Clear Cache
-
         return notification('Category updated.', 'success');
     }
 
@@ -58,13 +56,19 @@ class RoomCategoryController extends Controller
 
         // Check if the category has associated rooms
         if ($category->rooms()->count() > 0) {
-            return notification("Category in use - can't delete.", 'error');
+            $notification = array(
+                'message' => "Category in use - can't delete.",
+                'alert-type' => 'error'
+            );
+
+        return notification("Category in use - can't delete.", 'error');
+
         }
 
         $category->delete();
 
-        $this->clearRoomCache(); // Clear Cache
-
         return notification('Category deleted.', 'success');
     }
+
+
 }
