@@ -264,6 +264,10 @@ Route::get('/db-test', function () {
     return $user ? $user->email : 'No users';
 });
 
+Route::get('/debug-admin-prefix', function () {
+    return "Admin prefix group is reachable!";
+})->prefix('admin')->name('debug.admin.test');
+
 Route::get('/preview-booking-email/{bookingId}', function ($bookingId) {
     $booking    = \App\Models\Booking::with('room.category')->findOrFail($bookingId);
     $room       = $booking->room;
