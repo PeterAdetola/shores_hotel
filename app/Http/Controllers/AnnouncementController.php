@@ -173,6 +173,8 @@ class AnnouncementController extends Controller
                 $message = 'Announcement published! 🎉';
             }
 
+            clearPublishedAnnouncementCache();
+
             return response()->json([
                 'success' => true,
                 'message' => $message
@@ -194,6 +196,8 @@ class AnnouncementController extends Controller
     {
         try {
             Announcement::where('is_published', 1)->update(['is_published' => 0]);
+
+            clearPublishedAnnouncementCache();
 
             return response()->json([
                 'success' => true,

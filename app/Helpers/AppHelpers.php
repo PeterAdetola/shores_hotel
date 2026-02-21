@@ -282,11 +282,28 @@ if (!function_exists('apartmentContact')) {
     }
 }
 
+//if (!function_exists('getPublishedAnnouncement')) {
+//    function getPublishedAnnouncement()
+//    {
+//        return Cache::remember('published_announcement', 3600, function() {
+//            return \App\Models\Announcement::where('is_published', 1)->first();
+//        });
+//    }
+//}
+
 if (!function_exists('getPublishedAnnouncement')) {
     function getPublishedAnnouncement()
     {
         return Cache::remember('published_announcement', 3600, function() {
             return \App\Models\Announcement::where('is_published', 1)->first();
         });
+    }
+}
+
+// Add this helper to clear the cache when you publish/unpublish
+if (!function_exists('clearPublishedAnnouncementCache')) {
+    function clearPublishedAnnouncementCache()
+    {
+        Cache::forget('published_announcement');
     }
 }

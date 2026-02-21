@@ -183,12 +183,6 @@
 
                         <div class="row justify-content-between">
 
-{{--                            <div class="col-md-6 col-lg-5 mil-mb-40">--}}
-
-{{--                                <h5 class="mil-mb-20">Spain</h5>--}}
-{{--                                <p>71 South Los Carneros Road, California +51 174 705 812</p>--}}
-
-{{--                            </div>--}}
                             <div class="col-md-6 col-lg-5 mil-mb-40" style="float: right">
 
                                 <h5 class="mil-mb-20">Lagos, Nigeria</h5>
@@ -249,8 +243,6 @@
                         </div>
                         <p class="mil-light-soft">© Copyright 2025 - Shores Hotel. All Rights Reserved.</p><br>
                         <p>Developed by {!! signature() !!}</p>
-
-{{--                        <p class="mil-light-soft">© Copyright 2025 - Shores Hotel. All Rights Reserved.</p><br>--}}
                     </div>
                 </div>
             </div>
@@ -259,11 +251,18 @@
     <!-- footer end -->
 
     <!-- notice popup -->
-    @include('index.partials.popup')
+{{--    @include('index.partials.popup')--}}
     <!-- notice popup end -->
 
 
-    <!-- book popup -->
+    <!-- Announcement popup - only shows on timer/exit-intent when published -->
+    @php $announcement = getPublishedAnnouncement(); @endphp
+    @if($announcement)
+        @include('index.partials.popup')
+    @endif
+    <!-- Announcement popup end -->
+
+    <!-- Booking popup - ALWAYS available, only shows when button is clicked -->
     <div class="mil-book-popup-frame">
         <div class="mil-book-popup">
             <div class="mil-popup-head mil-mb-40">
@@ -278,25 +277,20 @@
             <div class="mil-modal-form">
                 <form method="POST" action="{{ route('make.booking') }}">
                     @csrf
-
                     <div class="mil-field-frame mil-mb-20">
                         <label>Check-in</label>
                         <input name="check_in" id="check-in-2" type="text" class="datepicker-here"
                                data-position="bottom left" placeholder="Select date" autocomplete="off" readonly>
                     </div>
-
                     <div class="mil-field-frame mil-mb-20">
                         <label>Check-out</label>
                         <input name="check_out" id="check-out-2" type="text" class="datepicker-here"
                                data-position="bottom left" placeholder="Select date" autocomplete="off" readonly>
                     </div>
-
                     <div class="mil-field-frame mil-mb-20">
                         <label>Lodging type</label>
                         <select name="room_id" required>
                             <option value="">Select Lodging</option>
-
-                            {{-- Rooms group --}}
                             @if($rooms->where('room_type', 0)->count() > 0)
                                 <optgroup label="Rooms">
                                     @foreach($rooms->where('room_type', 0) as $room)
@@ -306,8 +300,6 @@
                                     @endforeach
                                 </optgroup>
                             @endif
-
-                            {{-- Apartments group --}}
                             @if($rooms->where('room_type', 1)->count() > 0)
                                 <optgroup label="Apartments">
                                     @foreach($rooms->where('room_type', 1) as $room)
@@ -318,9 +310,7 @@
                                 </optgroup>
                             @endif
                         </select>
-
                     </div>
-
                     <div class="mil-field-row mil-mb-20">
                         <div class="mil-field-frame mil-field-col">
                             <label>Adults</label>
@@ -331,17 +321,14 @@
                             <input name="children" type="number" placeholder="Enter quantity" value="0" min="0">
                         </div>
                     </div>
-
                     <button type="submit" class="mil-button mil-accent-1">
                         <span>Make Booking</span>
                     </button>
                 </form>
-
             </div>
-
         </div>
     </div>
-    <!-- book popup end -->
+    <!-- Booking popup end -->
 
     <div class="mil-progressbar"></div>
 

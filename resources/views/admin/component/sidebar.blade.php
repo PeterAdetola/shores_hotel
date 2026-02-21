@@ -12,11 +12,12 @@
          <h1 class="logo-wrapper" style="height:5em">
              <a class="brand-logo darken-1" href="{{route('dashboard')}}">
                  <img style="padding-bottom: 0.2em; height: 1.3em;" class="hide-on-med-and-down"
-                      src="{{ asset('admin/assets/images/logo/pacmediac_logo.png') }}" alt="Pacmedia logo"/>
+                      src="{{ asset('admin/assets/images/logo/logo.png') }}" alt="Pacmedia logo"/>
                  <img style="margin-top: -8px; height: 1.3em;" class="show-on-medium-and-down hide-on-med-and-up"
-                      src="{{ asset('admin/assets/images/logo/pacmediac_logo.png') }}" alt="Pacmedia logo"/><span
-                     class="logo-text hide-on-med-and-down" style="padding-bottom:20px"><img
-                         src="{{ asset('admin/assets/images/logo/logo-text.png') }}" alt="Pacmedia logo" style="height: 1.2em;"/></span>
+                      src="{{ asset('admin/assets/images/logo/logo.png') }}" alt="Pacmedia logo"/>
+                 <span class="logo-text hide-on-med-and-down" style="padding-bottom:20px">
+                     <img src="{{ asset('admin/assets/images/logo/logo-text.png') }}" alt="Pacmedia logo" style="height: 1.35em;"/>
+                 </span>
              </a>
 
              <a class="navbar-toggler" href="#">
