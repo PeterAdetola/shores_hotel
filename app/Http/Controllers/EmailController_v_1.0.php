@@ -19,7 +19,7 @@ class EmailController extends Controller
     protected $clientManager;
 
     // How many emails to show per page in the inbox
-    const EMAILS_PER_PAGE = 10;
+    const EMAILS_PER_PAGE = 20;
 
     // IMAP connection timeout in seconds — well below PHP's 30s limit
     const IMAP_TIMEOUT = 10;
