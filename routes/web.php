@@ -269,53 +269,18 @@ Route::middleware(['auth'])->delete('/rooms/{room}/gallery/{roomImage}', [RoomCo
 // ============================================================
 // DEV / DEBUG ROUTES — remove or guard before going to production
 // ============================================================
-
-Route::get('/db-test', function () {
-    $user = \App\Models\User::first();
-    return $user ? $user->email : 'No users';
-});
-
-Route::get('/debug-admin-prefix', function () {
-    return "Admin prefix group is reachable!";
-})->prefix('admin')->name('debug.admin.test');
-
-Route::get('/preview-booking-email/{bookingId}', function ($bookingId) {
-    $booking    = \App\Models\Booking::with('room.category')->findOrFail($bookingId);
-    $room       = $booking->room;
-    $nights     = abs(\Carbon\Carbon::parse($booking->check_out)->diffInDays(\Carbon\Carbon::parse($booking->check_in)));
-    $senderName = $room->room_type == 0 ? 'Shores Hotel' : 'Shores Apartment';
-    return view('emails.booking-report', compact('booking', 'room', 'senderName', 'nights'));
-})->name('preview.booking.email');
-
-Route::get('/preview-booking-confirmation/{bookingId}', function ($bookingId) {
-    $booking     = \App\Models\Booking::with('room.category')->findOrFail($bookingId);
-    $room        = $booking->room;
-    $senderEmail = $room->room_type == 0 ? 'book_hotel@shoreshotelng.com' : 'book_apartment@shoreshotelng.com';
-    $senderName  = $room->room_type == 0 ? 'Shores Hotel' : 'Shores Apartment';
-    return view('emails.booking-request', compact('booking', 'senderEmail', 'senderName', 'room'));
-})->name('preview.booking.confirmation');
-
-Route::get('/test-email-fetch', function () {
-    try {
-        $service = new \App\Services\ImapEmailService();
-        echo '<h2>Testing Email Fetch</h2>';
-        echo '<h3>1. Testing Connection...</h3>';
-        $result = $service->testConnection('default');
-        echo '<pre>' . print_r($result, true) . '</pre>';
-        echo '<h3>2. Testing Fetch Emails...</h3>';
-        $emails = $service->fetchEmails('default', 'INBOX', 5);
-        echo 'Found ' . $emails->count() . ' emails<br>';
-        foreach ($emails as $email) {
-            echo '- ' . $email->getSubject() . '<br>';
-        }
-        echo '<h3>✓ Test Complete</h3>';
-    } catch (\Exception $e) {
-        echo "<h3 style='color:red;'>✗ Error:</h3>";
-        echo '<pre>' . $e->getMessage() . '</pre>';
-        echo '<pre>' . $e->getTraceAsString() . '</pre>';
+Route::get('/run-clear-cache', function () {
+    if (request('token') !== 'shores2026clear') {
+        abort(403);
     }
-});
 
+    Artisan::call('config:clear');
+    Artisan::call('view:clear');
+    Artisan::call('cache:clear');
+    Artisan::call('route:clear');
+
+    return 'Done! All caches cleared.';
+});
 
 // ============================================================
 // AUTH ROUTES
