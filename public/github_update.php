@@ -172,11 +172,17 @@ try {
     // ===== FIXED: SYNC PUBLIC FILES - CORRECT METHOD =====
     logMessage("🔁 Syncing public files...");
 
-    // Backup server's index.php
+    // Backup server-specific files that must not be overwritten
     $indexBackup = "/tmp/index.php.server." . time() . ".bak";
     if (file_exists("$PUBLIC_PATH/index.php")) {
         copy("$PUBLIC_PATH/index.php", $indexBackup);
-        logMessage("✅ Backed up index.php to $indexBackup");
+        logMessage("✅ Backed up public_html/index.php");
+    }
+
+    $adminIndexBackup = "/tmp/admin_index.php.server." . time() . ".bak";
+    if (file_exists("$PUBLIC_PATH/admin/index.php")) {
+        copy("$PUBLIC_PATH/admin/index.php", $adminIndexBackup);
+        logMessage("✅ Backed up admin/index.php");
     }
 
     $publicSource = "$LARAVEL_PATH/public";
@@ -247,11 +253,24 @@ try {
         }
     }
 
-    // Restore server's index.php
+    // Restore server-specific files
     if (file_exists($indexBackup)) {
         copy($indexBackup, "$PUBLIC_PATH/index.php");
-        logMessage("✅ Restored index.php");
+        logMessage("✅ Restored public_html/index.php");
         unlink($indexBackup);
+    }
+
+    if (file_exists($adminIndexBackup)) {
+        copy($adminIndexBackup, "$PUBLIC_PATH/admin/index.php");
+        logMessage("✅ Restored admin/index.php");
+        unlink($adminIndexBackup);
+    }
+
+// Ensure admin/.htaccess is always deleted after deploy
+    $adminHtaccess = "$PUBLIC_PATH/admin/.htaccess";
+    if (file_exists($adminHtaccess)) {
+        unlink($adminHtaccess);
+        logMessage("🗑️ Deleted admin/.htaccess (intentional - prevents route conflicts)");
     }
 
     // Fix permissions on synced files

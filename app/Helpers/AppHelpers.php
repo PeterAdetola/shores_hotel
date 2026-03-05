@@ -238,25 +238,31 @@ if (!function_exists('signature')) {
 if (!function_exists('getAllBookings')) {
     function getAllBookings($limit = 10)
     {
-        return Booking::with('room.category')->latest()->take($limit)->get();
+        return Cache::remember("bookings_all_{$limit}", 60, function() use ($limit) {
+            return Booking::with('room.category')->latest()->take($limit)->get();
+        });
     }
 }
 
 if (!function_exists('getProcessedBookings')) {
     function getProcessedBookings($limit = 10)
     {
-        return Booking::with('room.category')
-            ->whereIn('status', ['confirmed', 'paid', 'cancelled', 'completed'])
-            ->latest()->take($limit)->get();
+        return Cache::remember("bookings_processed_{$limit}", 60, function() use ($limit) {
+            return Booking::with('room.category')
+                ->whereIn('status', ['confirmed', 'paid', 'cancelled', 'completed'])
+                ->latest()->take($limit)->get();
+        });
     }
 }
 
 if (!function_exists('getUnprocessedBookings')) {
     function getUnprocessedBookings($limit = 10)
     {
-        return Booking::with('room.category')
-            ->whereIn('status', ['pending'])
-            ->latest()->take($limit)->get();
+        return Cache::remember("bookings_unprocessed_{$limit}", 60, function() use ($limit) {
+            return Booking::with('room.category')
+                ->whereIn('status', ['pending'])
+                ->latest()->take($limit)->get();
+        });
     }
 }
 
