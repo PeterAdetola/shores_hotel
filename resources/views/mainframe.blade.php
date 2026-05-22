@@ -241,7 +241,9 @@
                                 @endforeach
                             </ul>
                         </div>
-                        <p class="mil-light-soft">© Copyright 2025 - Shores Hotel. All Rights Reserved.</p><br>
+                        <p class="mil-light-soft">
+                            © Copyright <span id="current-year">2025</span> - Shores Hotel. All Rights Reserved.
+                        </p>
                         <p>Developed by {!! signature() !!}</p>
                     </div>
                 </div>
@@ -362,6 +364,12 @@
             }, 5000);
         }
     });
+
+    // Get the current year
+    const currentYear = new Date().getFullYear();
+
+    // Inject it into the HTML element with the id "current-year"
+    document.getElementById('current-year').textContent = currentYear;
 </script>
 
 </body>

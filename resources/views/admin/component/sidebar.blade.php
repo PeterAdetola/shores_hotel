@@ -95,7 +95,7 @@
          {{-- Email Accounts Section in Main Sidebar --}}
          <li class="bold">
              <a class="collapsible-header waves-effect waves-cyan" href="javascript:void(0)">
-                 <i class="material-icons">mail</i>
+                 <i class="material-icons"><span class="material-symbols-outlined">mail</span></i>
                  <span class="menu-title" data-i18n="Email">Email Accounts</span>
              </a>
              <div class="collapsible-body">

@@ -1,0 +1,71 @@
+# Shores Hotel
+
+> A hotel and apartment booking website for Shores Hotel, located in Lagos, Nigeria. Built with Laravel (Blade templating engine).
+
+## Site Overview
+
+Shores Hotel is a hospitality website offering hotel room and apartment bookings, a lounge/bar page, an about page, and a contact page. It features an online reservation system, newsletter subscription, and announcement popups.
+
+## LLM Context Streams
+- [Full Site Context](https://shoreshotelng.com/llms-full.txt): Complete compiled text content for pages (Home, About, Citibar, Contact) parsed dynamically from backend storage.
+
+## Pages & Routes
+
+- `/` — Home page (`home` route)
+- `/about` — About Us page (`aboutUs` route); includes a gallery section at `#gallery`
+- `/rooms` — Hotel rooms listing (`getRooms` route)
+- `/apartments` — Apartments listing (`getApartments` route)
+- `/get-lodged` — Get Lodged page (`getlodged` route)
+- `/citibar` — CitiB Lounge page (`citibar` route)
+- `/contact` — Contact / Reach out page (`contact` route)
+- `POST /booking` — Booking form submission (`make.booking` route)
+
+## Key Features
+
+- **Room Booking Popup** — Available site-wide via "Book now" button. Accepts: check-in date, check-out date, lodging type (room or apartment), number of adults, number of children.
+- **Announcement Popup** — Conditionally shown when a published announcement exists (`getPublishedAnnouncement()`).
+- **Newsletter Subscription** — Footer email subscribe form.
+- **Cookie Consent** — Rendered via `vendor.cookie-consent` when enabled in config and cookie not yet set.
+
+## Navigation
+
+Primary nav links: Home, About Us, Hotel, Apartments, CitiB Lounge, Book Now (CTA).
+Footer nav links: Home, About, Hotel, Apartments, Get Lodged, CitiB Lounge, Our Gallery, Reach out to us.
+
+## Lodging Types
+
+- `room_type = 0` — Hotel Rooms (listed under "Hotel" nav item)
+- `room_type = 1` — Apartments (listed under "Apartments" nav item)
+
+## Data / Helper Functions
+
+- `getContactContent()` — Returns contact info and social media links.
+- `getAllRooms()` — Returns all available rooms/apartments with category name and price per night (in NGN ₦).
+- `getPublishedAnnouncement()` — Returns a published announcement object if one exists.
+- `signature()` — Returns developer credit HTML string.
+
+## Social Media
+
+Supports: Facebook, Instagram, X (Twitter), LinkedIn. Icons rendered inline as SVG. URLs sourced from `getContactContent()['social']`.
+
+## Tech Stack
+
+- **Backend:** Laravel (PHP), Blade templates
+- **Frontend:** Bootstrap Grid, Swiper.js, Datepicker.js, jQuery, custom CSS/JS
+- **Fonts:** Google Fonts — Material Symbols Outlined
+- **Location:** Lagos, Nigeria
+
+## Assets
+
+- Logo: `img/logo.png`
+- Favicon: `img/favicon/favicon.ico`
+- Decorative shape: `img/shapes/4.png`
+- CSS: `css/style.css`, `css/custom.css`, `css/plugins/`
+- JS: `js/main.js`, `js/exit-intent_popup.js`, `js/plugins/`
+
+## Notes
+
+- The site copyright year is dynamically set via JavaScript.
+- Booking form uses Laravel CSRF protection (`@csrf`).
+- Datepicker inputs are read-only and autocomplete is disabled.
+- The `mil-` prefix is used throughout for BEM-style CSS class naming.
